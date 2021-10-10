@@ -21,7 +21,8 @@ const HomeScreen = () => {
 
   const initClass = async () => {
     try {
-      const res: any = await getClass(token)
+      const res: any = await getClass();
+      console.log({res});
       setClasses(res.data.items)
     } catch (err) {
       Alert.alert("Error")

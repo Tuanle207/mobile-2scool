@@ -20,7 +20,7 @@ const AuthScreen = () => {
 
     try {
       const res: any = await login({ username: userName, password: pass })
-      console.log('resr', res)
+      console.log(res)
       const payload = {
         access_token: res.data.access_token,
         token_type: res.data.token_type,
@@ -28,7 +28,6 @@ const AuthScreen = () => {
         expires_in: res.data.expires_in,
         scope: res.data.scope
       }
-      console.log('keytest', payload)
       dispatch(loginSuccess(payload))
       navigation.dispatch(
         CommonActions.navigate({
