@@ -9,10 +9,9 @@ export const baseUrl = 'http://10.0.2.2:5000';
 
 
 export const getDefaultOAuthOptions = () => {
-  const { oAuthConfig } = configEnv();
   return {
     'grant_type': 'password',
-    'scope': 'offline_access Scool',
+    'scope': 'offline_access openid profile role email phone Scool',
     'client_id': 'Scool_App',
     'client_secret': '1q2w3e*',
   };
