@@ -11,7 +11,7 @@ interface Props {
 }
 
 const StatusHeaderBar = (props: Props) => {
-  const { renderLeft, renderCenter, renderRight, title } = props
+  const { renderLeft, renderCenter, title } = props
   const _renderLeft = () => (
     <TouchableOpacity>
       <Image source={require('../assets/icon/back.png')} style={styles.iconBack} />
@@ -32,7 +32,6 @@ const StatusHeaderBar = (props: Props) => {
       <View style={styles.headerContainer}>
         {/* {renderLeft ? renderLeft : _renderLeft()} */}
         {renderCenter ? renderCenter : _renderCenter()}
-        {/* {renderRight ? renderRight : <View></View>} */}
       </View>
     </View>
   )

@@ -1,5 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { store } from '../../../redux/store/stote';
+import { store } from '../../../redux/store/store';
+import * as AxiosLogger from 'axios-logger';
 
 export const configHttpRequest = (axios: AxiosInstance) => {
   const token = store.getState().auth.access_token;
@@ -7,7 +8,7 @@ export const configHttpRequest = (axios: AxiosInstance) => {
   axios.interceptors.request.use(function (config: AxiosRequestConfig) {
     if (config.headers) config.headers['Accept-Language'] = 'vi-vn';
     if (config.headers) config.headers['Authorization'] = `Bearer ${token}`;
-    return config;
+    return AxiosLogger.requestLogger(config);
   });
 };
 

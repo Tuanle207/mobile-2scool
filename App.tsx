@@ -21,7 +21,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import { Provider } from 'react-redux';
 import AppContainer from './src/navigation';
-import { store } from './src/redux/store/stote';
+import { store } from './src/redux/store/store';
 
 
 const Section: React.FC<{
