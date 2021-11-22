@@ -26,9 +26,30 @@ const ReportInfo = (props: Props) => {
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const listClassReportApi = listClassReport.filter(item => item.faults.length > 0)
   const [listClass, setListClass] = useState<Class[]>([])
+
+  //check list empty
+  const [isEmpty, setEmpty] = useState<boolean>(false);
+  //Information list of votes
+  const [listClassReportState, setListClassReportState] = useState(listClassReportApi)
+  //list information in reducers
+  const [dcpReport1, setdcpRport1] = useState(dcpReport)
+
   useEffect(() => {
     initClass()
   }, [])
+
+  useEffect(() => {
+    const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
+    console.log("newListClassReport", newListClassReport);
+    var count = 0;
+    newListClassReport.map((item: DcpClassesReport, index: number) => {
+      if (newListClassReport[index].faults.length != 0) count++;
+    })
+    if (count === 0) {
+      setEmpty(true)
+    }
+    setdcpRport1(dcpReport);
+  }, [dcpReport?.dcpClassReports, dcpReport])
 
   const initClass = async () => {
     try {
@@ -39,20 +60,23 @@ const ReportInfo = (props: Props) => {
       console.log(err)
     }
   }
+
   const deleteClass = (index: number) => {
     const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
     newListClassReport[index].faults = []
     dcpReport.dcpClassReports = newListClassReport
     dispatch(addClassMistake(dcpReport))
-    navigation.dispatch(
-      CommonActions.navigate({
-        name: 'HomeScreen',
-      })
-    )
+    const listClassReport1 = dcpReport1.dcpClassReports
+    const listClassReportApi = listClassReport1.filter(item => item.faults.length > 0)
+    setListClassReportState(listClassReportApi);
+    // navigation.dispatch(
+    //   CommonActions.navigate({
+    //     name: 'HomeScreen',
+    //   })
+    // )
   }
 
   const _renderClass = (item: DcpClassesReport, index: number) => {
-
     const classInfo = listClass.find(classItem => classItem.id === item.classId)
     const className: any = classInfo?.name
     const faultsInfo = item.faults.map((item: Faults) => {
@@ -64,7 +88,7 @@ const ReportInfo = (props: Props) => {
       }
     })
     const totalFault = faultsInfo.length
-    const totalPoint = faultsInfo.reduce(((acc, cur) => acc + cur.point * cur.relatedStudentIds.length), 0)
+    const totalPoint = faultsInfo.reduce(((acc, cur) => acc + cur?.point * cur.relatedStudentIds.length), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
         onPress={() => navigation.dispatch(
@@ -100,16 +124,31 @@ const ReportInfo = (props: Props) => {
     try {
       console.log(dcpReport)
       console.log(JSON.stringify(dcpReport))
-      const res = await postDcpReport(dcpReport)
-      Alert.alert("Success", "Create DcpReport success")
-      navigation.dispatch(
-        CommonActions.navigate({
-          name: 'HomeScreen',
-        })
-      )
+      const res = await postDcpReport(dcpReport);
+      if (res) {
+        Alert.alert("Success", "Create DcpReport success", [
+          {
+            text: "OK", onPress: () => {
+              navigation.dispatch(
+                CommonActions.navigate({
+                  name: 'HomeScreen',
+                })
+              )
+              const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
+              console.log("newListClassReport", newListClassReport);
+              newListClassReport.map((item: DcpClassesReport, index: number) => {
+                newListClassReport[index].faults = [];
+              })
+              dcpReport.dcpClassReports = newListClassReport
+              dispatch(addClassMistake(dcpReport))
+            }
+          },
+        ],
+          { cancelable: false })
+      }
     }
     catch (err) {
-      console.log('errs', err, err.response)
+      console.log('errs', err, err?.response)
     }
   }
 
@@ -118,11 +157,11 @@ const ReportInfo = (props: Props) => {
       <Header title="Thông tin phiếu chấm" />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
         <View>
-          {listClassReportApi.map((item, index) => _renderClass(item, index))}
+          {listClassReportState.map((item, index) => _renderClass(item, index))}
         </View>
-        <TouchableOpacity
+        <TouchableOpacity disabled={isEmpty}
           onPress={() => createDcpReport()}
-          style={[mainStyle.buttonContainer, styles.buttonAdd]}>
+          style={[mainStyle.buttonContainer, styles.buttonAdd, { backgroundColor: isEmpty ? 'gray' : color.blueStrong }]}>
           <Text style={mainStyle.buttonTitle}>Gửi phiếu chấm</Text>
         </TouchableOpacity>
       </View>
