@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
+import { SafeAreaView, ScrollView,StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { getAllDcpReports } from '../api/mistake'
@@ -54,7 +54,9 @@ const HomeScreen = () => {
       filter: pagingInfo.filter
     }
     const res = await getAllDcpReports(input)
-    setListDcpReport(res.data)
+    if(res?.status===200){
+    setListDcpReport(res.data?.items)
+    }
   }
 
   const _renderDatePicker = () => {
@@ -81,9 +83,9 @@ const HomeScreen = () => {
     )
   }
 
-  const _renderItem = (item: any) => {
+  const _renderItem = (item: any, index:number) => {
     return (
-      <View style={styles.itemContainer}>
+      <View style={styles.itemContainer} key={index}>
         <View style={styles.infoContainer}>
           <Text style={styles.dateTime}>{`Phiếu chấm ngày ${'2021'}`}</Text>
           <View style={styles.line2Container}>
@@ -145,8 +147,9 @@ const HomeScreen = () => {
         }}
       />
       <ScrollView>
-        {listDcpReport.map(item => _renderItem(item))}
-      </ScrollView>
+        {listDcpReport.length!==0?
+        listDcpReport.map((item, index) => _renderItem(item, index)):<Text style={{alignSelf:'center', fontStyle:'italic'}}>Danh sách trống</Text>}
+          </ScrollView>
     </SafeAreaView>
   )
 }
