@@ -94,7 +94,7 @@ const MistakeCreate = () => {
             searchInputPlaceholderText='Tên tiêu chí'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.warn(text)}
+            onChangeInput={(text) => console.log(text)}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -120,7 +120,7 @@ const MistakeCreate = () => {
             noItemsText='Vui lòng chọn tiêu chí'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.warn(text)}
+            onChangeInput={(text) => console.log(text)}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -142,7 +142,7 @@ const MistakeCreate = () => {
             searchInputPlaceholderText='Tên học sinh'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.warn(text)}
+            onChangeInput={(text) => console.log(text)}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
