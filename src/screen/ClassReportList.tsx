@@ -34,6 +34,9 @@ const ClassReportList = () => {
     }
   })
   const listPointOfFault = faultsInfo.map((item: FaultInfo) => {
+    if (item.relatedStudentIds.length===0){
+      return 1
+    }else
     return item.point * item.relatedStudentIds.length
   })
   const totalPoint = listPointOfFault.reduce(((acc: number, cur: number) => acc + cur), 0)
@@ -64,7 +67,7 @@ const ClassReportList = () => {
         )}
         style={styles.item} key={index}>
         <View style={styles.itemPoint}>
-          <Text style={styles.point}>{`- ${item.point * item.relatedStudentIds.length}`}</Text>
+          <Text style={styles.point}>{item.relatedStudentIds.length!==0?`- ${item.point * item.relatedStudentIds.length}`:"- 1"}</Text>
         </View>
         <View style={styles.itemContent}>
           <Text style={styles.content}>{item.regulationName}</Text>

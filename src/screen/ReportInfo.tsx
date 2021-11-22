@@ -88,7 +88,7 @@ const ReportInfo = (props: Props) => {
       }
     })
     const totalFault = faultsInfo.length
-    const totalPoint = faultsInfo.reduce(((acc, cur) => acc + cur?.point * cur.relatedStudentIds.length), 0)
+    const totalPoint = faultsInfo.reduce(((acc, cur) => acc + (cur.relatedStudentIds.length?cur?.point * cur.relatedStudentIds.length:1)), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
         onPress={() => navigation.dispatch(
@@ -124,6 +124,7 @@ const ReportInfo = (props: Props) => {
     try {
       console.log(dcpReport)
       console.log(JSON.stringify(dcpReport))
+
       const res = await postDcpReport(dcpReport);
       if (res) {
         Alert.alert("Success", "Create DcpReport success", [
