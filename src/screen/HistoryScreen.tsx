@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, ScrollView,StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
+import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { getAllDcpReports } from '../api/mistake'
@@ -9,8 +9,9 @@ import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import HeaderHome from '../component/HeaderMain'
 import usePagingInfo from '../ultil/usePagingInfo'
-
-const HomeScreen = () => {
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+const HistoryScreen = () => {
   const navigation = useNavigation()
   const [dateFromPicker, setDateFromPicker] = useState(false)
   const [dateToPicker, setDateToPicker] = useState(false)
@@ -54,56 +55,73 @@ const HomeScreen = () => {
       filter: pagingInfo.filter
     }
     const res = await getAllDcpReports(input)
-    if(res?.status===200){
-    setListDcpReport(res.data?.items)
+    if (res?.status === 200) {
+      setListDcpReport(res.data?.items)
     }
   }
 
   const _renderDatePicker = () => {
     return (
       <View style={styles.dateContainer}>
-        <TouchableOpacity onPress={() => setDateFromPicker(true)}>
+        <TouchableOpacity onPress={() => setDateFromPicker(true)} style={styles.touchChooseDate}>
           <TextInput
             value={pagingInfo.filter ? pagingInfo.filter[2].value.toString() : ''}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
           />
+          <FontAwesome
+            name={'calendar'}
+            color={color.blueStrong}
+            size={20}
+
+          />
         </TouchableOpacity>
-        <Text>_______</Text>
-        <TouchableOpacity onPress={() => setDateToPicker(true)}>
+        <Text style={{ alignSelf: 'center' }}>_______</Text>
+        <TouchableOpacity onPress={() => setDateToPicker(true)} style={styles.touchChooseDate}>
           <TextInput
             value={pagingInfo.filter ? pagingInfo.filter[3].value.toString() : ''}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
           />
+          <FontAwesome
+            name={'calendar'}
+            color={color.blueStrong}
+            size={20}
+
+          />
         </TouchableOpacity>
       </View>
     )
   }
 
-  const _renderItem = (item: any, index:number) => {
+  const _renderItem = (item: any, index: number) => {
+    console.log(item)
     return (
       <View style={styles.itemContainer} key={index}>
         <View style={styles.infoContainer}>
-          <Text style={styles.dateTime}>{`Phiếu chấm ngày ${'2021'}`}</Text>
+          <Text style={styles.dateTime}>{`Phiếu chấm ngày ${moment(item?.creationTime).format("DD/MM/YYYY")}`}</Text>
           <View style={styles.line2Container}>
             <View style={styles.timeContainer}>
               <Image source={require('../assets/icon/clock.png')} />
-              <Text style={styles.line2Content}>{`07:15 AM`}</Text>
+              <Text style={styles.line2Content}>{moment(item?.creationTime).format("hh:mm a")}</Text>
             </View>
             <View style={styles.statusContainer}>
               <Image source={require('../assets/icon/status.png')} />
-              <Text style={[styles.line2Content, { color: 'red' }]}>{`Đã duyệt`}</Text>
+              <Text style={[styles.line2Content, { color: item?.status === "Created" ? "green" : 'red' }]}>{item?.status === "Created" ? "Đã duyệt" : "Đang chờ duyệt"}</Text>
             </View>
           </View>
         </View>
         <TouchableOpacity>
-          <TouchableOpacity
+          <TouchableOpacity disabled={item?.status === "Created" ? true : false}
           // onPress={() => removeMistake(index)}
-          >
-            <Image source={require('../assets/icon/remove.png')} style={styles.iconRemove} />
+          >{item?.status !== "Created" ?
+            <AntDesign
+              name={'closecircleo'}
+              color={"black"}
+              size={24}
+            /> :null}
           </TouchableOpacity>
         </TouchableOpacity>
       </View>
@@ -118,38 +136,50 @@ const HomeScreen = () => {
         modal
         open={dateFromPicker}
         date={new Date()}
+        maximumDate={new Date()}
+        mode={"date"}
         onConfirm={(date) => {
+          setDateFromPicker(false);
           setFilter({
             key: 'StartDate',
             comparison: '==',
             value: moment(date).format('MM/DD/YYYY')
           });
-          setDateFromPicker(false)
         }}
         onCancel={() => {
           setDateFromPicker(false)
         }}
+        title={"Chọn ngày bắt đầu"}
+        cancelText={"Thoát"}
+        confirmText={"Chọn"}
+        locale={"vi"}
       />
       <DatePicker
         modal
         open={dateToPicker}
         date={new Date()}
+        mode={"date"}
         onConfirm={(date) => {
+          setDateToPicker(false);
           setFilter({
             key: 'EndDate',
             comparison: '==',
             value: moment(date).format('MM/DD/YYYY')
           });
-          setDateToPicker(false)
+
         }}
+        locale={"vi"}
         onCancel={() => {
           setDateToPicker(false)
         }}
+        title={"Chọn ngày bắt đầu"}
+        cancelText={"Thoát"}
+        confirmText={"Chọn"}
       />
       <ScrollView>
-        {listDcpReport.length!==0?
-        listDcpReport.map((item, index) => _renderItem(item, index)):<Text style={{alignSelf:'center', fontStyle:'italic'}}>Danh sách trống</Text>}
-          </ScrollView>
+        {listDcpReport.length !== 0 ?
+          listDcpReport.map((item, index) => _renderItem(item, index)) : <Text style={{ alignSelf: 'center', fontStyle: 'italic', marginTop: 10 }}>Danh sách trống</Text>}
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -168,7 +198,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: 'white',
     flex: 1,
-    marginHorizontal: '10%',
+    marginHorizontal: '4%',
     marginTop: 20,
     borderRadius: 5,
     borderWidth: 1,
@@ -210,20 +240,29 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: '10%',
+    justifyContent: 'space-around',
+    marginHorizontal: "3%",
     alignItems: 'center',
     marginTop: 20
   },
   datePicker: {
-    color: 'black',
+    color: color.blueStrong,
     backgroundColor: 'white',
     height: 40,
     borderColor: color.border,
-    borderWidth: 1,
+    // borderWidth: 1,
     width: widthDevice * 30 / 100,
-    borderRadius: 3
+    borderRadius: 10,
+
+  },
+  touchChooseDate: {
+    backgroundColor: "white",
+    flexDirection: 'row',
+    paddingRight: 16,
+    paddingVertical: 2,
+    alignItems: 'center',
+    borderRadius: 10,
   }
 });
 
-export default HomeScreen
+export default HistoryScreen
