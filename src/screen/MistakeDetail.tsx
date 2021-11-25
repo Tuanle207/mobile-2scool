@@ -12,12 +12,14 @@ import { addClassMistake } from '../redux/action/mistake'
 import { RootState } from '../redux/reducer'
 import { DcpReport } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
+import { Regulation} from '../model/Mistake'
 
 const MistakeCreate = () => {
   const navigation = useNavigation()
   const dcpReport = useSelector((state: RootState) => state.mistake)
   const listRegulation = useSelector((state: RootState) => state.regulation)
   const listCriteria = useSelector((state: RootState) => state.criteria)
+  const [listRegulation1, setListRegulation1] = useState<Regulation[]>([])
   const dispatch = useDispatch()
   const route = useRoute()
   const { classInfo, fault, indexFault }: any = route.params
@@ -34,6 +36,14 @@ const MistakeCreate = () => {
   useEffect(() => {
     initStudent()
   }, [])
+  useEffect(()=>{
+    console.log("listCriteria", listRegulation,  classInfo, fault, indexFault);
+  const dataRegulation:any = listRegulation.find(item => item.id === fault?.regulationId);
+  console.log(dataRegulation)
+  setCriteria(dataRegulation?.criteriaId);
+  setListRegulation1(listRegulation.filter((item:any) => item.criteriaId === dataRegulation?.criteriaId));
+  },[])
+
 
   const initStudent = async () => {
     try {
@@ -44,6 +54,10 @@ const MistakeCreate = () => {
       Alert.alert('Error')
     }
   }
+  useEffect(() => {
+    if (criteria === '') setListRegulation1([])
+    else setListRegulation1(listRegulation.filter(item => item.criteriaId === criteria))
+  }, [criteria])
 
   const editMistake = () => {
     if (!isEdit) return setIsEdit(true)
@@ -80,7 +94,7 @@ const MistakeCreate = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Chi tiết vi phạm" />
-      <View style={styles.mainContainer}>
+      <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.contentContainer}>
           <MultiSelect
             fixedHeight
@@ -111,7 +125,7 @@ const MistakeCreate = () => {
             fixedHeight
             single
             styleMainWrapper={styles.criteria}
-            items={listRegulation}
+            items={listRegulation1}
             uniqueKey='id'
             onSelectedItemsChange={onSelectRegulation}
             selectedItems={[regulation]}
@@ -120,7 +134,7 @@ const MistakeCreate = () => {
             noItemsText='Vui lòng chọn tiêu chí'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.warn(text)}
+            onChangeInput={(text) => console.log(text)}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -157,7 +171,7 @@ const MistakeCreate = () => {
           />
 
         </View>
-      </View>
+      </ScrollView>
       <TouchableOpacity
         onPress={() => editMistake()}
         style={[mainStyle.buttonContainer, styles.buttonAdd]}>
@@ -176,7 +190,8 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    backgroundColor: color.background,
   },
   contentContainer: {
     flex: 1,
@@ -258,9 +273,8 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     backgroundColor: color.blueStrong,
-    marginBottom: 20,
-    position: 'absolute',
-    top: heightDevice - 70,
+    marginBottom: 10,
+    // position: 'absolute',
     width: '80%'
   }
 })
