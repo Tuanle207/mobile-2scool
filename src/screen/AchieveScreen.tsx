@@ -1,44 +1,102 @@
-import { CommonActions, useNavigation } from '@react-navigation/native'
+import { useNavigation, CommonActions } from '@react-navigation/native'
+import moment from 'moment'
 import React, { useEffect, useState } from 'react'
-import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import MultiSelect from 'react-native-multiple-select'
-import { getClass } from '../api/class'
+import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
+import DatePicker from 'react-native-date-picker'
+import { Colors } from 'react-native/Libraries/NewAppScreen'
+import { getAllDcpReports } from '../api/mistake'
 import { color } from '../assets/color'
-import { fontSize } from '../assets/size'
+import { fontSize, widthDevice } from '../assets/size'
 import HeaderHome from '../component/HeaderMain'
-import { Class } from '../model/Class'
-
-const HomeScreen = () => {
+import usePagingInfo from '../ultil/usePagingInfo'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+const AchieveScreen = () => {
   const navigation = useNavigation()
-  const [classId, setClassId] = useState('')
-  const [listClass, setListClass] = useState<Class[]>([])
+  const [dateFromPicker, setDateFromPicker] = useState(false)
+  const [dateToPicker, setDateToPicker] = useState(false)
+  const [datePicker, setDatePicker] = useState(false)
+  const [listDcpReport, setListDcpReport] = useState([])
+
+  const { pagingInfo, setPageIndex, setFilter } = usePagingInfo({
+    filter: [
+      {
+        key: 'Status',
+        comparison: '',
+        value: 'Approved'
+      },
+      {
+        key: 'Status',
+        comparison: '',
+        value: 'Rejected'
+      },
+      {
+        key: 'StartDate',
+        comparison: '==',
+        value: moment().format('MM/DD/YYYY')
+      },
+      {
+        key: 'EndDate',
+        comparison: '!=',
+        value: moment().add(10, 'days').calendar()
+      }
+    ]
+  });
 
   useEffect(() => {
-    initClass()
-  }, [])
+    getHistoryDcpReports()
+  }, [pagingInfo])
 
-  useEffect(() => {
-    if (listClass.length > 0) {
-      setClassId(listClass[0].id)
+  const getHistoryDcpReports = async () => {
+    const input = {
+      pageIndex: 1,
+      pageSize: 10,
+      sortName: '',
+      filter: pagingInfo.filter
     }
-  }, [listClass])
-
-  const initClass = async () => {
-    try {
-      const res: any = await getClass();
-      setListClass(res.data.items)
-    } catch (err) {
-      Alert.alert("Error", "Can not get list class")
-      console.log(err)
+    const res = await getAllDcpReports(input)
+    if (res?.status === 200) {
+      setListDcpReport(res.data?.items)
     }
   }
 
-  const onSelectClass = (e: any) => {
-    setClassId(e[0])
-    console.log('keytest', e[0])
+  const _renderDatePicker = () => {
+    return (
+      <View style={styles.dateContainer}>
+        <TouchableOpacity onPress={() => setDateFromPicker(true)} style={styles.touchChooseDate}>
+          <TextInput
+            value={pagingInfo.filter ? pagingInfo.filter[2].value.toString() : ''}
+            editable={false}
+            style={styles.datePicker}
+            textAlign="center"
+          />
+          <FontAwesome
+            name={'calendar'}
+            color={color.blueStrong}
+            size={20}
+
+          />
+        </TouchableOpacity>
+        <Text style={{ alignSelf: 'center' }}>_______</Text>
+        <TouchableOpacity onPress={() => setDateToPicker(true)} style={styles.touchChooseDate}>
+          <TextInput
+            value={pagingInfo.filter ? pagingInfo.filter[3].value.toString() : ''}
+            editable={false}
+            style={styles.datePicker}
+            textAlign="center"
+          />
+          <FontAwesome
+            name={'calendar'}
+            color={color.blueStrong}
+            size={20}
+
+          />
+        </TouchableOpacity>
+      </View>
+    )
   }
 
-  const _renderItem = () => {
+  const _renderItem =  (item: any, index: number) => {
     return (
       <View style={styles.itemContainer}>
         <View style={styles.infoContainer}>
@@ -73,21 +131,63 @@ const HomeScreen = () => {
       </View>
     )
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <HeaderHome title="Thành tích" />
+      {_renderDatePicker()}
+      <DatePicker
+        modal
+        open={dateFromPicker}
+        date={new Date()}
+        maximumDate={new Date()}
+        mode={"date"}
+        onConfirm={(date) => {
+          setDateFromPicker(false);
+          setFilter({
+            key: 'StartDate',
+            comparison: '==',
+            value: moment(date).format('MM/DD/YYYY')
+          });
+        }}
+        onCancel={() => {
+          setDateFromPicker(false)
+        }}
+        title={"Chọn ngày bắt đầu"}
+        cancelText={"Thoát"}
+        confirmText={"Chọn"}
+        locale={"vi"}
+      />
+      <DatePicker
+        modal
+        open={dateToPicker}
+        date={new Date()}
+        mode={"date"}
+        onConfirm={(date) => {
+          setDateToPicker(false);
+          setFilter({
+            key: 'EndDate',
+            comparison: '==',
+            value: moment(date).format('MM/DD/YYYY')
+          });
+
+        }}
+        locale={"vi"}
+        onCancel={() => {
+          setDateToPicker(false)
+        }}
+        title={"Chọn ngày bắt đầu"}
+        cancelText={"Thoát"}
+        confirmText={"Chọn"}
+      />
       <ScrollView>
-        {_renderItem()}
-        {_renderItem()}
-        {_renderItem()}
-        {_renderItem()}
+        {listDcpReport.length !== 0 ?
+          listDcpReport.map((item, index) => _renderItem(item, index)) : <Text style={{ alignSelf: 'center', fontStyle: 'italic', marginTop: 10 }}>Danh sách trống</Text>}
       </ScrollView>
       <View style={styles.iconAddContainer}>
         <TouchableOpacity onPress={() => navigation.dispatch(
           CommonActions.navigate({
             name: 'LrReport',
-            params: { classId: classId }
+            // params: { classId: classId }
           })
         )}>
           <Image source={require('../assets/icon/plus.png')} style={styles.iconAdd} />
@@ -111,7 +211,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: 'white',
     flex: 1,
-    marginHorizontal: '10%',
+    marginHorizontal: '4%',
     marginTop: 20,
     borderRadius: 5,
     borderWidth: 1,
@@ -151,6 +251,31 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  dateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginHorizontal: "3%",
+    alignItems: 'center',
+    marginTop: 20
+  },
+  datePicker: {
+    color: color.blueStrong,
+    backgroundColor: 'white',
+    height: 40,
+    borderColor: color.border,
+    // borderWidth: 1,
+    width: widthDevice * 30 / 100,
+    borderRadius: 10,
+
+  },
+  touchChooseDate: {
+    backgroundColor: "white",
+    flexDirection: 'row',
+    paddingRight: 16,
+    paddingVertical: 2,
+    alignItems: 'center',
+    borderRadius: 10,
+  },
   iconAddContainer: {
     alignItems: 'flex-end'
   },
@@ -159,13 +284,6 @@ const styles = StyleSheet.create({
     height: 55,
     margin: 30
   },
-  className: {
-    fontSize: fontSize.contentSmall,
-    fontWeight: 'bold',
-    color: 'black',
-    marginTop: 0,
-    marginLeft: '10%'
-  },
 });
 
-export default HomeScreen
+export default AchieveScreen
