@@ -13,6 +13,7 @@ import { addClassMistake } from '../redux/action/mistake'
 import { RootState } from '../redux/reducer'
 import { DcpReport } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const MistakeCreate = () => {
   const navigation = useNavigation()
@@ -159,7 +160,12 @@ const MistakeCreate = () => {
       <TouchableOpacity
         onPress={() => addNewMistake()}
         style={[mainStyle.buttonContainer, styles.buttonAdd]}>
-        <Text style={mainStyle.buttonTitle}>Thêm vi phạm</Text>
+        <AntDesign
+          name={'plus'}
+          color={"white"}
+          size={30}
+        />
+        <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Thêm vi phạm</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )
@@ -182,11 +188,11 @@ const styles = StyleSheet.create({
   },
   criteria: {
     marginTop: '15%',
-    width: widthDevice * 80 / 100,
+    width: widthDevice * 92 / 100,
     backgroundColor: 'white',
     borderColor: 'gray',
     borderRadius: 5,
-    borderWidth: 0.5,
+    // borderWidth: 0.5,
     paddingLeft: 15,
     paddingRight: 5,
   },
@@ -206,12 +212,12 @@ const styles = StyleSheet.create({
   studentContainer: {
     marginTop: '15%',
     backgroundColor: 'white',
-    borderColor: 'gray',
+    // borderColor: 'gray',
     borderRadius: 5,
-    borderWidth: 0.5,
+    // borderWidth: 0.5,
     paddingLeft: 15,
     paddingRight: 5,
-    width: widthDevice * 80 / 100,
+    width: widthDevice * 92 / 100,
     minHeight: 160
   },
   studentButton: {
@@ -258,7 +264,8 @@ const styles = StyleSheet.create({
   buttonAdd: {
     backgroundColor: color.blueStrong,
     marginBottom: 10,
-    width: '80%'
+    width: '92%',
+    flexDirection: 'row'
   }
 })
 

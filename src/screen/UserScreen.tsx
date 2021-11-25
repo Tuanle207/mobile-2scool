@@ -6,7 +6,7 @@ import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import HeaderHome from '../component/HeaderMain'
 import { mainStyle } from './mainStyle'
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 const UserScreen = () => {
   const navigation = useNavigation()
   const [name, setName] = useState('')
@@ -68,7 +68,12 @@ const UserScreen = () => {
           )
         }}
         style={[mainStyle.buttonContainer, styles.buttonSend]}>
-        <Text style={mainStyle.buttonTitle}>Đăng xuất</Text>
+                    <MaterialCommunityIcons
+          name={'logout'}
+          color={"white"}
+          size={30}
+        />
+        <Text style={[mainStyle.buttonTitle, {marginHorizontal:12}]}>Đăng xuất</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )
@@ -113,7 +118,7 @@ const styles = StyleSheet.create({
   buttonSend: {
     marginBottom: 20,
     marginHorizontal: 20,
-    width: '80%'
+    width: '80%', flexDirection:'row'
   },
   password: {
     color: color.blueStrong,

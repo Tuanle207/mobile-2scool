@@ -6,7 +6,7 @@ import { login } from '../api/login'
 import { color } from '../assets/color'
 import { fontSize, height, width } from '../assets/size'
 import { loginSuccess } from '../redux/action/auth'
-
+import Octicons from 'react-native-vector-icons/Octicons'
 const AuthScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
@@ -63,8 +63,12 @@ const AuthScreen = () => {
             style={{ flex: 1 }}
           />
           <TouchableOpacity onPress={() => setSeePass(!seePass)}>
-            <Image source={require('../assets/icon/eye.png')} style={styles.iconEye} />
-
+            {/* <Image source={require('../assets/icon/eye.png')} style={styles.iconEye} /> */}
+            <Octicons
+          name={seePass?'eye':"eye-closed"}
+          color={"gray"}
+          size={24}
+        />
           </TouchableOpacity>
         </View>
 
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   buttonTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center'

@@ -13,6 +13,7 @@ import { RootState } from '../redux/reducer'
 import { DcpReport } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
 import { Regulation} from '../model/Mistake'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const MistakeCreate = () => {
   const navigation = useNavigation()
@@ -175,7 +176,12 @@ const MistakeCreate = () => {
       <TouchableOpacity
         onPress={() => editMistake()}
         style={[mainStyle.buttonContainer, styles.buttonAdd]}>
-        <Text style={mainStyle.buttonTitle}>{isEdit ? 'Hoàn thành' : 'Cập nhật'}</Text>
+          <MaterialCommunityIcons
+          name={'update'}
+          color={"white"}
+          size={30}
+        />
+        <Text style={[mainStyle.buttonTitle,{ fontSize: 18, marginHorizontal: 12 }]}>{isEdit ? 'Hoàn thành' : 'Cập nhật'}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )
@@ -198,7 +204,7 @@ const styles = StyleSheet.create({
   },
   criteria: {
     marginTop: '15%',
-    width: widthDevice * 80 / 100,
+    width: widthDevice * 92 / 100,
     backgroundColor: 'white',
     borderColor: 'gray',
     borderRadius: 5,
@@ -227,7 +233,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     paddingLeft: 15,
     paddingRight: 5,
-    width: widthDevice * 80 / 100,
+    width: widthDevice * 92 / 100,
     minHeight: 160
   },
   studentButton: {
@@ -275,7 +281,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.blueStrong,
     marginBottom: 10,
     // position: 'absolute',
-    width: '80%'
+    width: '92%',
+    flexDirection:'row'
   }
 })
 

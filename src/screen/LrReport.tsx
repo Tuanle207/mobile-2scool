@@ -1,11 +1,12 @@
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState } from 'react'
-import { Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, KeyboardAvoidingView, SafeAreaView,Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View, Platform, ScrollView } from 'react-native'
 import { color } from '../assets/color'
 import { fontSize } from '../assets/size'
 import Header from '../component/Header'
 import { mainStyle } from './mainStyle'
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+const {height, width} = Dimensions.get('screen')
 const LrReport = () => {
   const navigation = useNavigation()
   const route = useRoute()
@@ -62,19 +63,29 @@ const LrReport = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="Thêm vi phạm" />
-      <View style={styles.mainContainer}>
+
+    <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>
+
+      <Header title="Thêm thành tích" />
+      <ScrollView style={styles.mainContainer}>
+      <View style={{flex:1, padding:20}}>
         {_renderImage()}
         {_renderPoint()}
         {_renderAbsent()}
-      </View>
+        </View>
       <TouchableOpacity
         onPress={() => { }}
         style={[mainStyle.buttonContainer, styles.buttonSend]}>
-        <Text style={mainStyle.buttonTitle}>Gửi phiếu thành tích</Text>
+          <FontAwesome
+          name={'send-o'}
+          color={"white"}
+          size={24}
+        />
+        <Text style={[mainStyle.buttonTitle,{marginHorizontal:12, fontSize:18}]}>Gửi phiếu thành tích</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+      </ScrollView>
+      </KeyboardAvoidingView>
+
   )
 }
 
@@ -84,8 +95,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
   },
   mainContainer: {
-    flex: 1,
-    paddingHorizontal: 20
+    flex: 1,  
   },
   buttonAdd: {
     height: 35,
@@ -109,9 +119,11 @@ const styles = StyleSheet.create({
     borderColor: color.border
   },
   buttonSend: {
-    marginBottom: 20,
-    marginHorizontal: 20
-  },
+    marginTop:50,
+ alignSelf:'center',
+ marginBottom:20,
+    flexDirection:'row',
+    width:'92%',alignItems:'center'},
   image: {
     width: 100,
     height: 100,
