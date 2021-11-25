@@ -7,6 +7,7 @@ import { getCriteria, getRegulation } from '../api/mistake'
 import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import HeaderMain from '../component/HeaderMain'
+import LoadingBase from '../component/LoadingBase'
 import { Class } from '../model/Class'
 import { addCriteria } from '../redux/action/criteria'
 import { addClassMistake } from '../redux/action/mistake'
@@ -21,11 +22,14 @@ const HomeScreen = () => {
   const [search, setSearch] = useState('')
   const [classes, setClasses] = useState<Class[]>([])
   const [listClass, setListClass] = useState<Class[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsLoading(true);
     initClass()
     initCriteria()
     initRegulation()
+    setIsLoading(false);
   }, [])
 
   const initClass = async () => {
@@ -117,6 +121,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+           <LoadingBase visible={isLoading} />
       <HeaderMain
         title="Trang chủ"
       />

@@ -7,6 +7,11 @@ import { color } from '../assets/color'
 import { fontSize, height, width } from '../assets/size'
 import { loginSuccess } from '../redux/action/auth'
 import Octicons from 'react-native-vector-icons/Octicons'
+import LoadingBase from '../component/LoadingBase'
+const resetAction = CommonActions.reset({
+  index: 0,
+  routes: [{ name: 'AppStack' }],
+});
 const AuthScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
@@ -14,9 +19,9 @@ const AuthScreen = () => {
   const [pass, setPass] = useState('1q2w3E*')
   const [errorMessage, setErrorMessage] = useState('')
   const [seePass, setSeePass] = useState(false)
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const loginApi = async () => {
-
+    setIsLoading(true);
     try {
       const res: any = await login({ username: userName, password: pass })
       const payload = {
@@ -26,13 +31,14 @@ const AuthScreen = () => {
         expires_in: res.data.expires_in,
         scope: res.data.scope
       }
+      setIsLoading(false);
       dispatch(loginSuccess(payload))
       navigation.dispatch(
-        CommonActions.navigate({
-          name: 'AppStack',
-        })
+        resetAction
       )
+
     } catch (err) {
+      setIsLoading(false);
       console.log(err)
       setErrorMessage('Thông tin tài khoản không đúng')
     }
@@ -46,6 +52,7 @@ const AuthScreen = () => {
         // barStyle={statusBarStyle}
         // showHideTransition={statusBarTransition}
         hidden={false} />
+      <LoadingBase visible={isLoading} />
       <Image source={require('../assets/icon/SCOOL.png')} style={styles.logo} />
       <View style={styles.inputContainer}>
         <TextInput
@@ -65,10 +72,10 @@ const AuthScreen = () => {
           <TouchableOpacity onPress={() => setSeePass(!seePass)}>
             {/* <Image source={require('../assets/icon/eye.png')} style={styles.iconEye} /> */}
             <Octicons
-          name={seePass?'eye':"eye-closed"}
-          color={"gray"}
-          size={24}
-        />
+              name={seePass ? 'eye' : "eye-closed"}
+              color={"gray"}
+              size={24}
+            />
           </TouchableOpacity>
         </View>
 

@@ -11,13 +11,14 @@ import HeaderHome from '../component/HeaderMain'
 import usePagingInfo from '../ultil/usePagingInfo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import LoadingBase from '../component/LoadingBase'
 const HistoryScreen = () => {
   const navigation = useNavigation()
   const [dateFromPicker, setDateFromPicker] = useState(false)
   const [dateToPicker, setDateToPicker] = useState(false)
   const [datePicker, setDatePicker] = useState(false)
   const [listDcpReport, setListDcpReport] = useState([])
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { pagingInfo, setPageIndex, setFilter } = usePagingInfo({
     filter: [
       {
@@ -44,10 +45,13 @@ const HistoryScreen = () => {
   });
 
   useEffect(() => {
+    setIsLoading(true);
     getHistoryDcpReports()
+
   }, [pagingInfo])
 
   const getHistoryDcpReports = async () => {
+    setIsLoading(true);
     const input = {
       pageIndex: 1,
       pageSize: 10,
@@ -56,8 +60,10 @@ const HistoryScreen = () => {
     }
     const res = await getAllDcpReports(input)
     if (res?.status === 200) {
+      setIsLoading(false)
       setListDcpReport(res.data?.items)
     }
+    setIsLoading(false)
   }
 
   const _renderDatePicker = () => {
@@ -131,6 +137,7 @@ const HistoryScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <HeaderHome title="Lịch sử chấm" />
+      <LoadingBase visible={isLoading} />
       {_renderDatePicker()}
       <DatePicker
         modal
