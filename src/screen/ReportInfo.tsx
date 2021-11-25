@@ -94,7 +94,7 @@ const ReportInfo = (props: Props) => {
       }
     })
     const totalFault = faultsInfo.length
-    const totalPoint = faultsInfo.reduce(((acc:number, cur:any) => acc + (cur.relatedStudentIds.length?cur?.point * cur.relatedStudentIds.length:1)), 0)
+    const totalPoint = faultsInfo.reduce(((acc:number, cur:any) => acc + (cur.relatedStudentIds.length?cur?.point * cur.relatedStudentIds.length:cur?.point)), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
         onPress={() => navigation.dispatch(
@@ -135,7 +135,7 @@ const ReportInfo = (props: Props) => {
             text: "OK", onPress: () => {
               navigation.dispatch(
                 CommonActions.navigate({
-                  name: 'HomeScreen',
+                  name: 'BottomTab',
                 })
               )
               const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))

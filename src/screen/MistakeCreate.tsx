@@ -80,7 +80,7 @@ const MistakeCreate = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Thêm vi phạm" />
-      <View style={styles.mainContainer}>
+      <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.contentContainer}>
           <MultiSelect
             fixedHeight
@@ -155,7 +155,7 @@ const MistakeCreate = () => {
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
         </View>
-      </View>
+      </ScrollView>
       <TouchableOpacity
         onPress={() => addNewMistake()}
         style={[mainStyle.buttonContainer, styles.buttonAdd]}>
@@ -174,7 +174,8 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    backgroundColor: color.background,
   },
   contentContainer: {
     flex: 1,
@@ -256,9 +257,7 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     backgroundColor: color.blueStrong,
-    marginBottom: 20,
-    position: 'absolute',
-    top: heightDevice - 70,
+    marginBottom: 10,
     width: '80%'
   }
 })

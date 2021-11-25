@@ -35,7 +35,7 @@ const ClassReportList = () => {
   })
   const listPointOfFault = faultsInfo.map((item: FaultInfo) => {
     if (item.relatedStudentIds.length===0){
-      return 1
+      return item.point
     }else
     return item.point * item.relatedStudentIds.length
   })
@@ -67,7 +67,7 @@ const ClassReportList = () => {
         )}
         style={styles.item} key={index}>
         <View style={styles.itemPoint}>
-          <Text style={styles.point}>{item.relatedStudentIds.length!==0?`- ${item.point * item.relatedStudentIds.length}`:"- 1"}</Text>
+          <Text style={styles.point}>{item.relatedStudentIds.length!==0?`- ${item.point * item.relatedStudentIds.length}`:`- ${item.point}`}</Text>
         </View>
         <View style={styles.itemContent}>
           <Text style={styles.content}>{item.regulationName}</Text>
@@ -96,7 +96,7 @@ const ClassReportList = () => {
           <TouchableOpacity
             onPress={() => navigation.dispatch(
               CommonActions.navigate({
-                name: 'HomeScreen',
+                name: 'BottomTab',
               })
             )}
             style={[mainStyle.buttonContainer, styles.buttonDone]}>
