@@ -28,8 +28,6 @@ const mistakeReducer = (state = initialDcpReport, action: AnyAction) => {
             // console.log(state)
         }
         case ADD_CLASS_MISTAKE: {
-            console.log(payload)
-            console.log(state)
             return payload
         }
         default: return state

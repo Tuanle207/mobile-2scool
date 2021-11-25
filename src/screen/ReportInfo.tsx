@@ -1,4 +1,5 @@
 import { CommonActions, useNavigation } from '@react-navigation/native'
+import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -40,7 +41,6 @@ const ReportInfo = (props: Props) => {
 
   useEffect(() => {
     const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
-    console.log("newListClassReport", newListClassReport);
     var count = 0;
     newListClassReport.map((item: DcpClassesReport, index: number) => {
       if (newListClassReport[index].faults.length != 0) count++;
@@ -61,9 +61,15 @@ const ReportInfo = (props: Props) => {
     }
   }
 
-  const deleteClass = (index: number) => {
+  const deleteClass = (item: DcpClassesReport) => {
+
     const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
-    newListClassReport[index].faults = []
+    console.log(item, newListClassReport);
+    newListClassReport.map((item1:any, index:number)=>{
+      if(item?.classId ===item1?.classId){
+        newListClassReport[index].faults = []
+      }
+    })
     dcpReport.dcpClassReports = newListClassReport
     dispatch(addClassMistake(dcpReport))
     const listClassReport1 = dcpReport1.dcpClassReports
@@ -88,7 +94,7 @@ const ReportInfo = (props: Props) => {
       }
     })
     const totalFault = faultsInfo.length
-    const totalPoint = faultsInfo.reduce(((acc, cur) => acc + (cur.relatedStudentIds.length?cur?.point * cur.relatedStudentIds.length:1)), 0)
+    const totalPoint = faultsInfo.reduce(((acc:number, cur:any) => acc + (cur.relatedStudentIds.length?cur?.point * cur.relatedStudentIds.length:1)), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
         onPress={() => navigation.dispatch(
@@ -112,7 +118,7 @@ const ReportInfo = (props: Props) => {
           </Text>
         </View>
         <View style={styles.iconRemoveContainer}>
-          <TouchableOpacity onPress={() => deleteClass(index)}>
+          <TouchableOpacity onPress={() => deleteClass(item)}>
             <Image source={require('../assets/icon/remove.png')} style={styles.iconRemove} />
           </TouchableOpacity>
         </View>
@@ -122,9 +128,6 @@ const ReportInfo = (props: Props) => {
 
   const createDcpReport = async () => {
     try {
-      console.log(dcpReport)
-      console.log(JSON.stringify(dcpReport))
-
       const res = await postDcpReport(dcpReport);
       if (res) {
         Alert.alert("Success", "Create DcpReport success", [
@@ -136,7 +139,7 @@ const ReportInfo = (props: Props) => {
                 })
               )
               const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
-              console.log("newListClassReport", newListClassReport);
+
               newListClassReport.map((item: DcpClassesReport, index: number) => {
                 newListClassReport[index].faults = [];
               })
@@ -149,7 +152,7 @@ const ReportInfo = (props: Props) => {
       }
     }
     catch (err) {
-      console.log('errs', err, err?.response)
+      console.log('errs', err)
     }
   }
 
