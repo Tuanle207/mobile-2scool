@@ -12,6 +12,7 @@ import usePagingInfo from '../ultil/usePagingInfo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LoadingBase from '../component/LoadingBase'
+import { convertStatus, convertStatusColor } from '../utilities/convertData'
 const HistoryScreen = () => {
   const navigation = useNavigation()
   const [dateFromPicker, setDateFromPicker] = useState(false)
@@ -117,14 +118,14 @@ const HistoryScreen = () => {
             </View>
             <View style={styles.statusContainer}>
               <Image source={require('../assets/icon/status.png')} />
-              <Text style={[styles.line2Content, { color: item?.status === "Created" ? "green" : 'red' }]}>{item?.status === "Created" ? "Đã duyệt" : "Đang chờ duyệt"}</Text>
+              <Text style={[styles.line2Content, { color: convertStatusColor(item?.status) }]}>{convertStatus(item?.status)}</Text>
             </View>
           </View>
         </View>
         <TouchableOpacity>
-          <TouchableOpacity disabled={item?.status === "Created" ? true : false}
+          <TouchableOpacity disabled={item?.status === "Created" ? false : true}
           // onPress={() => removeMistake(index)}
-          >{item?.status !== "Created" ?
+          >{item?.status == "Created" ?
             <AntDesign
               name={'closecircleo'}
               color={"black"}
