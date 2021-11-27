@@ -2,7 +2,7 @@ import { CommonActions, useNavigation, useRoute } from '@react-navigation/native
 import React, { useState } from 'react'
 import { Image, KeyboardAvoidingView, SafeAreaView,Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View, Platform, ScrollView } from 'react-native'
 import { color } from '../assets/color'
-import { fontSize } from '../assets/size'
+import { fontSize, heightDevice } from '../assets/size'
 import Header from '../component/Header'
 import { mainStyle } from './mainStyle'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -68,7 +68,7 @@ const LrReport = () => {
 
       <Header title="Thêm thành tích" />
       <ScrollView style={styles.mainContainer}>
-      <View style={{flex:1, padding:20}}>
+      <View style={{flex:1, padding:20, height:heightDevice-175}}>
         {_renderImage()}
         {_renderPoint()}
         {_renderAbsent()}

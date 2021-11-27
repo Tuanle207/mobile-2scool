@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Platform, Text, TextInput, TouchableOpacity, View , KeyboardAvoidingView} from 'react-native'
 import { changePassword } from '../api/user'
 import { color } from '../assets/color'
-import { fontSize } from '../assets/size'
+import { fontSize, heightDevice } from '../assets/size'
 import Header from '../component/Header'
 import { mainStyle } from './mainStyle'
 
@@ -77,8 +77,8 @@ const ChangePassword = () => {
   return (
     <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>
       <Header title="Đổi mật khẩu" />
-      <ScrollView>
-      <View style={styles.mainContainer}>
+      <ScrollView >
+      <View style={[styles.mainContainer, {height:heightDevice-130}]}>
         {_renderCurPassword()}
         {_renderNewPassword()}
         {_renderNewPasswordConfirm()}
@@ -125,8 +125,6 @@ const styles = StyleSheet.create({
   },
   buttonSend: {
     marginHorizontal: 20,
-    marginVertical: 40,
-
   },
   image: {
     width: 100,

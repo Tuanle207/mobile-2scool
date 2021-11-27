@@ -1,7 +1,7 @@
 import { CommonActions, useNavigation } from '@react-navigation/native'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert  } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { getClass } from '../api/class'
 import { postDcpReport } from '../api/mistake'
@@ -13,7 +13,7 @@ import { addClassMistake } from '../redux/action/mistake'
 import { RootState } from '../redux/reducer'
 import { DcpClassesReport, Faults } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 interface Props {
 
 }
@@ -166,7 +166,12 @@ const ReportInfo = (props: Props) => {
         <TouchableOpacity disabled={isEmpty}
           onPress={() => createDcpReport()}
           style={[mainStyle.buttonContainer, styles.buttonAdd, { backgroundColor: isEmpty ? 'gray' : color.blueStrong }]}>
-          <Text style={mainStyle.buttonTitle}>Gửi phiếu chấm</Text>
+                    <FontAwesome
+          name={'send-o'}
+          color={"white"}
+          size={24}
+        />
+          <Text style={[mainStyle.buttonTitle,{ fontSize: 18, marginHorizontal: 12 }]}>Gửi phiếu chấm</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -227,6 +232,8 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     backgroundColor: color.blueStrong,
-    marginBottom: 20
+    marginBottom: 20,
+     width:  widthDevice * 92 / 100,
+     flexDirection:'row'
   }
 })

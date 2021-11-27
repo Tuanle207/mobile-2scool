@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Image, SafeAreaView, StyleSheet, View, Text, Alert, TouchableOpacity } from 'react-native'
 import { getUserInfo, logout } from '../api/user'
 import { color } from '../assets/color'
-import { fontSize, widthDevice } from '../assets/size'
+import { fontSize, heightDevice, widthDevice } from '../assets/size'
 import HeaderHome from '../component/HeaderMain'
 import { mainStyle } from './mainStyle'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -31,7 +31,7 @@ const UserScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <HeaderHome title="Thông tin tài khoản" />
-      <View style={styles.mainContainer}>
+      <View style={[styles.mainContainer]}>
         <View style={styles.user}>
           <Image source={require('../assets/icon/user-photo.png')} />
           <View style={styles.contentContainer}>

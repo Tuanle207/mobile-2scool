@@ -157,16 +157,18 @@ const MistakeCreate = () => {
           />
         </View>
       </ScrollView>
-      <TouchableOpacity
-        onPress={() => addNewMistake()}
-        style={[mainStyle.buttonContainer, styles.buttonAdd]}>
-        <AntDesign
-          name={'plus'}
-          color={"white"}
-          size={30}
-        />
-        <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Thêm vi phạm</Text>
-      </TouchableOpacity>
+      <View style={{ height: 80, width: widthDevice, justifyContent: 'center', alignItems: 'center' }}>
+        <TouchableOpacity
+          onPress={() => addNewMistake()}
+          style={[mainStyle.buttonContainer, styles.buttonAdd]}>
+          <AntDesign
+            name={'plus'}
+            color={"white"}
+            size={30}
+          />
+          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Thêm vi phạm</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   )
 }
@@ -263,7 +265,6 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     backgroundColor: color.blueStrong,
-    marginBottom: 10,
     width: '92%',
     flexDirection: 'row'
   }

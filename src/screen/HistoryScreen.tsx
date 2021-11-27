@@ -19,6 +19,8 @@ const HistoryScreen = () => {
   const [datePicker, setDatePicker] = useState(false)
   const [listDcpReport, setListDcpReport] = useState([])
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [chooseDateStart, setChooseDateStart] = useState(new Date().toISOString());
+  const [chooseDateEnd, setChooseDateEnd] = useState(new Date().toISOString());
   const { pagingInfo, setPageIndex, setFilter } = usePagingInfo({
     filter: [
       {
@@ -71,7 +73,7 @@ const HistoryScreen = () => {
       <View style={styles.dateContainer}>
         <TouchableOpacity onPress={() => setDateFromPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? pagingInfo.filter[2].value.toString() : ''}
+            value={pagingInfo.filter ? moment(pagingInfo.filter[2].value.toString()).format("DD/MM/YYYY") : ''}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -86,7 +88,7 @@ const HistoryScreen = () => {
         <Text style={{ alignSelf: 'center' }}>_______</Text>
         <TouchableOpacity onPress={() => setDateToPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? pagingInfo.filter[3].value.toString() : ''}
+            value={pagingInfo.filter ? moment(pagingInfo.filter[3].value.toString()).format("DD/MM/YYYY") : ''}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -142,11 +144,13 @@ const HistoryScreen = () => {
       <DatePicker
         modal
         open={dateFromPicker}
-        date={new Date()}
+        date={new Date(chooseDateStart)}
         maximumDate={new Date()}
         mode={"date"}
         onConfirm={(date) => {
+
           setDateFromPicker(false);
+          setChooseDateStart(new Date(date).toISOString())
           setFilter({
             key: 'StartDate',
             comparison: '==',
@@ -164,10 +168,12 @@ const HistoryScreen = () => {
       <DatePicker
         modal
         open={dateToPicker}
-        date={new Date()}
+        date={new Date(chooseDateEnd)}
         mode={"date"}
         onConfirm={(date) => {
+
           setDateToPicker(false);
+          setChooseDateEnd(new Date(date).toISOString())
           setFilter({
             key: 'EndDate',
             comparison: '==',
@@ -179,7 +185,7 @@ const HistoryScreen = () => {
         onCancel={() => {
           setDateToPicker(false)
         }}
-        title={"Chọn ngày bắt đầu"}
+        title={"Chọn ngày kết thúc"}
         cancelText={"Thoát"}
         confirmText={"Chọn"}
       />
