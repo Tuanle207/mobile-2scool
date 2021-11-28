@@ -35,3 +35,13 @@ export const getAllDcpReports = async (input: any) => {
         throw error;
     }
 };
+export const delDcpReportsId = async (id: any) => {
+    try {
+        const endpoint = `api/app/dcp-reports/${id}`
+        const apiService = await getApiService();
+        const result = await apiService.delete(endpoint)
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};

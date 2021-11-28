@@ -8,7 +8,7 @@ import MistakeCreate from '../screen/MistakeCreate';
 import MistakeDetail from '../screen/MistakeDetail';
 import ReportInfo from '../screen/ReportInfo';
 import BottomTab from './BottomTab';
-
+import HistoryInfo from '../screen/HistoryInfo'
 const AppStack = () => {
   const Stack = createNativeStackNavigator();
 
@@ -32,6 +32,7 @@ const AppStack = () => {
       {_renderItemScreen('MistakeDetail', MistakeDetail)}
       {_renderItemScreen('LrReport', LrReport)}
       {_renderItemScreen('ChangePassword', ChangePassword)}
+      {_renderItemScreen('HistoryInfo', HistoryInfo)}
     </Stack.Navigator>
   )
 }

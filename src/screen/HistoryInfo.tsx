@@ -1,4 +1,4 @@
-import { CommonActions, useNavigation } from '@react-navigation/native'
+import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert  } from 'react-native'
@@ -14,42 +14,28 @@ import { RootState } from '../redux/reducer'
 import { DcpClassesReport, Faults } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-interface Props {
-
-}
-
-const ReportInfo = (props: Props) => {
+const HistoryInfo = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
-
-  const dcpReport = useSelector((state: RootState) => state.mistake)
-  const listClassReport = dcpReport.dcpClassReports
+  const route = useRoute();
+  const data: any = route.params
+  const listClassReport:any = data?.dcpClassReports
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
-  const listClassReportApi = listClassReport.filter(item => item.faults.length > 0)
   const [listClass, setListClass] = useState<Class[]>([])
-
   //check list empty
   const [isEmpty, setEmpty] = useState<boolean>(false);
   //Information list of votes
-  const [listClassReportState, setListClassReportState] = useState(listClassReportApi)
-  //list information in reducers
-  const [dcpReport1, setdcpRport1] = useState(dcpReport)
+  const [listClassReportState, setListClassReportState] = useState([])
 
   useEffect(() => {
     initClass()
   }, [])
 
-  useEffect(() => {
-    const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
-    var count = 0;
-    newListClassReport.map((item: DcpClassesReport, index: number) => {
-      if (newListClassReport[index].faults.length != 0) count++;
-    })
-    if (count === 0) {
-      setEmpty(true)
-    }
-    setdcpRport1(dcpReport);
-  }, [dcpReport?.dcpClassReports, dcpReport])
+  useEffect(()=>{
+    const listClassReportApi = listClassReport.filter((item:any) => item.faults.length > 0)
+    setListClassReportState(listClassReportApi)
+  },[])
+
 
   const initClass = async () => {
     try {
@@ -60,40 +46,18 @@ const ReportInfo = (props: Props) => {
       console.log(err)
     }
   }
-
-  const deleteClass = (item: DcpClassesReport) => {
-
-    const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
-    console.log(item, newListClassReport);
-    newListClassReport.map((item1:any, index:number)=>{
-      if(item?.classId ===item1?.classId){
-        newListClassReport[index].faults = []
-      }
-    })
-    dcpReport.dcpClassReports = newListClassReport
-    dispatch(addClassMistake(dcpReport))
-    const listClassReport1 = dcpReport1.dcpClassReports
-    const listClassReportApi = listClassReport1.filter(item => item.faults.length > 0)
-    setListClassReportState(listClassReportApi);
-    // navigation.dispatch(
-    //   CommonActions.navigate({
-    //     name: 'HomeScreen',
-    //   })
-    // )
-  }
-
   const _renderClass = (item: DcpClassesReport, index: number) => {
     const classInfo = listClass.find(classItem => classItem.id === item.classId)
     const className: any = classInfo?.name
-    const faultsInfo = item.faults.map((item: Faults) => {
+    const faultsInfo = item.faults.map((item: any) => {
       const faultInfo = listRegulationApi.find(fault => fault.id === item.regulationId)
       return {
         regulationName: faultInfo?.name,
         point: faultInfo?.point,
-        relatedStudentIds: item.relatedStudentIds
+        relatedStudentIds: item?.relatedStudents
       }
     })
-    const totalFault = faultsInfo.length
+    const totalFault = faultsInfo?.length
     const totalPoint = faultsInfo.reduce(((acc:number, cur:any) => acc + (cur.relatedStudentIds.length?cur?.point * cur.relatedStudentIds.length:cur?.point)), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
@@ -118,7 +82,7 @@ const ReportInfo = (props: Props) => {
           </Text>
         </View>
         <View style={styles.iconRemoveContainer}>
-          <TouchableOpacity onPress={() => deleteClass(item)}>
+          <TouchableOpacity onPress={() => {}}>
             <Image source={require('../assets/icon/remove.png')} style={styles.iconRemove} />
           </TouchableOpacity>
         </View>
@@ -126,59 +90,29 @@ const ReportInfo = (props: Props) => {
     )
   }
 
-  const createDcpReport = async () => {
-    try {
-      const res = await postDcpReport(dcpReport);
-      if (res) {
-        Alert.alert("Success", "Create DcpReport success", [
-          {
-            text: "OK", onPress: () => {
-              navigation.dispatch(
-                CommonActions.navigate({
-                  name: 'BottomTab',
-                })
-              )
-              const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
-
-              newListClassReport.map((item: DcpClassesReport, index: number) => {
-                newListClassReport[index].faults = [];
-              })
-              dcpReport.dcpClassReports = newListClassReport
-              dispatch(addClassMistake(dcpReport))
-            }
-          },
-        ],
-          { cancelable: false })
-      }
-    }
-    catch (err) {
-      console.log('errs', err)
-    }
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Thông tin phiếu chấm" />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
         <View>
-          {listClassReportState.map((item, index) => _renderClass(item, index))}
+          {listClassReportState.map((item:any, index:number) => _renderClass(item, index))}
         </View>
         <TouchableOpacity disabled={isEmpty}
-          onPress={() => createDcpReport()}
+          onPress={() =>{}}
           style={[mainStyle.buttonContainer, styles.buttonAdd, { backgroundColor: isEmpty ? 'gray' : color.blueStrong }]}>
                     <FontAwesome
           name={'send-o'}
           color={"white"}
           size={24}
         />
-          <Text style={[mainStyle.buttonTitle,{ fontSize: 18, marginHorizontal: 12 }]}>Gửi phiếu chấm</Text>
+          <Text style={[mainStyle.buttonTitle,{ fontSize: 18, marginHorizontal: 12 }]}>Cập nhật phiếu chấm</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   )
 }
 
-export default ReportInfo
+export default HistoryInfo
 
 const styles = StyleSheet.create({
   container: {

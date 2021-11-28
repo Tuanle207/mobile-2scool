@@ -1,10 +1,10 @@
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation , CommonActions} from '@react-navigation/native'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
-import { getAllDcpReports } from '../api/mistake'
+import { delDcpReportsId, getAllDcpReports } from '../api/mistake'
 import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import HeaderHome from '../component/HeaderMain'
@@ -105,10 +105,23 @@ const HistoryScreen = () => {
     )
   }
 
+  const onHanldeDel = async (value:any)=>{
+   const arrayDel = listDcpReport.filter((item:any)=>item?.id!==value?.id)
+   setListDcpReport(arrayDel);
+   const res = await delDcpReportsId(value?.id);
+  }
+
   const _renderItem = (item: any, index: number) => {
     console.log(item)
     return (
-      <View style={styles.itemContainer} key={index}>
+      <TouchableOpacity onPress ={()=> navigation.dispatch(
+        CommonActions.navigate({
+          name: 'HistoryInfo',
+          params: item
+          
+        })
+      )}
+       style={styles.itemContainer} key={index}>
         <View style={styles.infoContainer}>
           <Text style={styles.dateTime}>{`Phiếu chấm ngày ${moment(item?.creationTime).format("DD/MM/YYYY")}`}</Text>
           <View style={styles.line2Container}>
@@ -122,18 +135,17 @@ const HistoryScreen = () => {
             </View>
           </View>
         </View>
-        <TouchableOpacity>
-          <TouchableOpacity disabled={item?.status === "Created" ? false : true}
-          // onPress={() => removeMistake(index)}
-          >{item?.status == "Created" ?
+        {item?.status == "Created" ?
+        <TouchableOpacity onPress={()=>onHanldeDel(item)} disabled={item?.status === "Created" ? false : true}>
+
             <AntDesign
               name={'closecircleo'}
               color={"black"}
               size={24}
-            /> :null}
-          </TouchableOpacity>
+            /> 
         </TouchableOpacity>
-      </View>
+        :null}
+      </TouchableOpacity>
     )
   }
 
