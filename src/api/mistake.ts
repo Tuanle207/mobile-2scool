@@ -27,7 +27,7 @@ export const postDcpReport = async (params: DcpReport) => {
 
 export const getAllDcpReports = async (input: any) => {
     try {
-        const endpoint = `api/app/dcp-reports/paging`
+        const endpoint = `api/app/dcp-reports/get-my-reports`
         const apiService = await getApiService();
         const result = await apiService.post(endpoint, input)
         return result;
@@ -40,6 +40,16 @@ export const delDcpReportsId = async (id: any) => {
         const endpoint = `api/app/dcp-reports/${id}`
         const apiService = await getApiService();
         const result = await apiService.delete(endpoint)
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getAllLrReports = async (input: any) => {
+    try {
+        const endpoint = `api/app/lr-report/get-my-reports`
+        const apiService = await getApiService();
+        const result = await apiService.post(endpoint, input)
         return result;
     } catch (error) {
         throw error;

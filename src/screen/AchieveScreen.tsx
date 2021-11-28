@@ -1,10 +1,10 @@
-import { useNavigation, CommonActions } from '@react-navigation/native'
+import { useNavigation , CommonActions} from '@react-navigation/native'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
-import { getAllDcpReports } from '../api/mistake'
+import { delDcpReportsId, getAllDcpReports, getAllLrReports } from '../api/mistake'
 import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import HeaderHome from '../component/HeaderMain'
@@ -12,6 +12,7 @@ import usePagingInfo from '../ultil/usePagingInfo'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LoadingBase from '../component/LoadingBase'
+import { convertStatus, convertStatusColor } from '../utilities/convertData'
 const AchieveScreen = () => {
   const navigation = useNavigation()
   const [dateFromPicker, setDateFromPicker] = useState(false)
@@ -19,6 +20,8 @@ const AchieveScreen = () => {
   const [datePicker, setDatePicker] = useState(false)
   const [listDcpReport, setListDcpReport] = useState([])
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [chooseDateStart, setChooseDateStart] = useState(new Date().toISOString());
+  const [chooseDateEnd, setChooseDateEnd] = useState(new Date().toISOString());
   const { pagingInfo, setPageIndex, setFilter } = usePagingInfo({
     filter: [
       {
@@ -45,10 +48,12 @@ const AchieveScreen = () => {
   });
 
   useEffect(() => {
-    getHistoryDcpReports()
+    setIsLoading(true);
+    getHistoryLrpReports()
+
   }, [pagingInfo])
 
-  const getHistoryDcpReports = async () => {
+  const getHistoryLrpReports = async () => {
     setIsLoading(true);
     const input = {
       pageIndex: 1,
@@ -56,8 +61,9 @@ const AchieveScreen = () => {
       sortName: '',
       filter: pagingInfo.filter
     }
-    const res = await getAllDcpReports(input)
+    const res = await getAllLrReports(input)
     if (res?.status === 200) {
+      console.log(res)
       setIsLoading(false)
       setListDcpReport(res.data?.items)
     }
@@ -69,7 +75,7 @@ const AchieveScreen = () => {
       <View style={styles.dateContainer}>
         <TouchableOpacity onPress={() => setDateFromPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? pagingInfo.filter[2].value.toString() : ''}
+            value={pagingInfo.filter ? moment(pagingInfo.filter[2].value.toString()).format("DD/MM/YYYY") : ''}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -84,7 +90,7 @@ const AchieveScreen = () => {
         <Text style={{ alignSelf: 'center' }}>_______</Text>
         <TouchableOpacity onPress={() => setDateToPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? pagingInfo.filter[3].value.toString() : ''}
+            value={pagingInfo.filter ? moment(pagingInfo.filter[3].value.toString()).format("DD/MM/YYYY") : ''}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -100,41 +106,51 @@ const AchieveScreen = () => {
     )
   }
 
-  const _renderItem =  (item: any, index: number) => {
+  const onHanldeDel = async (value:any)=>{
+   const arrayDel = listDcpReport.filter((item:any)=>item?.id!==value?.id)
+   setListDcpReport(arrayDel);
+   const res = await delDcpReportsId(value?.id);
+  }
+  const _renderItem = (item: any, index: number) => {
+    console.log(item)
     return (
-      <View style={styles.itemContainer}>
+      <View style={styles.itemContainer}> 
         <View style={styles.infoContainer}>
           <View style={styles.line2Container}>
             <View style={styles.timeContainer}>
-              <Image source={require('../assets/icon/date.png')} />
-              <Text style={styles.line2Content}>{`03/10/2021`}</Text>
+            <Image source={require('../assets/icon/date.png')} />
+              <Text style={styles.line2Content}>{ moment(item?.creationTime).format("DD/MM/YYYY")}</Text>
             </View>
             <View style={styles.statusContainer}>
               <Image source={require('../assets/icon/status.png')} />
-              <Text style={[styles.line2Content, { color: 'red' }]}>{`Đã duyệt`}</Text>
+              <Text style={[styles.line2Content, { color: convertStatusColor(item?.status) }]}>{convertStatus(item?.status)}</Text>
+             
             </View>
           </View>
           <View style={styles.line2Container}>
             <View style={styles.timeContainer}>
               <Image source={require('../assets/icon/point.png')} />
-              <Text style={styles.line2Content}>{`9.98`}</Text>
+              <Text style={styles.line2Content}>{item?.totalPoint}</Text>
             </View>
             <View style={styles.statusContainer}>
               <Image source={require('../assets/icon/absent.png')} />
-              <Text style={styles.line2Content}>{`5`}</Text>
+              <Text style={styles.line2Content}>{item?.absenceNo}</Text>
             </View>
           </View>
         </View>
-        <TouchableOpacity>
-          <TouchableOpacity
-          // onPress={() => removeMistake(index)}
-          >
-            <Image source={require('../assets/icon/remove.png')} style={styles.iconRemove} />
-          </TouchableOpacity>
+        {item?.status == "Created" ?
+        <TouchableOpacity onPress={()=>onHanldeDel(item)} disabled={item?.status === "Created" ? false : true}>
+            <AntDesign
+              name={'closecircleo'}
+              color={"black"}
+              size={24}
+            /> 
         </TouchableOpacity>
+        :null}
       </View>
     )
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <HeaderHome title="Thành tích" />
@@ -143,11 +159,13 @@ const AchieveScreen = () => {
       <DatePicker
         modal
         open={dateFromPicker}
-        date={new Date()}
+        date={new Date(chooseDateStart)}
         maximumDate={new Date()}
         mode={"date"}
         onConfirm={(date) => {
+
           setDateFromPicker(false);
+          setChooseDateStart(new Date(date).toISOString())
           setFilter({
             key: 'StartDate',
             comparison: '==',
@@ -165,10 +183,12 @@ const AchieveScreen = () => {
       <DatePicker
         modal
         open={dateToPicker}
-        date={new Date()}
+        date={new Date(chooseDateEnd)}
         mode={"date"}
         onConfirm={(date) => {
+
           setDateToPicker(false);
+          setChooseDateEnd(new Date(date).toISOString())
           setFilter({
             key: 'EndDate',
             comparison: '==',
@@ -180,7 +200,7 @@ const AchieveScreen = () => {
         onCancel={() => {
           setDateToPicker(false)
         }}
-        title={"Chọn ngày bắt đầu"}
+        title={"Chọn ngày kết thúc"}
         cancelText={"Thoát"}
         confirmText={"Chọn"}
       />
