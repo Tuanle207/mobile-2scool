@@ -60,8 +60,28 @@ export const postCreateLrReports = async (body: any) => {
     try {
         const endpoint = `api/app/lr-report`
         const apiService = await getApiServiceFormData();
-        console.log("apiService, ",apiService)
         const result = await apiService.post(endpoint, body)
+        return result;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+export const delLrpReportsId = async (id: any) => {
+    try {
+        const endpoint = `api/app/lr-report/${id}`
+        const apiService = await getApiService();
+        const result = await apiService.delete(endpoint)
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
+export const postUpdateLrReports = async (body: any, id:string) => {
+    try {
+        const endpoint = `api/app/lr-report/${id}`
+        const apiService = await getApiServiceFormData();
+        const result = await apiService.put(endpoint, body)
         return result;
     } catch (error) {
         console.log(error);

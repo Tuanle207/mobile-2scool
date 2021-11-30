@@ -4,7 +4,7 @@ import React, { useEffect, useState , useCallback} from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
-import { delDcpReportsId, getAllDcpReports, getAllLrReports } from '../api/mistake'
+import { delDcpReportsId, delLrpReportsId, getAllDcpReports, getAllLrReports } from '../api/mistake'
 import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import HeaderHome from '../component/HeaderMain'
@@ -110,12 +110,18 @@ const AchieveScreen = () => {
   const onHanldeDel = async (value:any)=>{
    const arrayDel = listDcpReport.filter((item:any)=>item?.id!==value?.id)
    setListDcpReport(arrayDel);
-   const res = await delDcpReportsId(value?.id);
+   const res = await delLrpReportsId(value?.id);
+   console.log(res)
   }
   const _renderItem = (item: any, index: number) => {
     console.log(item)
     return (
-      <View style={styles.itemContainer}> 
+      <TouchableOpacity onPress={() => navigation.dispatch(
+        CommonActions.navigate({
+          name: 'LrReport',
+          params:item
+        })
+      )} style={styles.itemContainer}> 
         <View style={styles.infoContainer}>
           <View style={styles.line2Container}>
             <View style={styles.timeContainer}>
@@ -148,7 +154,7 @@ const AchieveScreen = () => {
             /> 
         </TouchableOpacity>
         :null}
-      </View>
+      </TouchableOpacity>
     )
   }
 

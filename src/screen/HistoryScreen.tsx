@@ -1,6 +1,6 @@
-import { useNavigation , CommonActions} from '@react-navigation/native'
+import { useNavigation , CommonActions, useFocusEffect} from '@react-navigation/native'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState , useCallback} from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
@@ -47,11 +47,12 @@ const HistoryScreen = () => {
     ]
   });
 
-  useEffect(() => {
-    setIsLoading(true);
-    getHistoryDcpReports()
-
-  }, [pagingInfo])
+  useFocusEffect(
+    useCallback(() => {
+      setIsLoading(true);
+      getHistoryDcpReports()
+    }, [pagingInfo]),
+  );
 
   const getHistoryDcpReports = async () => {
     setIsLoading(true);
