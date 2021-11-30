@@ -1,5 +1,6 @@
 import { DcpReport } from "../redux/reducer/mistake"
 import { getApiService } from "./BaseApiService"
+import { getApiServiceFormData } from "./BaseApiServiceFormData.ts"
 
 export const getCriteria = async () => {
     const endpoint = `/api/app/criteria/simple-list`
@@ -52,6 +53,18 @@ export const getAllLrReports = async (input: any) => {
         const result = await apiService.post(endpoint, input)
         return result;
     } catch (error) {
+        throw error;
+    }
+};
+export const postCreateLrReports = async (body: any) => {
+    try {
+        const endpoint = `api/app/lr-report`
+        const apiService = await getApiServiceFormData();
+        console.log("apiService, ",apiService)
+        const result = await apiService.post(endpoint, body)
+        return result;
+    } catch (error) {
+        console.log(error);
         throw error;
     }
 };

@@ -1,28 +1,109 @@
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState } from 'react'
-import { Image, KeyboardAvoidingView, SafeAreaView,Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View, Platform, ScrollView } from 'react-native'
+import { Image, KeyboardAvoidingView, SafeAreaView, Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, Alert, View, Platform, ScrollView } from 'react-native'
 import { color } from '../assets/color'
-import { fontSize, heightDevice } from '../assets/size'
+import { fontSize, heightDevice, widthDevice } from '../assets/size'
 import Header from '../component/Header'
 import { mainStyle } from './mainStyle'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-const {height, width} = Dimensions.get('screen')
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { launchImageLibrary } from 'react-native-image-picker';
+import { postCreateLrReports } from '../api/mistake'
+import { getClassLrReport } from '../api/class'
+const { height, width } = Dimensions.get('screen')
 const LrReport = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const [point, setPoint] = useState('')
   const [absent, setAbsent] = useState('')
+  const [listImage, setListImage] = useState<any>({})
+  const chooseFile = () => {
+    let options: any = {
+      title: 'Select Image',
+      includeBase64: true,
+      customButtons: [
+        {
+          name: 'customOptionKey',
+          title: 'Choose Photo from Custom Option',
+        },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    launchImageLibrary(options, (response: any) => {
 
+      if (response?.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response?.error) {
+        console.log('ImagePicker Error: ', response?.error);
+      } else if (response?.customButton) {
+        console.log('User tapped custom button: ', response?.customButton);
+      } else {
+        var source: any = response?.assets[0];
+        // let base64 = 'data:image/jpeg;base64,' + source?.base64;
+        setListImage(source)
+      }
+    });
+  };
+  const hanldeDelImage = () => {
+    setListImage({});
+  }
+
+  const onHanldeSendAchieve = async () => {
+    if (checkData()) {
+      const res: any = await getClassLrReport();
+      console.log("res", res?.data)
+      const objectImage: any = listImage;
+      if (res?.data?.items[0]?.id) {
+        let s = { uri: objectImage?.uri, name: objectImage?.fileName, type: objectImage?.type };
+        let formData = new FormData();
+        formData.append('ClassId', "9a0d26bf-3a1e-0b55-3385-39ff62e91b22");
+        formData.append('AbsenceNo', Number(absent));
+        formData.append('TotalPoint', Number(point));
+        formData.append('Photo', s);
+        const res1 = await postCreateLrReports(formData);
+        console.log("res", res1)
+        if (res1 && res1?.status === 200) {
+          navigation.goBack()
+        } else { Alert.alert("Thất bại", "Tạo mới thất bại") }
+      } else { Alert.alert("Thất bại", "Tạo mới thất bại") }
+    } else { Alert.alert("Thất bại", "Tạo mới thất bại") }
+  }
+  const checkData = () => {
+    if (absent && point && listImage?.uri) return true;
+    else return false
+  }
   const _renderImage = () => {
     return (
       <View style={styles.iamgeContainer}>
         <Text style={styles.title}>Ảnh sổ đầu bài</Text>
-        <TouchableOpacity style={styles.image}>
-          <Text style={styles.iconPlus}>+</Text>
-          <Text style={styles.titleButtonImage}>Image</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity onPress={() => { chooseFile() }}
+            style={[styles.image, { marginRight: 12 }]}>
+            <Text style={styles.iconPlus}>+</Text>
+            <Text style={styles.titleButtonImage}>Image</Text>
+          </TouchableOpacity>
+          <ScrollView style={{ height: 100, width: widthDevice - 130 }} horizontal>
+            {listImage?.base64 &&
+              <View style={styles.image}>
+                <Image source={{ uri: `data:image/jpeg;base64,${listImage?.base64}` }} style={styles.image} />
+                <TouchableOpacity onPress={() => hanldeDelImage()}
+                  style={styles.delImage}>
+                  <AntDesign
+                    name={'closecircle'}
+                    color={"white"}
+                    size={24}
+                  />
+                </TouchableOpacity>
+              </View>}
+          </ScrollView>
+
+        </View>
+
         <TouchableOpacity
-          onPress={() => { }}
+
           style={[mainStyle.buttonContainer, styles.buttonAdd]}>
           <Text style={mainStyle.buttonTitle}>Kiểm tra ảnh</Text>
         </TouchableOpacity>
@@ -64,27 +145,27 @@ const LrReport = () => {
 
   return (
 
-    <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>
 
       <Header title="Thêm thành tích" />
       <ScrollView style={styles.mainContainer}>
-      <View style={{flex:1, padding:20, height:heightDevice-175}}>
-        {_renderImage()}
-        {_renderPoint()}
-        {_renderAbsent()}
+        <View style={{ flex: 1, padding: 20, height: heightDevice - 175 }}>
+          {_renderImage()}
+          {_renderPoint()}
+          {_renderAbsent()}
         </View>
-      <TouchableOpacity
-        onPress={() => { }}
-        style={[mainStyle.buttonContainer, styles.buttonSend]}>
+        <TouchableOpacity
+          onPress={() => { onHanldeSendAchieve() }}
+          style={[mainStyle.buttonContainer, styles.buttonSend,]}>
           <FontAwesome
-          name={'send-o'}
-          color={"white"}
-          size={24}
-        />
-        <Text style={[mainStyle.buttonTitle,{marginHorizontal:12, fontSize:18}]}>Gửi phiếu thành tích</Text>
-      </TouchableOpacity>
+            name={'send-o'}
+            color={"white"}
+            size={24}
+          />
+          <Text style={[mainStyle.buttonTitle, { marginHorizontal: 12, fontSize: 18 }]}>Gửi phiếu thành tích</Text>
+        </TouchableOpacity>
       </ScrollView>
-      </KeyboardAvoidingView>
+    </KeyboardAvoidingView>
 
   )
 }
@@ -95,7 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
   },
   mainContainer: {
-    flex: 1,  
+    flex: 1,
   },
   buttonAdd: {
     height: 35,
@@ -119,11 +200,12 @@ const styles = StyleSheet.create({
     borderColor: color.border
   },
   buttonSend: {
-    marginTop:50,
- alignSelf:'center',
- marginBottom:20,
-    flexDirection:'row',
-    width:'92%',alignItems:'center'},
+    marginTop: 50,
+    alignSelf: 'center',
+    marginBottom: 20,
+    flexDirection: 'row',
+    width: '92%', alignItems: 'center'
+  },
   image: {
     width: 100,
     height: 100,
@@ -132,9 +214,9 @@ const styles = StyleSheet.create({
     borderColor: color.border,
     marginBottom: 15,
     backgroundColor: 'white',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-  iconPlus : {
+  iconPlus: {
     color: color.border,
     fontSize: 50,
     flex: 3,
@@ -144,7 +226,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: fontSize.title,
     flex: 2
-  }
+  },
+  delImage: { position: 'absolute', top: 0, right: 0 }
 })
 
 export default LrReport

@@ -5,3 +5,9 @@ export const getClass = async () => {
     const axios = await getApiService();
     return axios.get(endpoint);
 };
+
+export const getClassLrReport = async () => {
+    const endpoint = `/api/app/task-assigment/assigned-class-for-dcp-report?taskType=LessonRegisterReport`;
+    const axios = await getApiService();
+    return axios.get(endpoint);
+};
