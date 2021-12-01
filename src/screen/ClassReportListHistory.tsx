@@ -6,8 +6,9 @@ import { color } from '../assets/color'
 import { fontSize } from '../assets/size'
 import Header from '../component/Header'
 import { addClassMistake } from '../redux/action/mistake'
+import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 import { RootState } from '../redux/reducer'
-import { DcpClassesReport, DcpReport, Faults } from '../redux/reducer/mistake'
+import { DcpClassesReport, DcpReport, Faults } from '../redux/reducer/mistakeHistory'
 import { mainStyle } from './mainStyle'
 
 interface FaultInfo {
@@ -16,9 +17,9 @@ interface FaultInfo {
   relatedStudentIds: string[],
 }
 
-const ClassReportList = () => {
+const ClassReportListHistory = () => {
   const dispatch = useDispatch()
-  const dcpReport = useSelector((state: RootState) => state.mistake)
+  const dcpReport = useSelector((state: RootState) => state.mistakeHistory)
   console.log("ClassReportListHistory", dcpReport)
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const navigation = useNavigation()
@@ -35,7 +36,7 @@ const ClassReportList = () => {
     }
   })
   const listPointOfFault = faultsInfo.map((item: FaultInfo) => {
-    if (item.relatedStudentIds.length===0){
+    if (item.relatedStudentIds.length==0){
       return item.point
     }else
     return item.point * item.relatedStudentIds.length
@@ -50,7 +51,7 @@ const ClassReportList = () => {
     const newDcpClassReports = newDcpReport.dcpClassReports
     newDcpClassReports[indexClassMistake] = classMistake
     newDcpReport.dcpClassReports = newDcpClassReports
-    dispatch(addClassMistake(newDcpReport))
+    dispatch(addClassMistakeHistory(newDcpReport))
   }
 
   const _renderMistake = (item: FaultInfo, index: number) => {
@@ -58,7 +59,7 @@ const ClassReportList = () => {
       <TouchableOpacity
         onPress={() => navigation.dispatch(
           CommonActions.navigate({
-            name: 'MistakeDetail',
+            name: 'MistakeDetailHistory',
             params: {
               classInfo: classInfo,
               fault: item,
@@ -95,18 +96,15 @@ const ClassReportList = () => {
         </View>
         <View style={styles.footerContainer}>
           <TouchableOpacity
-            onPress={() => navigation.dispatch(
-              CommonActions.navigate({
-                name: 'BottomTab',
-              })
-            )}
+            onPress={() => navigation.goBack()
+            }
             style={[mainStyle.buttonContainer, styles.buttonDone]}>
             <Text style={mainStyle.buttonTitle}>Xong</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.dispatch(
               CommonActions.navigate({
-                name: 'MistakeCreate',
+                name: 'MistakeCreateHistory',
                 params: classInfo
               })
             )}
@@ -190,4 +188,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default ClassReportList
+export default ClassReportListHistory

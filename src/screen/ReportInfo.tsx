@@ -71,6 +71,7 @@ const ReportInfo = (props: Props) => {
       }
     })
     dcpReport.dcpClassReports = newListClassReport
+    console.log("dcpReport", dcpReport)
     dispatch(addClassMistake(dcpReport))
     const listClassReport1 = dcpReport1.dcpClassReports
     const listClassReportApi = listClassReport1.filter(item => item.faults.length > 0)
@@ -128,9 +129,13 @@ const ReportInfo = (props: Props) => {
 
   const createDcpReport = async () => {
     try {
-      const res = await postDcpReport(dcpReport);
+      // const res = await postDcpReport(dcpReport);
+      console.log('dcpReport', dcpReport)
+      const listDcReport = dcpReport.dcpClassReports.filter(item=>item?.faults.length !=0)
+      const requestDcReport ={dcpClassReports:listDcReport}
+            const res = await postDcpReport(requestDcReport);
       if (res) {
-        Alert.alert("Success", "Create DcpReport success", [
+        Alert.alert("Thành công", "Gửi phiếu chấm thành công", [
           {
             text: "OK", onPress: () => {
               navigation.dispatch(
@@ -139,11 +144,13 @@ const ReportInfo = (props: Props) => {
                 })
               )
               const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
-
               newListClassReport.map((item: DcpClassesReport, index: number) => {
                 newListClassReport[index].faults = [];
               })
               dcpReport.dcpClassReports = newListClassReport
+              
+console.log("dcpReport", dcpReport);
+
               dispatch(addClassMistake(dcpReport))
             }
           },

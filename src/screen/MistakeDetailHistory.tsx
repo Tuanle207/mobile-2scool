@@ -1,43 +1,49 @@
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Alert, Image, KeyboardAvoidingView, Modal, SafeAreaView,Platform, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import MultiSelect from 'react-native-multiple-select'
 import { useDispatch, useSelector } from 'react-redux'
 import { getStudent } from '../api/mistake'
 import { color } from '../assets/color'
 import { fontSize, heightDevice, widthDevice } from '../assets/size'
 import Header from '../component/Header'
-import { TYPE_PICKER } from '../constant'
-import { Regulation, Student } from '../model/Mistake'
-import { addClassMistake } from '../redux/action/mistake'
+import { Student } from '../model/Mistake'
 import { RootState } from '../redux/reducer'
 import { DcpReport } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
-import AntDesign from 'react-native-vector-icons/AntDesign'
+import { Regulation} from '../model/Mistake'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 
-const MistakeCreate = () => {
+const MistakeDetailHistory= () => {
   const navigation = useNavigation()
-  const dcpReport = useSelector((state: RootState) => state.mistake)
-  const listRegulationApi = useSelector((state: RootState) => state.regulation)
+  const dcpReport = useSelector((state: RootState) => state.mistakeHistory)
+  const listRegulation = useSelector((state: RootState) => state.regulation)
   const listCriteria = useSelector((state: RootState) => state.criteria)
+  const [listRegulation1, setListRegulation1] = useState<Regulation[]>([])
   const dispatch = useDispatch()
   const route = useRoute()
-  const classInfo: any = route.params
-
-  const [listRegulation, setListRegulation] = useState<Regulation[]>([])
+  const { classInfo, fault, indexFault }: any = route.params
   const [listStudent, setListStudent] = useState<Student[]>([])
+  const [listPicker, setListPicker] = useState<any[]>([])
   const [criteria, setCriteria] = useState('')
-  const [regulation, setRegulation] = useState('')
-  const [studentMistake, setStudentMistake] = useState<Student[]>([])
+  const [regulation, setRegulation] = useState(fault.regulationId)
+  const [regulationName, setRegulationName] = useState(fault.regulationName)
+  const [studentMistake, setStudentMistake] = useState<Student[]>(fault.relatedStudentIds)
+  const [modalType, setModalType] = useState<string | null>(null)
+  const [point, setPoint] = useState(fault.point)
+  const [isEdit, setIsEdit] = useState(false)
 
   useEffect(() => {
     initStudent()
   }, [])
-
-  useEffect(() => {
-    if (criteria === '') setListRegulation([])
-    else setListRegulation(listRegulationApi.filter(item => item.criteriaId === criteria))
-  }, [criteria])
+  useEffect(()=>{
+    console.log("listCriteria", listRegulation,  classInfo, fault, indexFault);
+  const dataRegulation:any = listRegulation.find(item => item.id === fault?.regulationId);
+  console.log(dataRegulation)
+  setCriteria(dataRegulation?.criteriaId);
+  setListRegulation1(listRegulation.filter((item:any) => item.criteriaId === dataRegulation?.criteriaId));
+  },[])
 
 
   const initStudent = async () => {
@@ -45,31 +51,33 @@ const MistakeCreate = () => {
       const res: any = await getStudent(classInfo.id)
       setListStudent(res.data.students)
     } catch (err) {
+      console.log('err3')
       Alert.alert('Error')
     }
   }
+  useEffect(() => {
+    if (criteria === '') setListRegulation1([])
+    else setListRegulation1(listRegulation.filter(item => item.criteriaId === criteria))
+  }, [criteria])
 
-  const addNewMistake = () => {
+  const editMistake = () => {
+    if (!isEdit) return setIsEdit(true)
     if (regulation === '') return Alert.alert('Thông báo', 'Vui lòng chọn vi phạm')
     const mistake = {
       regulationId: regulation,
+      regulationName: regulationName,
       relatedStudentIds: studentMistake,
+      point: point
     }
     const newDcpReport: DcpReport = JSON.parse(JSON.stringify(dcpReport))
-    console.log('newDcpReport', newDcpReport, dcpReport)
     const classMistake: any = newDcpReport.dcpClassReports.find(item => item.classId === classInfo.id)
     const indexClassMistake = newDcpReport.dcpClassReports.findIndex(item => item.classId === classInfo.id)
-    classMistake.faults = [...classMistake.faults, mistake]
+    classMistake.faults.splice(indexFault, 1, mistake)
     const newDcpClassReports = newDcpReport.dcpClassReports
     newDcpClassReports[indexClassMistake] = classMistake
     newDcpReport.dcpClassReports = newDcpClassReports
-
-    dispatch(addClassMistake(newDcpReport))
+    dispatch(addClassMistakeHistory(newDcpReport))
     navigation.goBack()
-  }
-
-  const onSelectStudentChange = (e: any) => {
-    setStudentMistake(e)
   }
 
   const onSelectCriteria = (e: any) => {
@@ -80,11 +88,15 @@ const MistakeCreate = () => {
     setRegulation(e[0])
   }
 
+  const onSelectStudentChange = (e: any) => {
+    setStudentMistake(e)
+  }
+
   return (
-    <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null}  style={styles.container}>
-      <Header title="Thêm vi phạm" />
+    <SafeAreaView style={styles.container}>
+      <Header title="Chi tiết vi phạm" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
-        <View style={[styles.contentContainer,{paddingHorizontal:widthDevice * 3 / 100,}]}>
+        <View style={styles.contentContainer}>
           <MultiSelect
             fixedHeight
             single
@@ -97,7 +109,7 @@ const MistakeCreate = () => {
             searchInputPlaceholderText='Tên tiêu chí'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            onChangeInput={(text) => console.warn(text)}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -114,7 +126,7 @@ const MistakeCreate = () => {
             fixedHeight
             single
             styleMainWrapper={styles.criteria}
-            items={listRegulation}
+            items={listRegulation1}
             uniqueKey='id'
             onSelectedItemsChange={onSelectRegulation}
             selectedItems={[regulation]}
@@ -135,6 +147,7 @@ const MistakeCreate = () => {
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
+
           <MultiSelect
             items={listStudent}
             uniqueKey='id'
@@ -145,7 +158,7 @@ const MistakeCreate = () => {
             searchInputPlaceholderText='Tên học sinh'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            onChangeInput={(text) => console.warn(text)}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -157,21 +170,20 @@ const MistakeCreate = () => {
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
+
         </View>
-        <View style={{ height: 80, width: widthDevice, justifyContent: 'center', alignItems: 'center', marginTop:100 }}>
-        <TouchableOpacity
-          onPress={() => addNewMistake()}
-          style={[mainStyle.buttonContainer, styles.buttonAdd]}>
-          <AntDesign
-            name={'plus'}
-            color={"white"}
-            size={30}
-          />
-          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Thêm vi phạm</Text>
-        </TouchableOpacity>
-      </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+      <TouchableOpacity
+        onPress={() => editMistake()}
+        style={[mainStyle.buttonContainer, styles.buttonAdd]}>
+          <MaterialCommunityIcons
+          name={'update'}
+          color={"white"}
+          size={30}
+        />
+        <Text style={[mainStyle.buttonTitle,{ fontSize: 18, marginHorizontal: 12 }]}>{isEdit ? 'Hoàn thành' : 'Cập nhật'}</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   )
 }
 
@@ -188,8 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
   },
   contentContainer: {
-    // flex: 1,
-    width:widthDevice
+    flex: 1,
   },
   criteria: {
     marginTop: '15%',
@@ -197,7 +208,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: 'gray',
     borderRadius: 5,
-    // borderWidth: 0.5,
+    borderWidth: 0.5,
     paddingLeft: 15,
     paddingRight: 5,
   },
@@ -217,9 +228,9 @@ const styles = StyleSheet.create({
   studentContainer: {
     marginTop: '15%',
     backgroundColor: 'white',
-    // borderColor: 'gray',
+    borderColor: 'gray',
     borderRadius: 5,
-    // borderWidth: 0.5,
+    borderWidth: 0.5,
     paddingLeft: 15,
     paddingRight: 5,
     width: widthDevice * 92 / 100,
@@ -268,9 +279,11 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     backgroundColor: color.blueStrong,
+    marginBottom: 10,
+    // position: 'absolute',
     width: '92%',
-    flexDirection: 'row'
+    flexDirection:'row'
   }
 })
 
-export default MistakeCreate
+export default MistakeDetailHistory

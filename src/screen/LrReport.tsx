@@ -203,7 +203,8 @@ const LrReport = () => {
           {_renderPoint()}
           {_renderAbsent()}
         </View>
-        <TouchableOpacity
+
+        <TouchableOpacity disabled={item?.id &&item?.status!="Created"?true:false}
           onPress={() => { item?.id ? onHanldeUpdateAchieve() : onHanldeSendAchieve() }}
           style={[mainStyle.buttonContainer, styles.buttonSend,]}>
           <FontAwesome

@@ -41,8 +41,8 @@ const AchieveScreen = () => {
       },
       {
         key: 'EndDate',
-        comparison: '!=',
-        value: moment().add(10, 'days').calendar()
+        comparison: '==',
+        value: moment().format('MM/DD/YYYY')
       }
     ]
   });
@@ -170,7 +170,6 @@ const AchieveScreen = () => {
         maximumDate={new Date()}
         mode={"date"}
         onConfirm={(date) => {
-
           setDateFromPicker(false);
           setChooseDateStart(new Date(date).toISOString())
           setFilter({

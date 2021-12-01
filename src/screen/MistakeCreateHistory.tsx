@@ -9,15 +9,15 @@ import { fontSize, heightDevice, widthDevice } from '../assets/size'
 import Header from '../component/Header'
 import { TYPE_PICKER } from '../constant'
 import { Regulation, Student } from '../model/Mistake'
-import { addClassMistake } from '../redux/action/mistake'
 import { RootState } from '../redux/reducer'
-import { DcpReport } from '../redux/reducer/mistake'
+import { DcpReport } from '../redux/reducer/mistakeHistory'
 import { mainStyle } from './mainStyle'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 
-const MistakeCreate = () => {
+const MistakeCreateHistory = () => {
   const navigation = useNavigation()
-  const dcpReport = useSelector((state: RootState) => state.mistake)
+  const dcpReport = useSelector((state: RootState) => state.mistakeHistory)
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const listCriteria = useSelector((state: RootState) => state.criteria)
   const dispatch = useDispatch()
@@ -64,7 +64,7 @@ const MistakeCreate = () => {
     newDcpClassReports[indexClassMistake] = classMistake
     newDcpReport.dcpClassReports = newDcpClassReports
 
-    dispatch(addClassMistake(newDcpReport))
+    dispatch(addClassMistakeHistory(newDcpReport))
     navigation.goBack()
   }
 
@@ -273,4 +273,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default MistakeCreate
+export default MistakeCreateHistory
