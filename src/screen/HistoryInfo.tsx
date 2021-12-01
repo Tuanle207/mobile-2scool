@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { getClass } from '../api/class'
-import { postDcpReport } from '../api/mistake'
+import { postDcpReport, putEditDcpReport } from '../api/mistake'
 import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import Header from '../component/Header'
@@ -20,7 +20,7 @@ const HistoryInfo = () => {
   const route = useRoute();
   const dcpReportHistory = useSelector((state: RootState) => state.mistakeHistory)
   const data: any = route.params
-  const listClassReport: any = data?.dcpClassReports
+  const listClassReport: any = dcpReportHistory?.dcpClassReports
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const [listClass, setListClass] = useState<Class[]>([])
   //check list empty
@@ -33,11 +33,11 @@ const HistoryInfo = () => {
   }, [])
 
   useEffect(() => {
-
+    console.log(data)
     const listClassReportApi = listClassReport.filter((item: any) => item.faults.length > 0)
     console.log(listClassReport)
     setListClassReportState(listClassReportApi)
-  }, [])
+  }, [dcpReportHistory?.dcpClassReports, dcpReportHistory])
 
 
   const initClass = async () => {
@@ -45,33 +45,33 @@ const HistoryInfo = () => {
       const res: any = await getClass();
       console.log(res)
       setListClass(res.data.items)
-      addListClassMistake(res.data.items)
+      onHandleSaveRedux(res.data.items)
     } catch (err) {
       Alert.alert("Error")
       console.log(err)
     }
   }
 
-  const addListClassMistake = (listClass: Class[]) => {
+  // const addListClassMistake = (listClass: Class[]) => {
 
-    // if (dcpReportHistory.dcpClassReports.length > 0) return
-    const listClassMistake = listClass.map(item => {
-      return {
-        classId: item.id,
-        faults: [] as Faults[]
-      }
-    })
-    const dcpClassReports = {
-      dcpClassReports: listClassMistake
-    }
-    console.log("listClassReport", dcpClassReports)
-    dispatch(addClassMistakeHistory(dcpClassReports))
-  }
+  //   // if (dcpReportHistory.dcpClassReports.length > 0) return
+  //   const listClassMistake = listClass.map(item => {
+  //     return {
+  //       classId: item.id,
+  //       faults: [] as Faults[]
+  //     }
+  //   })
+  //   const dcpClassReports = {
+  //     dcpClassReports: listClassMistake
+  //   }
+  //   console.log("listClassReport", dcpClassReports)
+  //   dispatch(addClassMistakeHistory(dcpClassReports))
+  // }
   useEffect(() => {
     // useCallback(() => {
     console.log(dcpReportHistory)
   }, [dcpReportHistory])
-  const onHandleSaveRedux = () => {
+  const onHandleSaveRedux = (listClass:Class[]) => {
     var listClassMistake = listClass.map(item => {
       return {
         classId: item.id,
@@ -80,7 +80,7 @@ const HistoryInfo = () => {
     })
 
     listClassMistake.map((item: any, index: number) => {
-      listClassReport.map((item1: any) => {
+      data?.dcpClassReports.map((item1: any) => {
         if (item1?.classId == item?.classId) {
 
           var dataFaults: Faults[] = [];
@@ -108,23 +108,26 @@ const HistoryInfo = () => {
 
     dispatch(addClassMistakeHistory(dcpClassReports))
   }
+
   const _renderClass = (item: DcpClassesReport, index: number) => {
     const classInfo = listClass.find(classItem => classItem.id === item.classId)
     const className: any = classInfo?.name
     const faultsInfo = item.faults.map((item: any) => {
+      console.log("item",item)
       const faultInfo = listRegulationApi.find(fault => fault.id === item.regulationId)
       return {
         regulationName: faultInfo?.name,
         point: faultInfo?.point,
-        relatedStudentIds: item?.relatedStudents
+        relatedStudentIds: item?.relatedStudentIds
       }
     })
     const totalFault = faultsInfo?.length
+    console.log("totalFault",faultsInfo )
     const totalPoint = faultsInfo.reduce(((acc: number, cur: any) => acc + (cur?.relatedStudentIds?.length ? cur?.point * cur?.relatedStudentIds?.length : cur?.point)), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
         onPress={() => {
-          onHandleSaveRedux();
+          // onHandleSaveRedux();
           navigation.dispatch(
             CommonActions.navigate({
               name: 'ClassReportListHistory',
@@ -155,6 +158,35 @@ const HistoryInfo = () => {
     )
   }
 
+  const EditDcReport = async () => {
+    try {
+      // const res = await postDcpReport(dcpReport);
+      const listDcReport = dcpReportHistory.dcpClassReports.filter(item=>item?.faults.length !=0)
+      const requestDcReport ={dcpClassReports:listDcReport}
+            const res = await putEditDcpReport(requestDcReport, data?.id );
+      if (res) {
+        Alert.alert("Thành công", "Cập nhật phiếu chấm thành công", [
+          {
+            text: "OK", onPress: () => {
+              navigation.goBack();
+              const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
+              newListClassReport.map((item: DcpClassesReport, index: number) => {
+                newListClassReport[index].faults = [];
+              })
+              dcpReportHistory.dcpClassReports = newListClassReport
+              
+              dispatch(addClassMistakeHistory(dcpReportHistory))
+            }
+          },
+        ],
+          { cancelable: false })
+      }
+    }
+    catch (err) {
+      console.log('errs', err)
+    }
+  }
+  
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Thông tin phiếu chấm" />
@@ -163,7 +195,7 @@ const HistoryInfo = () => {
           {listClassReportState.map((item: any, index: number) => _renderClass(item, index))}
         </View>
         <TouchableOpacity disabled={isEmpty}
-          onPress={() => { }}
+          onPress={() => { EditDcReport()}}
           style={[mainStyle.buttonContainer, styles.buttonAdd, { backgroundColor: isEmpty ? 'gray' : color.blueStrong }]}>
           <FontAwesome
             name={'send-o'}

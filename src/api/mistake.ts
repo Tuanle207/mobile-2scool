@@ -88,3 +88,8 @@ export const postUpdateLrReports = async (body: any, id:string) => {
         throw error;
     }
 };
+export const putEditDcpReport = async (params: DcpReport, id:string) => {
+    const endpoint = `api/app/dcp-reports/${id}`
+    const axios = await getApiService()
+    return axios.put(endpoint, params)
+}

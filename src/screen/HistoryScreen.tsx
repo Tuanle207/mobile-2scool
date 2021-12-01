@@ -41,7 +41,7 @@ const HistoryScreen = () => {
       },
       {
         key: 'EndDate',
-        comparison: '!=',
+        comparison: '==',
         value: moment().add(10, 'days').calendar()
       }
     ]
