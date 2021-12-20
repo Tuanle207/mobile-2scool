@@ -1,13 +1,13 @@
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState } from 'react'
-import { Image, KeyboardAvoidingView, SafeAreaView, Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, Alert, View, Platform, ScrollView } from 'react-native'
+import { Image, KeyboardAvoidingView, SafeAreaView, Dimensions, StyleSheet, Text, TextInput, TouchableOpacity,PermissionsAndroid, Alert, View, Platform, ScrollView } from 'react-native'
 import { color } from '../assets/color'
 import { fontSize, heightDevice, widthDevice } from '../assets/size'
 import Header from '../component/Header'
 import { mainStyle } from './mainStyle'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import { postCreateLrReports, postUpdateLrReports } from '../api/mistake'
 import { getClassLrReport } from '../api/class'
 import { baseUrl } from '../api/BaseApiService'
@@ -27,11 +27,49 @@ const LrReport = () => {
   const route = useRoute()
   const item: bodyItem = route?.params;
   const [urlImage, setUrlImage] = useState(item?.attachedPhotos ? item?.attachedPhotos[0] : '')
-  const [point, setPoint] = useState(item?.absenceNo ? `${item?.absenceNo}` : '')
-  const [absent, setAbsent] = useState(item?.totalPoint ? `${item?.totalPoint}` : '')
+  const [point, setPoint] = useState(`${item?.totalPoint}`)
+  const [absent, setAbsent] = useState(`${item?.absenceNo}`)
   const [listImage, setListImage] = useState<any>({})
-  const chooseFile = () => {
-    let options: any = {
+  
+  const chooseFile = async () => {
+    Alert.alert("Thêm hình ảnh", "Chọn hình ảnh từ thư viện hoặc chụp ảnh", [
+      {text: "Chọn hình ảnh", onPress: () => requestCameraPermission(true)},
+      {
+        text: "Chụp ảnh",
+        onPress: () => requestCameraPermission(false),
+      },
+    ]);
+  };
+ 
+  const requestCameraPermission = async (value: boolean) => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'App Camera Permission',
+            message: 'App needs access to your camera ',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          if (value) onLibImage();
+          else onCameraImage();
+        } else {
+          console.log('Camera permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    } else {
+      if (value) onLibImage();
+      else onCameraImage();
+    }
+  };
+  const onCameraImage = () => {
+    var options: any = {
       title: 'Select Image',
       includeBase64: true,
       customButtons: [
@@ -45,22 +83,27 @@ const LrReport = () => {
         path: 'images',
       },
     };
-    launchImageLibrary(options, (response: any) => {
-
-      if (response?.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response?.error) {
-        console.log('ImagePicker Error: ', response?.error);
-      } else if (response?.customButton) {
-        console.log('User tapped custom button: ', response?.customButton);
-      } else {
-        var source: any = response?.assets[0];
-        setUrlImage('')
-        // let base64 = 'data:image/jpeg;base64,' + source?.base64;
-        setListImage(source)
-      }
-    });
+    launchCamera(options, onFinishPickImage);
   };
+  const onLibImage = () => {
+    const options: any = {
+      selectionLimit: 0,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, onFinishPickImage);
+  };
+
+  const onFinishPickImage = async ({assets}: any) => {
+    if (assets && assets?.length > 0) {
+      const source =assets[0];
+      setUrlImage('')
+      // let base64 = 'data:image/jpeg;base64,' + source?.base64;
+      console.log(source)
+      setListImage(source)
+    }
+  };
+
   const hanldeDelImage = () => {
     if (urlImage) {
       setUrlImage('')
@@ -135,9 +178,9 @@ const LrReport = () => {
                 />
               </TouchableOpacity>
             </View> :
-              listImage?.base64 &&
+              listImage?.uri &&
               <View style={styles.image}>
-                <Image source={{ uri: `data:image/jpeg;base64,${listImage?.base64}` }} style={styles.image} />
+                <Image source={{ uri: listImage?.uri }} style={styles.image} />
                 <TouchableOpacity onPress={() => hanldeDelImage()}
                   style={styles.delImage}>
                   <AntDesign
