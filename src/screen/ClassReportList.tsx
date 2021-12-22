@@ -9,6 +9,7 @@ import { addClassMistake } from '../redux/action/mistake'
 import { RootState } from '../redux/reducer'
 import { DcpClassesReport, DcpReport, Faults } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 interface FaultInfo {
   regulationName: string,
@@ -74,9 +75,13 @@ const ClassReportList = () => {
           <Text style={styles.content}>{item.regulationName}</Text>
         </View>
         <TouchableOpacity
-          onPress={() => removeMistake(index)}
+          onPress={() => removeMistake(index)} style={styles.pd10}
         >
-          <Image source={require('../assets/icon/remove.png')} style={styles.iconRemove} />
+        <AntDesign
+            name={'closecircleo'}
+            color={"red"}
+            size={24}
+          /> 
         </TouchableOpacity>
       </TouchableOpacity>
     )
@@ -187,6 +192,9 @@ const styles = StyleSheet.create({
   buttonAdd: {
     backgroundColor: color.blueStrong,
     marginLeft: 20,
+  },
+  pd10: {
+    padding: 10
   },
 })
 

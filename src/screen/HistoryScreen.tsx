@@ -26,23 +26,18 @@ const HistoryScreen = () => {
     filter: [
       {
         key: 'Status',
-        comparison: '',
-        value: 'Approved'
+        comparison: 'In',
+        value: 'Created,Approved,Rejected'
       },
       {
-        key: 'Status',
-        comparison: '',
-        value: 'Rejected'
+        key: 'CreationTime',
+        comparison: '>=',
+        value: moment().subtract(6,'d').format('MM/DD/YYYY')
       },
       {
-        key: 'StartDate',
-        comparison: '==',
-        value: moment().format('MM/DD/YYYY')
-      },
-      {
-        key: 'EndDate',
-        comparison: '==',
-        value: moment().add(10, 'days').calendar()
+        key: 'CreationTime',
+        comparison: '<',
+        value: moment().add(1, 'd').format('MM/DD/YYYY')
       }
     ]
   });
@@ -75,7 +70,7 @@ const HistoryScreen = () => {
       <View style={styles.dateContainer}>
         <TouchableOpacity onPress={() => setDateFromPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? moment(pagingInfo.filter[2].value.toString()).format("DD/MM/YYYY") : ''}
+            value={pagingInfo.filter ? moment(pagingInfo.filter[1].value.toString()).format("DD/MM/YYYY") : ''}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -90,7 +85,7 @@ const HistoryScreen = () => {
         <Text style={{ alignSelf: 'center' }}>_______</Text>
         <TouchableOpacity onPress={() => setDateToPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? moment(pagingInfo.filter[3].value.toString()).format("DD/MM/YYYY") : ''}
+            value={pagingInfo.filter ? moment(pagingInfo.filter[2].value.toString()).format("DD/MM/YYYY") : ''}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -141,7 +136,7 @@ const HistoryScreen = () => {
 
             <AntDesign
               name={'closecircleo'}
-              color={"black"}
+              color={"red"}
               size={24}
             /> 
         </TouchableOpacity>
@@ -166,8 +161,8 @@ const HistoryScreen = () => {
           setDateFromPicker(false);
           setChooseDateStart(new Date(date).toISOString())
           setFilter({
-            key: 'StartDate',
-            comparison: '==',
+            key: 'CreationTime',
+            comparison: '>=',
             value: moment(date).format('MM/DD/YYYY')
           });
         }}
@@ -189,9 +184,9 @@ const HistoryScreen = () => {
           setDateToPicker(false);
           setChooseDateEnd(new Date(date).toISOString())
           setFilter({
-            key: 'EndDate',
-            comparison: '==',
-            value: moment(date).format('MM/DD/YYYY')
+            key: 'CreationTime',
+            comparison: '<',
+            value: moment(date).add(1, 'd').format('MM/DD/YYYY')
           });
 
         }}

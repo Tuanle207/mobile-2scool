@@ -14,6 +14,7 @@ import { RootState } from '../redux/reducer'
 import { DcpClassesReport, Faults } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 interface Props {
 
 }
@@ -120,7 +121,11 @@ const ReportInfo = (props: Props) => {
         </View>
         <View style={styles.iconRemoveContainer}>
           <TouchableOpacity onPress={() => deleteClass(item)}>
-            <Image source={require('../assets/icon/remove.png')} style={styles.iconRemove} />
+          <AntDesign
+              name={'closecircleo'}
+              color={"red"}
+              size={24}
+            /> 
           </TouchableOpacity>
         </View>
       </TouchableOpacity>

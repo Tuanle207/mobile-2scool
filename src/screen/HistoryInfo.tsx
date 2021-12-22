@@ -14,13 +14,14 @@ import { mainStyle } from './mainStyle'
 import { DcpClassesReport, Faults } from '../redux/reducer/mistakeHistory'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 const HistoryInfo = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const route = useRoute();
   const dcpReportHistory = useSelector((state: RootState) => state.mistakeHistory)
   const data: any = route.params
-  const listClassReport: any = dcpReportHistory?.dcpClassReports
+  const listClassReport: any = data?.dcpClassReports
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const [listClass, setListClass] = useState<Class[]>([])
   //check list empty
@@ -33,10 +34,10 @@ const HistoryInfo = () => {
   }, [])
 
   useEffect(() => {
-    console.log(data)
-    const listClassReportApi = listClassReport.filter((item: any) => item.faults.length > 0)
-    console.log(listClassReport)
-    setListClassReportState(listClassReportApi)
+    console.log("listClassReport", listClassReport)
+    // const listClassReportApi = listClassReport.filter((item: any) => item.faults.length > 0)
+    console.log("listClassReport", listClassReport)
+    setListClassReportState(listClassReport)
   }, [dcpReportHistory?.dcpClassReports, dcpReportHistory])
 
 
@@ -110,10 +111,11 @@ const HistoryInfo = () => {
   }
 
   const _renderClass = (item: DcpClassesReport, index: number) => {
+    console.log("item1",item)
     const classInfo = listClass.find(classItem => classItem.id === item.classId)
     const className: any = classInfo?.name
     const faultsInfo = item.faults.map((item: any) => {
-      console.log("item",item)
+      console.log("item1",listRegulationApi, item.regulationId)
       const faultInfo = listRegulationApi.find(fault => fault.id === item.regulationId)
       return {
         regulationName: faultInfo?.name,
@@ -123,7 +125,7 @@ const HistoryInfo = () => {
     })
     const totalFault = faultsInfo?.length
     console.log("totalFault",faultsInfo )
-    const totalPoint = faultsInfo.reduce(((acc: number, cur: any) => acc + (cur?.relatedStudentIds?.length ? cur?.point * cur?.relatedStudentIds?.length : cur?.point)), 0)
+    const totalPoint = faultsInfo.reduce(((acc: number, cur: any) => acc + (cur?.relatedStudentIds?.length>0 ? cur?.point * cur?.relatedStudentIds?.length : cur?.point)), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
         onPress={() => {
@@ -151,7 +153,11 @@ const HistoryInfo = () => {
         </View>
         <View style={styles.iconRemoveContainer}>
           <TouchableOpacity onPress={() => { }}>
-            <Image source={require('../assets/icon/remove.png')} style={styles.iconRemove} />
+          <AntDesign
+              name={'closecircleo'}
+              color={"red"}
+              size={24}
+            /> 
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
