@@ -25,7 +25,7 @@ const LoadingBase = (props:Props ) => {
   }, [visible]);
   return (
     <>
-      <Modal
+      <Modal    presentationStyle="overFullScreen"
         supportedOrientations={['portrait', 'landscape']}
         visible={isLoading}
         animationType="fade"

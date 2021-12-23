@@ -11,11 +11,11 @@ import { Student } from '../model/Mistake'
 import { RootState } from '../redux/reducer'
 import { DcpReport } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
-import { Regulation} from '../model/Mistake'
+import { Regulation } from '../model/Mistake'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 
-const MistakeDetailHistory= () => {
+const MistakeDetailHistory = () => {
   const navigation = useNavigation()
   const dcpReport = useSelector((state: RootState) => state.mistakeHistory)
   const listRegulation = useSelector((state: RootState) => state.regulation)
@@ -23,7 +23,7 @@ const MistakeDetailHistory= () => {
   const [listRegulation1, setListRegulation1] = useState<Regulation[]>([])
   const dispatch = useDispatch()
   const route = useRoute()
-  const { classInfo, fault, indexFault }: any = route.params
+  const { classInfo, fault, indexFault, data }: any = route.params
   const [listStudent, setListStudent] = useState<Student[]>([])
   const [listPicker, setListPicker] = useState<any[]>([])
   const [criteria, setCriteria] = useState('')
@@ -37,11 +37,11 @@ const MistakeDetailHistory= () => {
   useEffect(() => {
     initStudent()
   }, [])
-  useEffect(()=>{
-  const dataRegulation:any = listRegulation.find(item => item.id === fault?.regulationId);
-  setCriteria(dataRegulation?.criteriaId);
-  setListRegulation1(listRegulation.filter((item:any) => item.criteriaId === dataRegulation?.criteriaId));
-  },[])
+  useEffect(() => {
+    const dataRegulation: any = listRegulation.find(item => item.id === fault?.regulationId);
+    setCriteria(dataRegulation?.criteriaId);
+    setListRegulation1(listRegulation.filter((item: any) => item.criteriaId === dataRegulation?.criteriaId));
+  }, [])
 
 
   const initStudent = async () => {
@@ -170,16 +170,17 @@ const MistakeDetailHistory= () => {
 
         </View>
       </ScrollView>
-      <TouchableOpacity
-        onPress={() => editMistake()}
-        style={[mainStyle.buttonContainer, styles.buttonAdd]}>
+      {data?.status == "Created" ?
+        <TouchableOpacity
+          onPress={() => editMistake()}
+          style={[mainStyle.buttonContainer, styles.buttonAdd]}>
           <MaterialCommunityIcons
-          name={'update'}
-          color={"white"}
-          size={30}
-        />
-        <Text style={[mainStyle.buttonTitle,{ fontSize: 18, marginHorizontal: 12 }]}>{isEdit ? 'Hoàn thành' : 'Cập nhật'}</Text>
-      </TouchableOpacity>
+            name={'update'}
+            color={"white"}
+            size={30}
+          />
+          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>{isEdit ? 'Hoàn thành' : 'Cập nhật'}</Text>
+        </TouchableOpacity> : null}
     </SafeAreaView>
   )
 }
@@ -279,7 +280,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     // position: 'absolute',
     width: '92%',
-    flexDirection:'row'
+    flexDirection: 'row'
   }
 })
 

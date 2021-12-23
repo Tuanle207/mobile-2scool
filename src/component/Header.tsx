@@ -25,12 +25,6 @@ const StatusHeaderBar = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        animated={true}
-        backgroundColor='white'
-        // barStyle={statusBarStyle}
-        // showHideTransition={statusBarTransition}
-        hidden={false} />
       <View style={styles.headerContainer}>
         {_renderLeft()}
         {renderCenter ? renderCenter : _renderCenter()}
@@ -45,12 +39,12 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   headerContainer: {
-    height: 36,
+    height: 45,
     backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 10
+
   },
   iconBack: {
     tintColor: color.blueStrong,

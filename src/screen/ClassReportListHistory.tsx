@@ -24,7 +24,8 @@ const ClassReportListHistory = () => {
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const navigation = useNavigation()
   const route = useRoute()
-  const classInfo: any = route.params
+  const { classInfo, data }: any = route.params
+  console.log("ClassReportListHistory", data)
   const faultsClass: any = dcpReport.dcpClassReports.find(item => item.classId === classInfo.id)
   const faultsInfo = faultsClass.faults.map((item: Faults) => {
     const faultInfo = listRegulationApi.find(fault => fault.id === item.regulationId)
@@ -63,7 +64,8 @@ const ClassReportListHistory = () => {
             params: {
               classInfo: classInfo,
               fault: item,
-              indexFault: index
+              indexFault: index,
+              data: data
             }
           })
         )}
@@ -74,15 +76,17 @@ const ClassReportListHistory = () => {
         <View style={styles.itemContent}>
           <Text style={styles.content}>{item.regulationName}</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => removeMistake(index)} style={styles.pd10}
-        >
-          <AntDesign
-            name={'closecircleo'}
-            color={"red"}
-            size={24}
-          />
-        </TouchableOpacity>
+        {data?.status == 'Created' ?
+          <TouchableOpacity
+            onPress={() => removeMistake(index)} style={styles.pd10}
+          >
+            <AntDesign
+              name={'closecircleo'}
+              color={"red"}
+              size={24}
+            />
+          </TouchableOpacity>
+          : null}
       </TouchableOpacity>
     )
   }
@@ -98,24 +102,25 @@ const ClassReportListHistory = () => {
           </Text>
           {faultsInfo?.map((item: FaultInfo, index: number) => _renderMistake(item, index))}
         </View>
-        <View style={styles.footerContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()
-            }
-            style={[mainStyle.buttonContainer, styles.buttonDone]}>
-            <Text style={mainStyle.buttonTitle}>Xong</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.dispatch(
-              CommonActions.navigate({
-                name: 'MistakeCreateHistory',
-                params: classInfo
-              })
-            )}
-            style={[mainStyle.buttonContainer, styles.buttonAdd]}>
-            <Text style={mainStyle.buttonTitle}>Thêm vi phạm</Text>
-          </TouchableOpacity>
-        </View>
+        {data?.status == 'Created' ?
+          <View style={styles.footerContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()
+              }
+              style={[mainStyle.buttonContainer, styles.buttonDone]}>
+              <Text style={mainStyle.buttonTitle}>Xong</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(
+                CommonActions.navigate({
+                  name: 'MistakeCreateHistory',
+                  params: classInfo
+                })
+              )}
+              style={[mainStyle.buttonContainer, styles.buttonAdd]}>
+              <Text style={mainStyle.buttonTitle}>Thêm vi phạm</Text>
+            </TouchableOpacity>
+          </View> : null}
       </View>
     </SafeAreaView >
   )

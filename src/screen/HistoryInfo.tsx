@@ -22,6 +22,7 @@ const HistoryInfo = () => {
   const route = useRoute();
   const dcpReportHistory = useSelector((state: RootState) => state.mistakeHistory)
   const data: any = route.params
+  console.log("data", data)
   const [listClassReport, setListClassReport] = useState<any>();
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const [listClass, setListClass] = useState<Class[]>([])
@@ -36,36 +37,36 @@ const HistoryInfo = () => {
     getDetailHistoryInfo()
   }, [])
 
-const getDetailHistoryInfo =async()=>{
-  setIsLoading(true);
-  const res = await getMyDcpReportId(data?.id);
-  const res1: any = await getClass();
-  if(res?.status ===200 &&res1?.status ==200){
-    const resList =res?.data?.dcpClassReports;
-    setListClass(res1?.data.items)
-    onHandleSaveRedux(res1?.data.items,resList )
+  const getDetailHistoryInfo = async () => {
+    setIsLoading(true);
+    const res = await getMyDcpReportId(data?.id);
+    const res1: any = await getClass();
+    if (res?.status === 200 && res1?.status == 200) {
+      const resList = res?.data?.dcpClassReports;
+      setListClass(res1?.data.items)
+      onHandleSaveRedux(res1?.data.items, resList)
 
-    setListClassReport(resList);
+      setListClassReport(resList);
 
-const listClassReportApi = resList.filter((item: any) => item.faults.length > 0)
-setListClassReportState(listClassReportApi)
+      const listClassReportApi = resList.filter((item: any) => item.faults.length > 0)
+      setListClassReportState(listClassReportApi)
+    }
+    setIsLoading(false);
   }
-  setIsLoading(false);
-}
 
   useEffect(() => {
-    if(dcpReportHistory?.dcpClassReports.length!=0){
-      const dataFound =dcpReportHistory?.dcpClassReports.find(item =>item?.faults.length!=0)
-      if(dataFound?.classId ||isFirst>0){
+    if (dcpReportHistory?.dcpClassReports.length != 0) {
+      const dataFound = dcpReportHistory?.dcpClassReports.find(item => item?.faults.length != 0)
+      if (dataFound?.classId || isFirst > 0) {
         const listClassReportApi = dcpReportHistory?.dcpClassReports.filter((item: any) => item.faults.length > 0)
         setListClassReportState(listClassReportApi)
         setListClassReport(dcpReportHistory);
       }
     }
-    setIsFirst(isFirst+1);
+    setIsFirst(isFirst + 1);
   }, [dcpReportHistory?.dcpClassReports, dcpReportHistory])
 
-  const onHandleSaveRedux = (listClass:Class[], resList:any) => {
+  const onHandleSaveRedux = (listClass: Class[], resList: any) => {
     var listClassMistake = listClass.map(item => {
       return {
         classId: item.id,
@@ -109,7 +110,7 @@ setListClassReportState(listClassReportApi)
       }
     })
     const totalFault = faultsInfo?.length
-    const totalPoint = faultsInfo.reduce(((acc: number, cur: any) => acc + (cur?.relatedStudentIds?.length>0 ? cur?.point * cur?.relatedStudentIds?.length : cur?.point)), 0)
+    const totalPoint = faultsInfo.reduce(((acc: number, cur: any) => acc + (cur?.relatedStudentIds?.length > 0 ? cur?.point * cur?.relatedStudentIds?.length : cur?.point)), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
         onPress={() => {
@@ -117,7 +118,7 @@ setListClassReportState(listClassReportApi)
           navigation.dispatch(
             CommonActions.navigate({
               name: 'ClassReportListHistory',
-              params: classInfo
+              params: { classInfo, data }
             })
           )
         }}
@@ -151,9 +152,9 @@ setListClassReportState(listClassReportApi)
   const EditDcReport = async () => {
     try {
       // const res = await postDcpReport(dcpReport);
-      const listDcReport = dcpReportHistory.dcpClassReports.filter(item=>item?.faults.length !=0)
-      const requestDcReport ={dcpClassReports:listDcReport}
-            const res = await putEditDcpReport(requestDcReport, data?.id );
+      const listDcReport = dcpReportHistory.dcpClassReports.filter(item => item?.faults.length != 0)
+      const requestDcReport = { dcpClassReports: listDcReport }
+      const res = await putEditDcpReport(requestDcReport, data?.id);
       if (res) {
         Alert.alert("Thành công", "Cập nhật phiếu chấm thành công", [
           {
@@ -175,25 +176,26 @@ setListClassReportState(listClassReportApi)
       console.log('errs', err)
     }
   }
-  
+
   return (
     <SafeAreaView style={styles.container}>
-        <LoadingBase visible={isLoading} />
+      <LoadingBase visible={isLoading} />
       <Header title="Thông tin phiếu chấm" />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
         <View>
           {listClassReportState.map((item: any, index: number) => _renderClass(item, index))}
         </View>
-        <TouchableOpacity disabled={isEmpty}
-          onPress={() => { EditDcReport()}}
-          style={[mainStyle.buttonContainer, styles.buttonAdd, { backgroundColor: isEmpty ? 'gray' : color.blueStrong }]}>
-          <FontAwesome
-            name={'send-o'}
-            color={"white"}
-            size={24}
-          />
-          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Cập nhật phiếu chấm</Text>
-        </TouchableOpacity>
+        {data?.status == "Created" ?
+          <TouchableOpacity disabled={isEmpty}
+            onPress={() => { EditDcReport() }}
+            style={[mainStyle.buttonContainer, styles.buttonAdd, { backgroundColor: isEmpty ? 'gray' : color.blueStrong }]}>
+            <FontAwesome
+              name={'send-o'}
+              color={"white"}
+              size={24}
+            />
+            <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Cập nhật phiếu chấm</Text>
+          </TouchableOpacity> : null}
       </View>
     </SafeAreaView>
   )
