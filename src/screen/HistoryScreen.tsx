@@ -20,6 +20,7 @@ import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 const HistoryScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const roleUser = useSelector((state: RootState) => state.roleUser)
   const dcpReportHistory = useSelector((state: RootState) => state.mistakeHistory)
   const [dateFromPicker, setDateFromPicker] = useState(false)
   const [dateToPicker, setDateToPicker] = useState(false)
@@ -160,6 +161,13 @@ const HistoryScreen = () => {
     )
   }
 
+  if(!roleUser?.CreateNewDcpReport &&roleUser?.CreateNewLRReport)
+{return(
+  <SafeAreaView style={styles.container}>    
+     <HeaderHome title="Lịch sử chấm" />
+      <Text style={{alignSelf:'center', marginTop:10, textAlignVertical:'center', fontStyle:'italic'}}>Bạn không có quyền truy cập</Text>
+      </SafeAreaView>
+)}
   return (
     <SafeAreaView style={styles.container}>
       <HeaderHome title="Lịch sử chấm" />

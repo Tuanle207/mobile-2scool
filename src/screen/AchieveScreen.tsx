@@ -13,8 +13,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LoadingBase from '../component/LoadingBase'
 import { convertStatus, convertStatusColor } from '../utilities/convertData'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '../redux/reducer'
 const AchieveScreen = () => {
   const navigation = useNavigation()
+  const roleUser = useSelector((state: RootState) => state.roleUser)
   const [dateFromPicker, setDateFromPicker] = useState(false)
   const [dateToPicker, setDateToPicker] = useState(false)
   const [datePicker, setDatePicker] = useState(false)
@@ -145,6 +148,13 @@ const AchieveScreen = () => {
     )
   }
 
+  if(roleUser?.CreateNewDcpReport &&!roleUser?.CreateNewLRReport)
+{return(
+  <SafeAreaView style={styles.container}>    
+    <HeaderHome title="Thành tích" />
+      <Text style={{alignSelf:'center', marginTop:10, textAlignVertical:'center', fontStyle:'italic'}}>Bạn không có quyền truy cập</Text>
+      </SafeAreaView>
+)}
   return (
     <SafeAreaView style={styles.container}>
       <HeaderHome title="Thành tích" />

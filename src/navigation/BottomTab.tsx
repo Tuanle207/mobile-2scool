@@ -21,6 +21,7 @@ const BottomTab = () => {
     >
       <BotTab.Screen name="HomeScreen" component={HomeScreen}
         options={{
+          
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <Image
@@ -28,6 +29,7 @@ const BottomTab = () => {
               source={focused ? require('../assets/icon/home.png') : require('../assets/icon/home2.png')} />
           )
         }}
+
       />
       <BotTab.Screen name="HistoryScreen" component={HistoryScreen}
         options={{
@@ -48,7 +50,7 @@ const BottomTab = () => {
           )
         }} />
       <BotTab.Screen name="UserScreen" component={UserScreen}
-        options={{
+        options={{unmountOnBlur:false,
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <Image

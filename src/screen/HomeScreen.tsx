@@ -19,6 +19,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const dcpReport = useSelector((state: RootState) => state.mistake)
+  const roleUser = useSelector((state: RootState) => state.roleUser)
   const [search, setSearch] = useState('')
   const [classes, setClasses] = useState<Class[]>([])
   const [listClass, setListClass] = useState<Class[]>([])
@@ -119,6 +120,15 @@ const HomeScreen = () => {
     setClasses(newListClass)
   }
 
+  if(!roleUser?.CreateNewDcpReport &&roleUser?.CreateNewLRReport)
+{return(
+  <SafeAreaView style={styles.container}>    
+      <HeaderMain
+        title="Trang chủ"
+      />
+      <Text style={{alignSelf:'center', marginTop:10, textAlignVertical:'center', fontStyle:'italic'}}>Bạn không có quyền truy cập</Text>
+      </SafeAreaView>
+)}
   return (
     <SafeAreaView style={styles.container}>
            <LoadingBase visible={isLoading} />

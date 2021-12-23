@@ -2,12 +2,13 @@ import { CommonActions, useNavigation } from '@react-navigation/native'
 import React, { useState } from 'react'
 import { Image, KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { login } from '../api/login'
+import { getRoleUser, login } from '../api/login'
 import { color } from '../assets/color'
 import { fontSize, height, width } from '../assets/size'
 import { loginSuccess } from '../redux/action/auth'
 import Octicons from 'react-native-vector-icons/Octicons'
 import LoadingBase from '../component/LoadingBase'
+import { checkRoleUser } from '../redux/action/roleUser'
 const resetAction = CommonActions.reset({
   index: 0,
   routes: [{ name: 'AppStack' }],
@@ -24,6 +25,7 @@ const AuthScreen = () => {
     setIsLoading(true);
     try {
       const res: any = await login({ username: userName, password: pass })
+
       const payload = {
         access_token: res.data.access_token,
         token_type: res.data.token_type,
@@ -31,8 +33,23 @@ const AuthScreen = () => {
         expires_in: res.data.expires_in,
         scope: res.data.scope
       }
-      setIsLoading(false);
-      dispatch(loginSuccess(payload))
+
+      await dispatch(loginSuccess(payload))
+      const res1: any = await getRoleUser()
+      if (res1?.status == 200) {
+        var body = {
+          CreateNewDcpReport: false,
+          CreateNewLRReport: false,
+        }
+        const dataRoleAuth = res1?.data?.auth?.grantedPolicies;
+        Object.keys(dataRoleAuth).forEach(value => {
+          if (value == "LRReports.CreateNewLRReport")
+            body.CreateNewLRReport = dataRoleAuth[value];
+          else if (value == "DcpReports.CreateNewDcpReport")
+            body.CreateNewDcpReport = dataRoleAuth[value]
+        })
+        await dispatch(checkRoleUser(body))
+      } setIsLoading(false);
       navigation.dispatch(
         resetAction
       )

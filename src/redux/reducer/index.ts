@@ -8,12 +8,16 @@ import criteria from "./criteria"
 import regulation from './regulation'
 import mistakeHistory,{initialDcpHistoryReport} from "./mistakeHistory";
 import { initialRegulation } from "./regulation";
+import { RoleUser } from "../action/roleUser";
+import { initialRoleUser } from "./roleUser";
+import roleUser from './roleUser';
 export interface RootState {
     auth: Token;
     mistake: DcpReport,
     criteria: Criteria[],
     regulation: Regulation[]
-    mistakeHistory:DcpReport
+    mistakeHistory:DcpReport,
+    roleUser:RoleUser
 }
 
 export const initialState: RootState = {
@@ -21,7 +25,9 @@ export const initialState: RootState = {
     mistake: initialDcpReport,
     criteria: initialCriteria,
     regulation: initialRegulation,
-    mistakeHistory:initialDcpHistoryReport
+    mistakeHistory:initialDcpHistoryReport,
+    roleUser:initialRoleUser
+
 }
 
 const rootReducer = combineReducers({
@@ -29,7 +35,8 @@ const rootReducer = combineReducers({
     mistake,
     criteria,
     regulation,
-    mistakeHistory
+    mistakeHistory,
+    roleUser,
 });
 
 export default rootReducer;

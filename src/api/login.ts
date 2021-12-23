@@ -1,6 +1,6 @@
 import axios from "axios";
 import { User } from "../model/User";
-import { baseUrl } from "./BaseApiService";
+import { baseUrl, getApiService } from "./BaseApiService";
 
 export const login = async (body: User.Login) => {
   const params = new URLSearchParams()
@@ -20,3 +20,8 @@ export const login = async (body: User.Login) => {
  
   return ins.post('/connect/token', params)
 };
+export const getRoleUser = async () => {
+  const endpoint = 'api/abp/application-configuration'
+  const axios = await getApiService()
+  return axios.get(endpoint)
+}
