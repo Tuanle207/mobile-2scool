@@ -1,6 +1,6 @@
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useState } from 'react'
-import { Image, KeyboardAvoidingView, SafeAreaView, Dimensions, StyleSheet, Text, TextInput, TouchableOpacity,PermissionsAndroid, Alert, View, Platform, ScrollView } from 'react-native'
+import { Image, KeyboardAvoidingView, SafeAreaView, Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, PermissionsAndroid, Alert, View, Platform, ScrollView } from 'react-native'
 import { color } from '../assets/color'
 import { fontSize, heightDevice, widthDevice } from '../assets/size'
 import Header from '../component/Header'
@@ -27,20 +27,20 @@ const LrReport = () => {
   const route = useRoute()
   const item: bodyItem = route?.params;
   const [urlImage, setUrlImage] = useState(item?.attachedPhotos ? item?.attachedPhotos[0] : '')
-  const [point, setPoint] = useState(`${item?.totalPoint}`)
-  const [absent, setAbsent] = useState(`${item?.absenceNo}`)
+  const [point, setPoint] = useState(item?.totalPoint != undefined && item?.totalPoint != null && item?.totalPoint != 0 ? `${item?.totalPoint}` : '')
+  const [absent, setAbsent] = useState(item?.absenceNo != undefined && item?.absenceNo != null && item?.absenceNo != 0 ? `${item?.absenceNo}` : '')
   const [listImage, setListImage] = useState<any>({})
-  
+
   const chooseFile = async () => {
     Alert.alert("Thêm hình ảnh", "Chọn hình ảnh từ thư viện hoặc chụp ảnh", [
-      {text: "Chọn hình ảnh", onPress: () => requestCameraPermission(true)},
+      { text: "Chọn hình ảnh", onPress: () => requestCameraPermission(true) },
       {
         text: "Chụp ảnh",
         onPress: () => requestCameraPermission(false),
       },
     ]);
   };
- 
+
   const requestCameraPermission = async (value: boolean) => {
     if (Platform.OS === 'android') {
       try {
@@ -94,9 +94,9 @@ const LrReport = () => {
     launchImageLibrary(options, onFinishPickImage);
   };
 
-  const onFinishPickImage = async ({assets}: any) => {
+  const onFinishPickImage = async ({ assets }: any) => {
     if (assets && assets?.length > 0) {
-      const source =assets[0];
+      const source = assets[0];
       setUrlImage('')
       setListImage(source)
     }
@@ -154,7 +154,7 @@ const LrReport = () => {
   const _renderImage = () => {
     return (
       <View style={styles.iamgeContainer}>
-        <Text style={styles.title}>Ảnh sổ đầu bài (<Text style={[styles.title, {color:'red'}]}>*</Text>)</Text>
+        <Text style={styles.title}>Ảnh sổ đầu bài (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity onPress={() => { chooseFile() }}
             style={[styles.image, { marginRight: 12 }]}>
@@ -201,7 +201,7 @@ const LrReport = () => {
   const _renderPoint = () => {
     return (
       <View style={styles.pointContainer}>
-        <Text style={styles.title}>Điểm sổ đầu bài (<Text style={[styles.title, {color:'red'}]}>*</Text>)</Text>
+        <Text style={styles.title}>Điểm sổ đầu bài (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
         <TextInput
           value={point}
           onChangeText={(text: string) => setPoint(text)}
@@ -217,7 +217,7 @@ const LrReport = () => {
   const _renderAbsent = () => {
     return (
       <View style={styles.pointContainer}>
-        <Text style={styles.title}>Tổng số buổi vắng (<Text style={[styles.title, {color:'red'}]}>*</Text>)</Text>
+        <Text style={styles.title}>Tổng số buổi vắng (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
         <TextInput
           value={absent}
           onChangeText={(text: string) => setAbsent(text)}
@@ -234,7 +234,7 @@ const LrReport = () => {
 
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>
 
-      <Header title={item?.id?"Cập nhật thành tích":"Thêm thành tích" }/>
+      <Header title={item?.id ? "Cập nhật thành tích" : "Thêm thành tích"} />
       <ScrollView style={styles.mainContainer}>
         <View style={{ flex: 1, padding: 20, height: heightDevice - 175 }}>
           {_renderImage()}
@@ -242,7 +242,7 @@ const LrReport = () => {
           {_renderAbsent()}
         </View>
 
-        <TouchableOpacity disabled={item?.id &&item?.status!="Created"?true:false}
+        <TouchableOpacity disabled={item?.id && item?.status != "Created" ? true : false}
           onPress={() => { item?.id ? onHanldeUpdateAchieve() : onHanldeSendAchieve() }}
           style={[mainStyle.buttonContainer, styles.buttonSend,]}>
           <FontAwesome
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fontSize.contentSmall,
-    marginBottom: 10, color:'black'
+    marginBottom: 10, color: 'black'
   },
   iamgeContainer: {
     marginTop: 40
