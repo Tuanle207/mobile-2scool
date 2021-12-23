@@ -39,7 +39,6 @@ const AuthScreen = () => {
 
     } catch (err) {
       setIsLoading(false);
-      console.log(err)
       setErrorMessage('Thông tin tài khoản không đúng')
     }
   }

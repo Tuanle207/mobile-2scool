@@ -54,7 +54,6 @@ const AchieveScreen = () => {
     }
     const res = await getAllLrReports(input)
     if (res?.status === 200) {
-      console.log(res)
       setIsLoading(false)
       setListDcpReport(res.data?.items)
     }
@@ -101,10 +100,8 @@ const AchieveScreen = () => {
    const arrayDel = listDcpReport.filter((item:any)=>item?.id!==value?.id)
    setListDcpReport(arrayDel);
    const res = await delLrpReportsId(value?.id);
-   console.log(res)
   }
   const _renderItem = (item: any, index: number) => {
-    console.log(item)
     return (
       <TouchableOpacity onPress={() => navigation.dispatch(
         CommonActions.navigate({

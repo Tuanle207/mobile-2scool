@@ -98,8 +98,6 @@ const LrReport = () => {
     if (assets && assets?.length > 0) {
       const source =assets[0];
       setUrlImage('')
-      // let base64 = 'data:image/jpeg;base64,' + source?.base64;
-      console.log(source)
       setListImage(source)
     }
   };
@@ -124,7 +122,6 @@ const LrReport = () => {
         formData.append('Photo', s);
       }
       const res1 = await postUpdateLrReports(formData, `${item?.id}`);
-      console.log("res", res1)
       if (res1 && res1?.status === 200) {
         navigation.goBack()
       } else { Alert.alert("Thất bại", "Cập nhật thất bại") }
@@ -134,7 +131,6 @@ const LrReport = () => {
   const onHanldeSendAchieve = async () => {
     if (checkData()) {
       const res: any = await getClassLrReport();
-      console.log("res", res?.data)
       const objectImage: any = listImage;
       if (res?.data?.items[0]?.id) {
         let s = { uri: objectImage?.uri, name: objectImage?.fileName, type: objectImage?.type };
@@ -145,7 +141,6 @@ const LrReport = () => {
         formData.append('TotalPoint', Number(point));
         formData.append('Photo', s);
         const res1 = await postCreateLrReports(formData);
-        console.log("res", res1)
         if (res1 && res1?.status === 200) {
           navigation.goBack()
         } else { Alert.alert("Thất bại", "Tạo mới thất bại") }

@@ -56,7 +56,6 @@ const MistakeCreateHistory = () => {
       relatedStudentIds: studentMistake,
     }
     const newDcpReport: DcpReport = JSON.parse(JSON.stringify(dcpReport))
-    console.log('newDcpReport', newDcpReport, dcpReport)
     const classMistake: any = newDcpReport.dcpClassReports.find(item => item.classId === classInfo.id)
     const indexClassMistake = newDcpReport.dcpClassReports.findIndex(item => item.classId === classInfo.id)
     classMistake.faults = [...classMistake.faults, mistake]

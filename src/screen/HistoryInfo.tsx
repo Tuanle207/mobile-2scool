@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { getClass } from '../api/class'
-import { postDcpReport, putEditDcpReport } from '../api/mistake'
+import { getMyDcpReportId, postDcpReport, putEditDcpReport } from '../api/mistake'
 import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import Header from '../component/Header'
@@ -14,79 +14,69 @@ import { mainStyle } from './mainStyle'
 import { DcpClassesReport, Faults } from '../redux/reducer/mistakeHistory'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
-import AntDesign from 'react-native-vector-icons/AntDesign'
+import LoadingBase from '../component/LoadingBase'
+
 const HistoryInfo = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const route = useRoute();
   const dcpReportHistory = useSelector((state: RootState) => state.mistakeHistory)
   const data: any = route.params
-  const listClassReport: any = data?.dcpClassReports
+  const [listClassReport, setListClassReport] = useState<any>();
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const [listClass, setListClass] = useState<Class[]>([])
   //check list empty
   const [isEmpty, setEmpty] = useState<boolean>(false);
   //Information list of votes
   const [listClassReportState, setListClassReportState] = useState([])
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFirst, setIsFirst] = useState<number>(1);
 
   useEffect(() => {
-    initClass()
+    getDetailHistoryInfo()
   }, [])
 
+const getDetailHistoryInfo =async()=>{
+  setIsLoading(true);
+  const res = await getMyDcpReportId(data?.id);
+  const res1: any = await getClass();
+  if(res?.status ===200 &&res1?.status ==200){
+    const resList =res?.data?.dcpClassReports;
+    setListClass(res1?.data.items)
+    onHandleSaveRedux(res1?.data.items,resList )
+
+    setListClassReport(resList);
+
+const listClassReportApi = resList.filter((item: any) => item.faults.length > 0)
+setListClassReportState(listClassReportApi)
+  }
+  setIsLoading(false);
+}
+
   useEffect(() => {
-    console.log("listClassReport", listClassReport)
-    // const listClassReportApi = listClassReport.filter((item: any) => item.faults.length > 0)
-    console.log("listClassReport", listClassReport)
-    setListClassReportState(listClassReport)
+    if(dcpReportHistory?.dcpClassReports.length!=0){
+      const dataFound =dcpReportHistory?.dcpClassReports.find(item =>item?.faults.length!=0)
+      if(dataFound?.classId ||isFirst>0){
+        const listClassReportApi = dcpReportHistory?.dcpClassReports.filter((item: any) => item.faults.length > 0)
+        setListClassReportState(listClassReportApi)
+        setListClassReport(dcpReportHistory);
+      }
+    }
+    setIsFirst(isFirst+1);
   }, [dcpReportHistory?.dcpClassReports, dcpReportHistory])
 
-
-  const initClass = async () => {
-    try {
-      const res: any = await getClass();
-      console.log(res)
-      setListClass(res.data.items)
-      onHandleSaveRedux(res.data.items)
-    } catch (err) {
-      Alert.alert("Error")
-      console.log(err)
-    }
-  }
-
-  // const addListClassMistake = (listClass: Class[]) => {
-
-  //   // if (dcpReportHistory.dcpClassReports.length > 0) return
-  //   const listClassMistake = listClass.map(item => {
-  //     return {
-  //       classId: item.id,
-  //       faults: [] as Faults[]
-  //     }
-  //   })
-  //   const dcpClassReports = {
-  //     dcpClassReports: listClassMistake
-  //   }
-  //   console.log("listClassReport", dcpClassReports)
-  //   dispatch(addClassMistakeHistory(dcpClassReports))
-  // }
-  useEffect(() => {
-    // useCallback(() => {
-    console.log(dcpReportHistory)
-  }, [dcpReportHistory])
-  const onHandleSaveRedux = (listClass:Class[]) => {
+  const onHandleSaveRedux = (listClass:Class[], resList:any) => {
     var listClassMistake = listClass.map(item => {
       return {
         classId: item.id,
         faults: [] as Faults[]
       }
     })
-
     listClassMistake.map((item: any, index: number) => {
-      data?.dcpClassReports.map((item1: any) => {
+      resList.map((item1: any) => {
         if (item1?.classId == item?.classId) {
-
           var dataFaults: Faults[] = [];
           item1?.faults.map((item3: any) => {
-            console.log(item3)
             var arrayStudent: string[] = []
             item3?.relatedStudents.map((item4: any) => {
               arrayStudent.push(item4?.studentId)
@@ -101,30 +91,24 @@ const HistoryInfo = () => {
         }
       })
     })
-    console.log("listClassMistake", listClassMistake)
     const dcpClassReports = {
       dcpClassReports: listClassMistake
     }
-    console.log("dcpClassReports", dcpClassReports)
-
     dispatch(addClassMistakeHistory(dcpClassReports))
   }
 
   const _renderClass = (item: DcpClassesReport, index: number) => {
-    console.log("item1",item)
     const classInfo = listClass.find(classItem => classItem.id === item.classId)
     const className: any = classInfo?.name
     const faultsInfo = item.faults.map((item: any) => {
-      console.log("item1",listRegulationApi, item.regulationId)
       const faultInfo = listRegulationApi.find(fault => fault.id === item.regulationId)
       return {
         regulationName: faultInfo?.name,
         point: faultInfo?.point,
-        relatedStudentIds: item?.relatedStudentIds
+        relatedStudentIds: item?.relatedStudents || item?.relatedStudentIds
       }
     })
     const totalFault = faultsInfo?.length
-    console.log("totalFault",faultsInfo )
     const totalPoint = faultsInfo.reduce(((acc: number, cur: any) => acc + (cur?.relatedStudentIds?.length>0 ? cur?.point * cur?.relatedStudentIds?.length : cur?.point)), 0)
     return (
       <TouchableOpacity style={styles.itemContainer} key={index}
@@ -152,13 +136,13 @@ const HistoryInfo = () => {
           </Text>
         </View>
         <View style={styles.iconRemoveContainer}>
-          <TouchableOpacity onPress={() => { }}>
+          {/* <TouchableOpacity onPress={() => { }}>
           <AntDesign
               name={'closecircleo'}
               color={"red"}
               size={24}
             /> 
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </TouchableOpacity>
     )
@@ -175,12 +159,11 @@ const HistoryInfo = () => {
           {
             text: "OK", onPress: () => {
               navigation.goBack();
-              const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
+              const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(dcpReportHistory?.dcpClassReports))
               newListClassReport.map((item: DcpClassesReport, index: number) => {
                 newListClassReport[index].faults = [];
               })
               dcpReportHistory.dcpClassReports = newListClassReport
-              
               dispatch(addClassMistakeHistory(dcpReportHistory))
             }
           },
@@ -195,6 +178,7 @@ const HistoryInfo = () => {
   
   return (
     <SafeAreaView style={styles.container}>
+        <LoadingBase visible={isLoading} />
       <Header title="Thông tin phiếu chấm" />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
         <View>

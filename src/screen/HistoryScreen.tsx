@@ -1,6 +1,6 @@
-import { useNavigation , CommonActions, useFocusEffect} from '@react-navigation/native'
+import { useNavigation, CommonActions, useFocusEffect } from '@react-navigation/native'
 import moment from 'moment'
-import React, { useEffect, useState , useCallback} from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
@@ -13,8 +13,14 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import LoadingBase from '../component/LoadingBase'
 import { convertStatus, convertStatusColor } from '../utilities/convertData'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '../redux/reducer'
+import { DcpClassesReport, Faults } from '../redux/reducer/mistakeHistory'
+import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 const HistoryScreen = () => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
+  const dcpReportHistory = useSelector((state: RootState) => state.mistakeHistory)
   const [dateFromPicker, setDateFromPicker] = useState(false)
   const [dateToPicker, setDateToPicker] = useState(false)
   const [datePicker, setDatePicker] = useState(false)
@@ -32,7 +38,7 @@ const HistoryScreen = () => {
       {
         key: 'CreationTime',
         comparison: '>=',
-        value: moment().subtract(6,'d').format('MM/DD/YYYY')
+        value: moment().format('MM/DD/YYYY')
       },
       {
         key: 'CreationTime',
@@ -101,23 +107,32 @@ const HistoryScreen = () => {
     )
   }
 
-  const onHanldeDel = async (value:any)=>{
-   const arrayDel = listDcpReport.filter((item:any)=>item?.id!==value?.id)
-   setListDcpReport(arrayDel);
-   const res = await delDcpReportsId(value?.id);
+  const onHanldeDel = async (value: any) => {
+    const arrayDel = listDcpReport.filter((item: any) => item?.id !== value?.id)
+    setListDcpReport(arrayDel);
+    const res = await delDcpReportsId(value?.id);
   }
 
   const _renderItem = (item: any, index: number) => {
-    console.log(item)
     return (
-      <TouchableOpacity onPress ={()=> navigation.dispatch(
-        CommonActions.navigate({
-          name: 'HistoryInfo',
-          params: item
-          
-        })
-      )}
-       style={styles.itemContainer} key={index}>
+      <TouchableOpacity onPress={() => {
+        if (dcpReportHistory.dcpClassReports.length != 0) {
+          const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(dcpReportHistory?.dcpClassReports))
+          newListClassReport.map((item: DcpClassesReport, index: number) => {
+            newListClassReport[index].faults = [];
+          })
+          dcpReportHistory.dcpClassReports = newListClassReport
+          dispatch(addClassMistakeHistory(dcpReportHistory))
+        }
+        navigation.dispatch(
+          CommonActions.navigate({
+            name: 'HistoryInfo',
+            params: item
+
+          })
+        )
+      }}
+        style={styles.itemContainer} key={index}>
         <View style={styles.infoContainer}>
           <Text style={styles.dateTime}>{`Phiếu chấm ngày ${moment(item?.creationTime).format("DD/MM/YYYY")}`}</Text>
           <View style={styles.line2Container}>
@@ -132,15 +147,15 @@ const HistoryScreen = () => {
           </View>
         </View>
         {item?.status == "Created" ?
-        <TouchableOpacity onPress={()=>onHanldeDel(item)} disabled={item?.status === "Created" ? false : true}>
+          <TouchableOpacity onPress={() => onHanldeDel(item)} disabled={item?.status === "Created" ? false : true}>
 
             <AntDesign
               name={'closecircleo'}
               color={"red"}
               size={24}
-            /> 
-        </TouchableOpacity>
-        :null}
+            />
+          </TouchableOpacity>
+          : null}
       </TouchableOpacity>
     )
   }

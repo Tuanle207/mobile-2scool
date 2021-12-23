@@ -20,11 +20,11 @@ interface FaultInfo {
 const ClassReportList = () => {
   const dispatch = useDispatch()
   const dcpReport = useSelector((state: RootState) => state.mistake)
-  console.log("ClassReportListHistory", dcpReport)
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const navigation = useNavigation()
   const route = useRoute()
   const classInfo: any = route.params
+
   const faultsClass: any = dcpReport.dcpClassReports.find(item => item.classId === classInfo.id)
   const faultsInfo = faultsClass.faults.map((item: Faults) => {
     const faultInfo = listRegulationApi.find(fault => fault.id === item.regulationId)

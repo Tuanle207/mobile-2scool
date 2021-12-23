@@ -13,7 +13,6 @@ const authReducer = (state = initialToken, action: AnyAction) => {
   const { type, payload } = action
   switch (type) {
     case LOGIN_SUCCESS: {
-      console.log(payload)
       return payload
     }
     default:

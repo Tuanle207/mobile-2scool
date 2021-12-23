@@ -65,14 +65,12 @@ const ReportInfo = (props: Props) => {
   const deleteClass = (item: DcpClassesReport) => {
 
     const newListClassReport: DcpClassesReport[] = JSON.parse(JSON.stringify(listClassReport))
-    console.log(item, newListClassReport);
     newListClassReport.map((item1:any, index:number)=>{
       if(item?.classId ===item1?.classId){
         newListClassReport[index].faults = []
       }
     })
     dcpReport.dcpClassReports = newListClassReport
-    console.log("dcpReport", dcpReport)
     dispatch(addClassMistake(dcpReport))
     const listClassReport1 = dcpReport1.dcpClassReports
     const listClassReportApi = listClassReport1.filter(item => item.faults.length > 0)
@@ -135,7 +133,6 @@ const ReportInfo = (props: Props) => {
   const createDcpReport = async () => {
     try {
       // const res = await postDcpReport(dcpReport);
-      console.log('dcpReport', dcpReport)
       const listDcReport = dcpReport.dcpClassReports.filter(item=>item?.faults.length !=0)
       const requestDcReport ={dcpClassReports:listDcReport}
             const res = await postDcpReport(requestDcReport);
@@ -153,9 +150,6 @@ const ReportInfo = (props: Props) => {
                 newListClassReport[index].faults = [];
               })
               dcpReport.dcpClassReports = newListClassReport
-              
-console.log("dcpReport", dcpReport);
-
               dispatch(addClassMistake(dcpReport))
             }
           },

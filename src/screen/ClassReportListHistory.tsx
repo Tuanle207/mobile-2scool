@@ -21,7 +21,6 @@ interface FaultInfo {
 const ClassReportListHistory = () => {
   const dispatch = useDispatch()
   const dcpReport = useSelector((state: RootState) => state.mistakeHistory)
-  console.log("ClassReportListHistory", dcpReport)
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
   const navigation = useNavigation()
   const route = useRoute()
@@ -37,10 +36,10 @@ const ClassReportListHistory = () => {
     }
   })
   const listPointOfFault = faultsInfo.map((item: FaultInfo) => {
-    if (item.relatedStudentIds.length==0){
+    if (item.relatedStudentIds.length == 0) {
       return item.point
-    }else
-    return item.point * item.relatedStudentIds.length
+    } else
+      return item.point * item.relatedStudentIds.length
   })
   const totalPoint = listPointOfFault.reduce(((acc: number, cur: number) => acc + cur), 0)
 
@@ -70,7 +69,7 @@ const ClassReportListHistory = () => {
         )}
         style={styles.item} key={index}>
         <View style={styles.itemPoint}>
-          <Text style={styles.point}>{item.relatedStudentIds.length!==0?`- ${item.point * item.relatedStudentIds.length}`:`- ${item.point}`}</Text>
+          <Text style={styles.point}>{item.relatedStudentIds.length !== 0 ? `- ${item.point * item.relatedStudentIds.length}` : `- ${item.point}`}</Text>
         </View>
         <View style={styles.itemContent}>
           <Text style={styles.content}>{item.regulationName}</Text>
@@ -78,11 +77,11 @@ const ClassReportListHistory = () => {
         <TouchableOpacity
           onPress={() => removeMistake(index)} style={styles.pd10}
         >
-        <AntDesign
+          <AntDesign
             name={'closecircleo'}
             color={"red"}
             size={24}
-          /> 
+          />
         </TouchableOpacity>
       </TouchableOpacity>
     )
@@ -95,7 +94,7 @@ const ClassReportListHistory = () => {
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{`Danh sách vi phạm ${classInfo.name}`}</Text>
           <Text style={styles.totalPoint}>Tổng điểm trừ:
-          <Text style={styles.point}>{` - ${totalPoint}`}</Text>
+            <Text style={styles.point}>{` - ${totalPoint}`}</Text>
           </Text>
           {faultsInfo?.map((item: FaultInfo, index: number) => _renderMistake(item, index))}
         </View>

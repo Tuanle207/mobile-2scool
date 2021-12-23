@@ -38,9 +38,7 @@ const MistakeDetailHistory= () => {
     initStudent()
   }, [])
   useEffect(()=>{
-    console.log("listCriteria", listRegulation,  classInfo, fault, indexFault);
   const dataRegulation:any = listRegulation.find(item => item.id === fault?.regulationId);
-  console.log(dataRegulation)
   setCriteria(dataRegulation?.criteriaId);
   setListRegulation1(listRegulation.filter((item:any) => item.criteriaId === dataRegulation?.criteriaId));
   },[])
@@ -51,7 +49,6 @@ const MistakeDetailHistory= () => {
       const res: any = await getStudent(classInfo.id)
       setListStudent(res.data.students)
     } catch (err) {
-      console.log('err3')
       Alert.alert('Error')
     }
   }
