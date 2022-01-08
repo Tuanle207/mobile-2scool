@@ -241,7 +241,7 @@ const LrReport = () => {
           {_renderPoint()}
           {_renderAbsent()}
         </View>
-
+        {item?.id && item?.status == "Created" ?
         <TouchableOpacity disabled={item?.id && item?.status != "Created" ? true : false}
           onPress={() => { item?.id ? onHanldeUpdateAchieve() : onHanldeSendAchieve() }}
           style={[mainStyle.buttonContainer, styles.buttonSend,]}>
@@ -251,7 +251,7 @@ const LrReport = () => {
             size={24}
           />
           <Text style={[mainStyle.buttonTitle, { marginHorizontal: 12, fontSize: 18 }]}>{item?.id ? "Cập nhật phiếu thành tích" : "Gửi phiếu thành tích"}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> : null}
       </ScrollView>
     </KeyboardAvoidingView>
 
