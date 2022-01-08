@@ -136,7 +136,7 @@ const LrReport = () => {
         let s = { uri: objectImage?.uri, name: objectImage?.fileName, type: objectImage?.type };
         // let s = { url: "http://10.0.2.2:5000/photo/d50650c8-25d0-319f-ff48-3a00817199d5-2021-11-30-12-15-16.png",name:"50650c8-25d0-319f-ff48-3a00817199d5-2021-11-30-12-15-16.png" , type:"image/png" };
         let formData = new FormData();
-        formData.append('ClassId', "9a0d26bf-3a1e-0b55-3385-39ff62e91b22");
+        formData.append('ClassId', res?.data?.items[0]?.id);
         formData.append('AbsenceNo', Number(absent));
         formData.append('TotalPoint', Number(point));
         formData.append('Photo', s);

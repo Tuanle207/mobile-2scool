@@ -19,7 +19,7 @@ export default function usePagingInfo(props?: Props): ReturnType {
       pageSize: props?.pageSize || 5,
       filter: props?.filter || []
     });
-  
+  console.log("filter", pagingInfo)
     const setFilter = (filter: Util.PagingFilter) => {
       const newFilter = pagingInfo.filter || [];
       const existedFilter = newFilter.find(f => f.key === filter.key);

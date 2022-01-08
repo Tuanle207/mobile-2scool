@@ -27,7 +27,7 @@ const HistoryScreen = () => {
   const [datePicker, setDatePicker] = useState(false)
   const [listDcpReport, setListDcpReport] = useState([])
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [chooseDateStart, setChooseDateStart] = useState(new Date().toISOString());
+  const [chooseDateStart, setChooseDateStart] = useState(new Date( moment().add(-6, 'd').format('YYYY-MM-DD')).toISOString());
   const [chooseDateEnd, setChooseDateEnd] = useState(new Date().toISOString());
   const { pagingInfo, setPageIndex, setFilter } = usePagingInfo({
     filter: [
@@ -39,7 +39,7 @@ const HistoryScreen = () => {
       {
         key: 'CreationTime',
         comparison: '>=',
-        value: moment().format('MM/DD/YYYY')
+        value: moment().add(-6, 'd').format('MM/DD/YYYY')
       },
       {
         key: 'CreationTime',
@@ -77,7 +77,7 @@ const HistoryScreen = () => {
       <View style={styles.dateContainer}>
         <TouchableOpacity onPress={() => setDateFromPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? moment(pagingInfo.filter[1].value.toString()).format("DD/MM/YYYY") : ''}
+            value={moment(chooseDateStart).format("DD/MM/YYYY") }
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -92,7 +92,7 @@ const HistoryScreen = () => {
         <Text style={{ alignSelf: 'center' }}>_______</Text>
         <TouchableOpacity onPress={() => setDateToPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? moment(pagingInfo.filter[2].value.toString()).format("DD/MM/YYYY") : ''}
+            value={moment(chooseDateEnd).format("DD/MM/YYYY")}
             editable={false}
             style={styles.datePicker}
             textAlign="center"

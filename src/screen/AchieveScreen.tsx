@@ -23,19 +23,19 @@ const AchieveScreen = () => {
   const [datePicker, setDatePicker] = useState(false)
   const [listDcpReport, setListDcpReport] = useState([])
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [chooseDateStart, setChooseDateStart] = useState(new Date().toISOString());
+  const [chooseDateStart, setChooseDateStart] = useState(new Date( moment().add(-6, 'd').format('YYYY-MM-DD')).toISOString());
   const [chooseDateEnd, setChooseDateEnd] = useState(new Date().toISOString());
   const { pagingInfo, setPageIndex, setFilter } = usePagingInfo({
     filter: [
       {
         key: 'CreationTime',
         comparison: '>=',
-        value: moment().subtract(6,'d').format('MM/DD/YYYY')
+        value: moment().add(-6, 'd').format('MM/DD/YYYY')
       },
       {
         key: 'CreationTime',
         comparison: '<',
-        value: moment().add(1,'d').format('MM/DD/YYYY')
+        value: moment().add(1, 'd').format('MM/DD/YYYY')
       }
     ]
   });
@@ -68,7 +68,7 @@ const AchieveScreen = () => {
       <View style={styles.dateContainer}>
         <TouchableOpacity onPress={() => setDateFromPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? moment(pagingInfo.filter[0].value.toString()).format("DD/MM/YYYY") : ''}
+            value={moment(chooseDateStart).format("DD/MM/YYYY") }
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -83,7 +83,7 @@ const AchieveScreen = () => {
         <Text style={{ alignSelf: 'center' }}>_______</Text>
         <TouchableOpacity onPress={() => setDateToPicker(true)} style={styles.touchChooseDate}>
           <TextInput
-            value={pagingInfo.filter ? moment(pagingInfo.filter[1].value.toString()).format("DD/MM/YYYY") : ''}
+            value={moment(chooseDateEnd).format("DD/MM/YYYY")}
             editable={false}
             style={styles.datePicker}
             textAlign="center"
@@ -195,7 +195,7 @@ const AchieveScreen = () => {
           setFilter({
             key: 'CreationTime',
             comparison: '<',
-            value: moment(date).format('MM/DD/YYYY')
+            value: moment(date).add(1, 'd').format('MM/DD/YYYY')
           });
 
         }}
