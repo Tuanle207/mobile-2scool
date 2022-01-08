@@ -234,7 +234,7 @@ const LrReport = () => {
 
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>
 
-      <Header title={item?.id ? "Cập nhật thành tích" : "Thêm thành tích"} />
+      <Header title={item?.id ? item?.status == "Created"? "Cập nhật thành tích": "Thông tin thành tích" : "Thêm thành tích"} />
       <ScrollView style={styles.mainContainer}>
         <View style={{ flex: 1, padding: 20, height: heightDevice - 175 }}>
           {_renderImage()}
