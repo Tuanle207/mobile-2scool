@@ -241,7 +241,7 @@ const LrReport = () => {
           {_renderPoint()}
           {_renderAbsent()}
         </View>
-        {item?.id && item?.status == "Created" ?
+        {((item?.id && item?.status == "Created") || !(item?.id)) ?
         <TouchableOpacity disabled={item?.id && item?.status != "Created" ? true : false}
           onPress={() => { item?.id ? onHanldeUpdateAchieve() : onHanldeSendAchieve() }}
           style={[mainStyle.buttonContainer, styles.buttonSend,]}>
