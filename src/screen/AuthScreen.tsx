@@ -112,7 +112,7 @@ const AuthScreen = () => {
           marginHorizontal: 10, 
         }}
       >
-      {
+      {/* {
         !selectedTenant ? (
           <DropDownPicker
             placeholder="Chọn trường"
@@ -144,7 +144,7 @@ const AuthScreen = () => {
           </TouchableOpacity>
           </View>
         )
-      }
+      } */}
       </View>
       <Image source={require('../assets/icon/SCOOL.png')} style={styles.logo} />
       <View style={styles.inputContainer}>
