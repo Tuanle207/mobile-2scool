@@ -21,6 +21,7 @@ export namespace User {
     export interface Login {
       username: string;
       password: string;
+      tenant: string;
     }
   
     export interface UpdateProfile {

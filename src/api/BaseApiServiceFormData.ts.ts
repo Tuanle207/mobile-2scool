@@ -12,7 +12,9 @@ export const getDefaultOAuthOptions = () => {
     'client_secret': '1q2w3e*',
   };
 };
-export const getApiServiceFormData = async () => {
+export const getApiServiceFormData = async ({queryActiveCourse, queryCurrentAccount}: {queryActiveCourse?: boolean, queryCurrentAccount?: boolean} = {
+  queryActiveCourse: false, queryCurrentAccount: false
+}) => {
 
   // get token from store
   const { 
@@ -24,8 +26,11 @@ export const getApiServiceFormData = async () => {
 
   const axiosConfig = axios.create({
     baseURL: baseUrl,
-    headers: { 'Content-Type': 'multipart/form-data',
-     'Authorization': `Bearer ${token}` },
+    headers: { 
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}` ,
+      '2Scool-Active-Course': queryActiveCourse ? '1' : '0',
+      '2Scool-Current-Account': queryCurrentAccount ? '1' : '0',},
     withCredentials: true,
   });
 

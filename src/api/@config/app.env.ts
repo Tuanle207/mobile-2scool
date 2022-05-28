@@ -2,7 +2,7 @@ import { IEnvConfig } from './common';
 
 const appEnv: {[key: string]: IEnvConfig} = {
   development: {
-    host: 'http://localhost:5000',
+    host: 'http://147.182.219.63:5000',
     appUrl: 'http://localhost:3000',
     oAuthConfig: {
       issuer: 'http://localhost:5000',
@@ -14,7 +14,7 @@ const appEnv: {[key: string]: IEnvConfig} = {
     enableLogger: true
   },
   production: {
-    host: 'http://localhost:5000',
+    host: 'http://147.182.219.63:5000',
     appUrl: 'http://localhost:3000',
     oAuthConfig: {
       issuer: 'http://localhost:5000',
