@@ -22,6 +22,7 @@ import {
 import { Provider } from 'react-redux';
 import AppContainer from './src/navigation';
 import { store } from './src/redux/store/store';
+import codePush from 'react-native-code-push';
 
 
 const Section: React.FC<{
@@ -85,4 +86,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+const codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  deploymentKey: '48b5413e-ab3a-48eb-a4ad-e6eb1a4737bf',
+  installMode: codePush.InstallMode.IMMEDIATE,
+};
+
+export default codePush(codePushOptions)(App);
