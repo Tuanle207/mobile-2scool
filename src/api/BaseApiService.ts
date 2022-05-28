@@ -12,7 +12,9 @@ export const getDefaultOAuthOptions = () => {
     'client_secret': '1q2w3e*',
   };
 };
-export const getApiService = async () => {
+export const getApiService = async ({queryActiveCourse, queryCurrentAccount}: {queryActiveCourse?: boolean, queryCurrentAccount?: boolean} = {
+  queryActiveCourse: false, queryCurrentAccount: false
+}) => {
 
   // get token from store
   const { 
@@ -24,7 +26,12 @@ export const getApiService = async () => {
 
   const axiosConfig = axios.create({
     baseURL: baseUrl,
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    headers: { 
+      'Content-Type': 'application/json', 
+      'Authorization': `Bearer ${token}`,
+      '2Scool-Active-Course': queryActiveCourse ? '1' : '0',
+      '2Scool-Current-Account': queryCurrentAccount ? '1' : '0',
+    },
     withCredentials: true,
   });
 
@@ -35,4 +42,4 @@ export const getApiService = async () => {
   return axiosConfig;
 };
 
-export const baseUrl = 'http://10.0.2.2:5000'
+export const baseUrl = 'http://147.182.219.63:5000'

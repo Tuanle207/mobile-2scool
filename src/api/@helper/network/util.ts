@@ -1,4 +1,4 @@
-import { Util } from '../../interfaces';
+import { Util } from '../../../model/Util';
 
 export const parseQueryString = (params: Util.IObject = {}) => {
   return Object.keys(params).reduce((queryStr, current, index) => {
@@ -18,19 +18,3 @@ export class HttpException<T = any> {
     this.data = data;
   }
 }
-
-export const isTokenValid = (token: string): boolean => {
-  if (!token) {
-    return false;
-  }
-  try {
-    const decoded: JwtPayload = jwt_decode(token);    if (!decoded || typeof(decoded) !== 'object' || !decoded.exp) {
-      return false;
-    }
-    const now = new Date().valueOf();
-    return now/1000 < decoded.exp;
-  } catch (err) {
-    console.log('invalid')
-    return false;
-  }
-};

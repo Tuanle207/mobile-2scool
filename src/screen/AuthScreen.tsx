@@ -1,5 +1,5 @@
 import { CommonActions, useNavigation } from '@react-navigation/native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { getRoleUser, login } from '../api/login'
@@ -9,6 +9,11 @@ import { loginSuccess } from '../redux/action/auth'
 import Octicons from 'react-native-vector-icons/Octicons'
 import LoadingBase from '../component/LoadingBase'
 import { checkRoleUser } from '../redux/action/roleUser'
+import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import { getTenantSimpleList } from '../api/tenant'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const resetAction = CommonActions.reset({
   index: 0,
   routes: [{ name: 'AppStack' }],
@@ -16,15 +21,48 @@ const resetAction = CommonActions.reset({
 const AuthScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  const [userName, setUserName] = useState('lalala123')
-  const [pass, setPass] = useState('1q2w3E*')
+  const [userName, setUserName] = useState('')
+  const [pass, setPass] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const [seePass, setSeePass] = useState(false)
+  const [seePass, setSeePass] = useState(true)
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [ openTenantDropdown, setOpenTenantDropdown ] = useState(false);
+  const [ selectedTenant, setSelectedTenant ] = useState<string | null>(null);
+  const [ tenants, setTenants ] = useState<ItemType<string>[]>([]);
+
+  useEffect(() => {
+    const initTenants = async () => {
+      const tenantsRes = await getTenantSimpleList();
+      const tenants: ItemType<string>[] = tenantsRes.data.items.map(x => ({
+        label: x.displayName,
+        value: x.name,
+      }));
+      const selectedTenant = await AsyncStorage.getItem('tenant_name') || null;
+      setSelectedTenant(selectedTenant);
+      setTenants(tenants);
+      console.log(selectedTenant);
+    };
+    initTenants();
+  }, []);
+
+  useEffect(() => {
+    const setItem = async (selectedTenant: string | null) => {
+      AsyncStorage.setItem('tenant_name', selectedTenant || '');
+      const item = await AsyncStorage.getItem('tenant_name');
+      console.log({item})
+    };
+    setItem(selectedTenant);
+  }, [selectedTenant]);
+
   const loginApi = async () => {
-    setIsLoading(true);
+    if (!selectedTenant) {
+      setErrorMessage('Vui lòng chọn trường của bạn');
+      return;
+    }
     try {
-      const res: any = await login({ username: userName, password: pass })
+      setIsLoading(true);
+      const res: any = await login({ username: userName, password: pass, tenant: selectedTenant })
 
       const payload = {
         access_token: res.data.access_token,
@@ -58,7 +96,7 @@ const AuthScreen = () => {
       setIsLoading(false);
       setErrorMessage('Thông tin tài khoản không đúng')
     }
-  }
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -69,6 +107,45 @@ const AuthScreen = () => {
         // showHideTransition={statusBarTransition}
         hidden={false} />
       <LoadingBase visible={isLoading} />
+      <View
+        style={{ 
+          marginHorizontal: 10, 
+        }}
+      >
+      {
+        !selectedTenant ? (
+          <DropDownPicker
+            placeholder="Chọn trường"
+            ListEmptyComponent={() => <Text style={{ padding: 10 }}>Danh sách trống</Text>}
+            open={openTenantDropdown}
+            value={selectedTenant}
+            items={tenants}
+            setOpen={setOpenTenantDropdown}
+            setValue={setSelectedTenant}
+            setItems={setTenants}
+          />
+        ) : (
+          <View style={{
+            display: 'flex', 
+            flexDirection: 'row', 
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            width: '100%'
+          }}>
+          <Text>{selectedTenant && tenants.find(x => x.value === selectedTenant)?.label}</Text>
+          <TouchableOpacity
+            onPress={() => setSelectedTenant(null)}
+          >
+            <AntDesignIcon
+              name="edit"
+              size={24}
+              color="blue"
+            />
+          </TouchableOpacity>
+          </View>
+        )
+      }
+      </View>
       <Image source={require('../assets/icon/SCOOL.png')} style={styles.logo} />
       <View style={styles.inputContainer}>
         <TextInput
