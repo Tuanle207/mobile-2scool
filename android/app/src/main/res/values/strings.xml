@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Scool</string>
+    <string name="app_name">2Scool</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
     <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">48b5413e-ab3a-48eb-a4ad-e6eb1a4737bf</string>
 </resources>

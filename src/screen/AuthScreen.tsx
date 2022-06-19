@@ -1,18 +1,19 @@
 import { CommonActions, useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Image, KeyboardAvoidingView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, KeyboardAvoidingView, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { getRoleUser, login } from '../api/login'
 import { color } from '../assets/color'
-import { fontSize, height, width } from '../assets/size'
+import { fontSize, height, width, widthDevice } from '../assets/size'
 import { loginSuccess } from '../redux/action/auth'
 import Octicons from 'react-native-vector-icons/Octicons'
 import LoadingBase from '../component/LoadingBase'
 import { checkRoleUser } from '../redux/action/roleUser'
-import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { getTenantSimpleList } from '../api/tenant'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MultiSelect from 'react-native-multiple-select';
+import { TenantDto } from '../model/Tenant'
 
 const resetAction = CommonActions.reset({
   index: 0,
@@ -29,19 +30,17 @@ const AuthScreen = () => {
 
   const [ openTenantDropdown, setOpenTenantDropdown ] = useState(false);
   const [ selectedTenant, setSelectedTenant ] = useState<string | null>(null);
-  const [ tenants, setTenants ] = useState<ItemType<string>[]>([]);
+  const [ tenants, setTenants ] = useState<TenantDto[]>([]);
+  const [ loadingTenant, setLoadingTenant ] = useState(true);
 
   useEffect(() => {
     const initTenants = async () => {
+      setLoadingTenant(true);
       const tenantsRes = await getTenantSimpleList();
-      const tenants: ItemType<string>[] = tenantsRes.data.items.map(x => ({
-        label: x.displayName,
-        value: x.name,
-      }));
       const selectedTenant = await AsyncStorage.getItem('tenant_name') || null;
       setSelectedTenant(selectedTenant);
-      setTenants(tenants);
-      console.log(selectedTenant);
+      setTenants(tenantsRes.data.items);
+      setLoadingTenant(false);
     };
     initTenants();
   }, []);
@@ -49,10 +48,10 @@ const AuthScreen = () => {
   useEffect(() => {
     const setItem = async (selectedTenant: string | null) => {
       AsyncStorage.setItem('tenant_name', selectedTenant || '');
-      const item = await AsyncStorage.getItem('tenant_name');
-      console.log({item})
     };
-    setItem(selectedTenant);
+    if (selectedTenant) {
+      setItem(selectedTenant);
+    }
   }, [selectedTenant]);
 
   const loginApi = async () => {
@@ -99,7 +98,10 @@ const AuthScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"} 
+      style={styles.container}
+    >
       <StatusBar
         animated={true}
         backgroundColor={color.blue}
@@ -113,26 +115,54 @@ const AuthScreen = () => {
         }}
       >
       {
-        !selectedTenant ? (
-          <DropDownPicker
-            placeholder="Chọn trường"
-            ListEmptyComponent={() => <Text style={{ padding: 10 }}>Danh sách trống</Text>}
-            open={openTenantDropdown}
-            value={selectedTenant}
+        !selectedTenant && !loadingTenant && (
+          <MultiSelect
+            fixedHeight
+            single
+            styleMainWrapper={styles.tenants}
             items={tenants}
-            setOpen={setOpenTenantDropdown}
-            setValue={setSelectedTenant}
-            setItems={setTenants}
+            uniqueKey='name'
+            onSelectedItemsChange={(items) => setSelectedTenant(items[0])}
+            selectedItems={[selectedTenant]}
+            noItemsText='Không có trường nào'
+            selectText='Chọn trường THPT của bạn'
+            searchInputPlaceholderText='Tìm kiếm trường THPT'
+            styleTextDropdown={{ 
+              fontSize: fontSize.tag,
+              color: 'black',
+              marginTop: 0
+            }}
+            styleTextDropdownSelected={{
+              fontSize: fontSize.tag,
+              color: 'black',
+              marginTop: 0
+            }}
+            tagRemoveIconColor='gray'
+            tagBorderColor='gray'
+            tagTextColor='black'
+            selectedItemTextColor='red'
+            selectedItemIconColor='red'
+            itemTextColor='#000'
+            displayKey='displayName'
+            submitButtonColor='#CCC'
+            submitButtonText='Submit'
+            searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
-        ) : (
+        )
+      }
+      {
+        selectedTenant && !loadingTenant && (
           <View style={{
             display: 'flex', 
             flexDirection: 'row', 
-            justifyContent: 'space-evenly',
             alignItems: 'center',
             width: '100%'
           }}>
-          <Text>{selectedTenant && tenants.find(x => x.value === selectedTenant)?.label}</Text>
+          <Text style={{
+            fontSize: fontSize.content,
+            fontWeight: '500',
+            marginRight: 16
+          }}>{selectedTenant && tenants.find(x => x.name === selectedTenant)?.displayName}</Text>
           <TouchableOpacity
             onPress={() => setSelectedTenant(null)}
           >
@@ -147,7 +177,6 @@ const AuthScreen = () => {
       }
       </View>
       <Image source={require('../assets/icon/SCOOL.png')} style={styles.logo} />
-      <Text>heellllo</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -241,7 +270,17 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     tintColor: 'grey'
-  }
+  },
+  tenants: {
+    width: widthDevice * 92 / 100,
+    backgroundColor: 'white',
+    borderColor: 'gray',
+    borderRadius: 5,
+    // borderWidth: 0.5,
+    paddingLeft: 15,
+    paddingRight: 5,
+    zIndex: 100,
+  },
 })
 
 export default AuthScreen

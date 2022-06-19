@@ -3,8 +3,8 @@ import { getApiService } from "./BaseApiService"
 import { getApiServiceFormData } from "./BaseApiServiceFormData.ts"
 
 export const getCriteria = async () => {
-    const endpoint = `/api/app/criteria/simple-list`
-    const axios = await getApiService()
+    const endpoint = `/api/app/criterias/simple-list`
+    const axios = await getApiService();
     return axios.get(endpoint)
 }
 
@@ -16,7 +16,7 @@ export const getRegulation = async () => {
 
 export const getStudent = async (classId: string) => {
     const endpoint = `/api/app/classes/${classId}`
-    const axios = await getApiService()
+    const axios = await getApiService({ queryActiveCourse: true })
     return axios.get(endpoint)
 }
 

@@ -102,7 +102,7 @@ const AchieveScreen = () => {
   const onHanldeDel = async (value:any)=>{
    const arrayDel = listDcpReport.filter((item:any)=>item?.id!==value?.id)
    setListDcpReport(arrayDel);
-   const res = await delLrpReportsId(value?.id);
+   await delLrpReportsId(value?.id);
   }
   const _renderItem = (item: any, index: number) => {
     return (
@@ -136,7 +136,7 @@ const AchieveScreen = () => {
           </View>
         </View>
         {item?.status == "Created" ?
-        <TouchableOpacity onPress={()=>onHanldeDel(item)} disabled={item?.status === "Created" ? false : true}>
+        <TouchableOpacity onPress={() => onHanldeDel(item)} disabled={item?.status === "Created" ? false : true}>
             <AntDesign
               name={'closecircleo'}
               color={"red"}
