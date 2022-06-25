@@ -15,6 +15,7 @@ import { DcpClassesReport, Faults } from '../redux/reducer/mistakeHistory'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 import LoadingBase from '../component/LoadingBase'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const HistoryInfo = () => {
   const navigation = useNavigation()
@@ -136,14 +137,13 @@ const HistoryInfo = () => {
             <Text style={styles.content}>{`  ${totalFault}`}</Text>
           </Text>
         </View>
-        <View style={styles.iconRemoveContainer}>
-          {/* <TouchableOpacity onPress={() => { }}>
+        <View style={styles.iconDetailContainer}>
+          {
           <AntDesign
-              name={'closecircleo'}
-              color={"red"}
+              name={'right'}
+              color={"blue"}
               size={24}
-            /> 
-          </TouchableOpacity> */}
+            /> }
         </View>
       </TouchableOpacity>
     )
@@ -180,7 +180,7 @@ const HistoryInfo = () => {
   return (
     <SafeAreaView style={styles.container}>
       <LoadingBase visible={isLoading} />
-      <Header title="Thông tin phiếu chấm" />
+      <Header title="Thông tin phiếu chấm nề nếp" />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
         <View>
           {listClassReportState.map((item: any, index: number) => _renderClass(item, index))}
@@ -214,16 +214,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 15,
     width: widthDevice * 92 / 100,
-    borderRadius: 6,
     borderWidth: 1,
-    borderColor: color.border
+    borderColor: color.border,
+    borderBottomRightRadius: 6,
+    borderTopRightRadius: 6,
   },
   itemClassContainer: {
     width: widthDevice * 25 / 100,
     height: 70,
     backgroundColor: color.blue,
-    borderRadius: 6,
-    borderWidth: 0,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -234,7 +233,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 8,
     justifyContent: 'space-evenly'
   },
   contentTitle: {
@@ -249,9 +248,9 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
   },
-  iconRemoveContainer: {
+  iconDetailContainer: {
     justifyContent: 'center',
-    marginRight: 15
+    marginRight: 10
   },
   buttonAdd: {
     backgroundColor: color.blueStrong,

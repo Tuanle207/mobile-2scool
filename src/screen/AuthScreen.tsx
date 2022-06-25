@@ -144,7 +144,7 @@ const AuthScreen = () => {
             selectedItemIconColor='red'
             itemTextColor='#000'
             displayKey='displayName'
-            submitButtonColor='#CCC'
+            submitButtonColor='#2CC97E'
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />

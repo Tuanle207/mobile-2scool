@@ -83,7 +83,7 @@ const MistakeCreate = () => {
     <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null}  style={styles.container}>
       <Header title="Thêm vi phạm" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
-        <View style={[styles.contentContainer,{paddingHorizontal:widthDevice * 3 / 100,}]}>
+        <View style={[styles.contentContainer,{paddingLeft: 16, paddingRight: 16}]}>
           <MultiSelect
             fixedHeight
             single
@@ -104,7 +104,7 @@ const MistakeCreate = () => {
             selectedItemIconColor='red'
             itemTextColor='#000'
             displayKey='name'
-            submitButtonColor='#CCC'
+            submitButtonColor='#2CC97E'
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
@@ -130,7 +130,7 @@ const MistakeCreate = () => {
             selectedItemIconColor='red'
             itemTextColor='#000'
             displayKey='name'
-            submitButtonColor='#CCC'
+            submitButtonColor='#2CC97E'
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
@@ -152,12 +152,12 @@ const MistakeCreate = () => {
             selectedItemIconColor='red'
             itemTextColor='#000'
             displayKey='name'
-            submitButtonColor='#CCC'
+            submitButtonColor='#2CC97E'
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
         </View>
-        <View style={{ height: 80, width: widthDevice, justifyContent: 'center', alignItems: 'center', marginTop:100 }}>
+        <View style={{ height: 80, width: widthDevice, justifyContent: 'center', alignItems: 'center', padding: 60}}>
         <TouchableOpacity
           onPress={() => addNewMistake()}
           style={[mainStyle.buttonContainer, styles.buttonAdd]}>
@@ -187,24 +187,26 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
   },
   contentContainer: {
-    // flex: 1,
-    width:widthDevice
+    flex: 1,
+    width: widthDevice,
   },
   criteria: {
-    marginTop: '15%',
+    marginTop: '4%',
     width: widthDevice * 92 / 100,
     backgroundColor: 'white',
     borderColor: 'gray',
     borderRadius: 5,
     // borderWidth: 0.5,
-    paddingLeft: 15,
-    paddingRight: 5,
+    paddingLeft: 16,
+    paddingRight: 4,
   },
   criteriaName: {
-    fontSize: fontSize.contentSmall,
+    fontSize: 16,
     fontWeight: 'bold',
+    height: 21,
     color: 'black',
-    marginTop: 0
+    marginTop: 0,
+    marginBottom: 0,
   },
   iconNext: {
 
@@ -214,15 +216,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   studentContainer: {
-    marginTop: '15%',
+    marginTop: '4%',
     backgroundColor: 'white',
-    // borderColor: 'gray',
     borderRadius: 5,
-    // borderWidth: 0.5,
     paddingLeft: 15,
     paddingRight: 5,
     width: widthDevice * 92 / 100,
-    minHeight: 160
+    minHeight: 360
   },
   studentButton: {
     flexDirection: 'row',
@@ -267,8 +267,9 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     backgroundColor: color.blueStrong,
-    width: '92%',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginBottom: 10,
+     width:  widthDevice * 92 / 100,
   }
 })
 

@@ -5,6 +5,7 @@ import { getUserInfo, logout } from '../api/user'
 import { color } from '../assets/color'
 import { fontSize, heightDevice, widthDevice } from '../assets/size'
 import HeaderHome from '../component/HeaderMain'
+import LoadingBase from '../component/LoadingBase'
 import { mainStyle } from './mainStyle'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 const UserScreen = () => {
@@ -12,6 +13,7 @@ const UserScreen = () => {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     getInfo()
@@ -19,18 +21,22 @@ const UserScreen = () => {
 
   const getInfo = async () => {
     try {
+      setIsLoading(true);
       const res: any = await getUserInfo()
+      setIsLoading(false)
       setName(res.data.name)
       setPhone(res.data.phoneNumber)
       setEmail(res.data.email)
     } catch {
-      Alert.alert('Error', 'Can not get user info')
+      Alert.alert('Lỗi', 'Không thể lấy thông tin tài khoản')
+      setIsLoading(false)
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <HeaderHome title="Thông tin tài khoản" />
+      <LoadingBase visible={isLoading} />
       <View style={[styles.mainContainer]}>
         <View style={styles.user}>
           <Image source={require('../assets/icon/user-photo.png')} />

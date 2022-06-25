@@ -151,13 +151,13 @@ const AchieveScreen = () => {
   if(roleUser?.CreateNewDcpReport &&!roleUser?.CreateNewLRReport)
 {return(
   <SafeAreaView style={styles.container}>    
-    <HeaderHome title="Thành tích" />
+    <HeaderHome title="Lịch sử chấm sổ đầu bài" />
       <Text style={{alignSelf:'center', marginTop:10, textAlignVertical:'center', fontStyle:'italic'}}>Bạn không có quyền truy cập</Text>
       </SafeAreaView>
 )}
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderHome title="Thành tích" />
+      <HeaderHome title="Lịch sử chấm sổ đầu bài" />
       <LoadingBase visible={isLoading} />
       {_renderDatePicker()}
       <DatePicker

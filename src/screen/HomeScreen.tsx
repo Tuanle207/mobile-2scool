@@ -79,19 +79,18 @@ const HomeScreen = () => {
   }
 
   const _renderItem = (item: Class) => {
-    return (
-      <View style={styles.classContainer}>
-        <Text style={styles.class}>{item.name}</Text>
-        <TouchableOpacity
-          onPress={() => navigation.dispatch(
+    return (      
+       <TouchableOpacity onPress={() => navigation.dispatch(
             CommonActions.navigate({
               name: 'ClassReportList',
               params: item
             })
           )}>
-          <Image source={require('../assets/icon/edit.png')} />
+          <View style={styles.classContainer}>
+            <Text style={styles.class}>{item.name}</Text>
+            <Image source={require('../assets/icon/edit.png')} />
+          </View>
         </TouchableOpacity>
-      </View>
     )
   }
 
@@ -111,7 +110,6 @@ const HomeScreen = () => {
         id: item.id
       }
     })
-
     const newSearchClass = newClasses.filter(item => item.name.includes(newValue) === true)
     const newListClass: any[] = newSearchClass.map(item => {
       const newClass = listClass.find(itemChild => itemChild.id === item.id)
@@ -146,7 +144,7 @@ const HomeScreen = () => {
             onChangeText={(value: string) => _setSearch(value)}
           />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1}}>
           <FlatList
             data={classes}
             keyExtractor={item => item.id}
@@ -189,22 +187,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: widthDevice * 80 / 100,
+    width: widthDevice * 90 / 100,
     height: 45,
     backgroundColor: 'white',
     color: 'black',
     marginTop: 20,
     borderRadius: 5,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    borderWidth: 0.2,
+    borderColor: 'grey'
   },
   classContainer: {
-    width: widthDevice * 80 / 100,
+    width: widthDevice * 90 / 100,
     backgroundColor: 'white',
     paddingHorizontal: 30,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
-    height: 55,
+    height: 50,
     alignItems: 'center',
     borderRadius: 10,
     borderWidth: 0.5,
@@ -220,7 +220,8 @@ const styles = StyleSheet.create({
   iconSend: {
     width: 55,
     height: 55,
-    margin: 30
+    margin: 20,
+    marginBottom: 30
   }
 });
 

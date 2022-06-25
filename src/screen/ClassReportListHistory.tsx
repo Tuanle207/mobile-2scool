@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   totalPoint: {
     fontSize: fontSize.contentSmall,
     fontWeight: 'bold',
-    marginTop: 20,
+    marginTop: 16,
   },
   point: {
     color: 'red',
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   buttonDone: {
-    backgroundColor: color.blue,
+    backgroundColor: color.green,
     width: '40%'
   },
   buttonAdd: {

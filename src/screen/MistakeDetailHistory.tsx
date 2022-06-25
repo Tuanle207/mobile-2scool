@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
-import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import MultiSelect from 'react-native-multiple-select'
 import { useDispatch, useSelector } from 'react-redux'
 import { getStudent } from '../api/mistake'
@@ -32,7 +32,6 @@ const MistakeDetailHistory = () => {
   const [studentMistake, setStudentMistake] = useState<Student[]>(fault.relatedStudentIds)
   const [modalType, setModalType] = useState<string | null>(null)
   const [point, setPoint] = useState(fault.point)
-  const [isEdit, setIsEdit] = useState(false)
 
   useEffect(() => {
     initStudent()
@@ -58,7 +57,6 @@ const MistakeDetailHistory = () => {
   }, [criteria])
 
   const editMistake = () => {
-    if (!isEdit) return setIsEdit(true)
     if (regulation === '') return Alert.alert('Thông báo', 'Vui lòng chọn vi phạm')
     const mistake = {
       regulationId: regulation,
@@ -93,7 +91,7 @@ const MistakeDetailHistory = () => {
     <SafeAreaView style={styles.container}>
       <Header title="Chi tiết vi phạm" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.contentContainer}>
+      <View style={[styles.contentContainer,{paddingLeft: 16, paddingRight: 16}]}>
           <MultiSelect
             fixedHeight
             single
@@ -114,7 +112,7 @@ const MistakeDetailHistory = () => {
             selectedItemIconColor='red'
             itemTextColor='#000'
             displayKey='name'
-            submitButtonColor='#CCC'
+            submitButtonColor='#2CC97E'
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
@@ -140,7 +138,7 @@ const MistakeDetailHistory = () => {
             selectedItemIconColor='red'
             itemTextColor='#000'
             displayKey='name'
-            submitButtonColor='#CCC'
+            submitButtonColor='#2CC97E'
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
@@ -163,7 +161,7 @@ const MistakeDetailHistory = () => {
             selectedItemIconColor='red'
             itemTextColor='#000'
             displayKey='name'
-            submitButtonColor='#CCC'
+            submitButtonColor='#2CC97E'
             submitButtonText='Submit'
             searchInputStyle={{ fontSize: fontSize.contentSmall }}
           />
@@ -179,7 +177,7 @@ const MistakeDetailHistory = () => {
             color={"white"}
             size={30}
           />
-          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>{isEdit ? 'Hoàn thành' : 'Cập nhật'}</Text>
+          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Cập nhật</Text>
         </TouchableOpacity> : null}
     </SafeAreaView>
   )
@@ -199,22 +197,25 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+    width: widthDevice,
   },
   criteria: {
-    marginTop: '15%',
+    marginTop: '4%',
     width: widthDevice * 92 / 100,
     backgroundColor: 'white',
     borderColor: 'gray',
     borderRadius: 5,
-    borderWidth: 0.5,
-    paddingLeft: 15,
-    paddingRight: 5,
+    // borderWidth: 0.5,
+    paddingLeft: 16,
+    paddingRight: 4,
   },
   criteriaName: {
-    fontSize: fontSize.contentSmall,
+    fontSize: 16,
     fontWeight: 'bold',
+    height: 21,
     color: 'black',
-    marginTop: 0
+    marginTop: 0,
+    marginBottom: 0,
   },
   iconNext: {
 
@@ -224,15 +225,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   studentContainer: {
-    marginTop: '15%',
+    marginTop: '4%',
     backgroundColor: 'white',
-    borderColor: 'gray',
     borderRadius: 5,
-    borderWidth: 0.5,
     paddingLeft: 15,
     paddingRight: 5,
     width: widthDevice * 92 / 100,
-    minHeight: 160
+    minHeight: 360
   },
   studentButton: {
     flexDirection: 'row',
@@ -277,10 +276,9 @@ const styles = StyleSheet.create({
   },
   buttonAdd: {
     backgroundColor: color.blueStrong,
+    flexDirection: 'row',
     marginBottom: 10,
-    // position: 'absolute',
-    width: '92%',
-    flexDirection: 'row'
+     width:  widthDevice * 92 / 100,
   }
 })
 

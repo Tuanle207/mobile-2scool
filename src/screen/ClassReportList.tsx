@@ -131,13 +131,13 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     justifyContent: 'space-between'
   },
   title: {
     fontSize: fontSize.content,
     fontWeight: 'bold',
-    marginTop: 20,
+    marginTop: 16,
   },
   contentContainer: {
     flex: 1,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   totalPoint: {
     fontSize: fontSize.contentSmall,
     fontWeight: 'bold',
-    marginTop: 20,
+    marginTop: 16,
   },
   point: {
     color: 'red',
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: fontSize.contentSmall,
-    color: 'grey'
+    color: 'grey',
   },
   iconRemove: {
     tintColor: 'gray',
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   buttonDone: {
-    backgroundColor: color.blue,
+    backgroundColor: color.green,
     width: '40%'
   },
   buttonAdd: {

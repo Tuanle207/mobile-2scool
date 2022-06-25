@@ -4,6 +4,7 @@ import { Image, KeyboardAvoidingView, SafeAreaView, Dimensions, StyleSheet, Text
 import { color } from '../assets/color'
 import { fontSize, heightDevice, widthDevice } from '../assets/size'
 import Header from '../component/Header'
+import LoadingBase from '../component/LoadingBase'
 import { mainStyle } from './mainStyle'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -30,6 +31,7 @@ const LrReport = () => {
   const [point, setPoint] = useState(item?.totalPoint != undefined && item?.totalPoint != null && item?.totalPoint != 0 ? `${item?.totalPoint}` : '')
   const [absent, setAbsent] = useState(item?.absenceNo != undefined && item?.absenceNo != null && item?.absenceNo != 0 ? `${item?.absenceNo}` : '')
   const [listImage, setListImage] = useState<any>({})
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const chooseFile = async () => {
     Alert.alert("Thêm hình ảnh", "Chọn hình ảnh từ thư viện hoặc chụp ảnh", [
@@ -117,13 +119,16 @@ const LrReport = () => {
       formData.append('ClassId', item?.class?.id);
       formData.append('AbsenceNo', Number(absent));
       formData.append('TotalPoint', Number(point));
+      setIsLoading(true);
       if (objectImage?.uri) {
         s = { uri: objectImage?.uri, name: objectImage?.fileName, type: objectImage?.type };
         formData.append('Photo', s);
       }
       const res1 = await postUpdateLrReports(formData, `${item?.id}`);
       if (res1 && res1?.status === 200) {
-        navigation.goBack()
+        setIsLoading(false);
+          Alert.alert("Thành công", "Cập nhật phiếu chấm thành công")
+          navigation.goBack()
       } else { Alert.alert("Thất bại", "Cập nhật thất bại") }
     } else { Alert.alert("Thất bại", "Cập nhật thất bại, bạn chưa điền đầy đủ thông tin") }
   }
@@ -134,14 +139,16 @@ const LrReport = () => {
       const objectImage: any = listImage;
       if (res?.data?.items[0]?.id) {
         let s = { uri: objectImage?.uri, name: objectImage?.fileName, type: objectImage?.type };
-        // let s = { url: "http://10.0.2.2:5000/photo/d50650c8-25d0-319f-ff48-3a00817199d5-2021-11-30-12-15-16.png",name:"50650c8-25d0-319f-ff48-3a00817199d5-2021-11-30-12-15-16.png" , type:"image/png" };
         let formData = new FormData();
         formData.append('ClassId', res?.data?.items[0]?.id);
         formData.append('AbsenceNo', Number(absent));
         formData.append('TotalPoint', Number(point));
         formData.append('Photo', s);
+        setIsLoading(true);
         const res1 = await postCreateLrReports(formData);
         if (res1 && res1?.status === 200) {
+          setIsLoading(false);
+          Alert.alert("Thành công", "Gửi phiếu chấm thành công")
           navigation.goBack()
         } else { Alert.alert("Thất bại", "Tạo mới thất bại") }
       } else { Alert.alert("Thất bại", "Tạo mới thất bại") }
@@ -154,7 +161,7 @@ const LrReport = () => {
   const _renderImage = () => {
     return (
       <View style={styles.iamgeContainer}>
-        <Text style={styles.title}>Ảnh sổ đầu bài (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
+        <Text style={styles.title}>Ảnh phiếu chấm sổ đầu bài (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity onPress={() => { chooseFile() }}
             style={[styles.image, { marginRight: 12 }]}>
@@ -188,12 +195,6 @@ const LrReport = () => {
           </ScrollView>
 
         </View>
-
-        <TouchableOpacity
-
-          style={[mainStyle.buttonContainer, styles.buttonAdd]}>
-          <Text style={mainStyle.buttonTitle}>Kiểm tra ảnh</Text>
-        </TouchableOpacity>
       </View>
     )
   }
@@ -201,12 +202,12 @@ const LrReport = () => {
   const _renderPoint = () => {
     return (
       <View style={styles.pointContainer}>
-        <Text style={styles.title}>Điểm sổ đầu bài (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
+        <Text style={styles.title}>Điểm phiếu chấm sổ đầu bài (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
         <TextInput
           value={point}
           onChangeText={(text: string) => setPoint(text)}
           keyboardType='numeric'
-          placeholder="Điểm sổ đầu bài"
+          placeholder="Điểm phiếu chấm sổ đầu bài"
           placeholderTextColor="gray"
           style={styles.input}
         />
@@ -234,9 +235,10 @@ const LrReport = () => {
 
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>
 
-      <Header title={item?.id ? item?.status == "Created"? "Cập nhật thành tích": "Thông tin thành tích" : "Thêm thành tích"} />
+      <Header title={item?.id ? item?.status == "Created"? "Cập nhật phiếu chấm sổ đầu bài": "Thông tin phiếu chấm sổ đầu bài" : "Thêm phiếu chấm sổ đầu bài"} />
+      <LoadingBase visible={isLoading} />
       <ScrollView style={styles.mainContainer}>
-        <View style={{ flex: 1, padding: 20, height: heightDevice - 175 }}>
+        <View style={{ flex: 1, padding: 20, height: heightDevice*0.7}}>
           {_renderImage()}
           {_renderPoint()}
           {_renderAbsent()}
@@ -250,7 +252,7 @@ const LrReport = () => {
             color={"white"}
             size={24}
           />
-          <Text style={[mainStyle.buttonTitle, { marginHorizontal: 12, fontSize: 18 }]}>{item?.id ? "Cập nhật phiếu thành tích" : "Gửi phiếu thành tích"}</Text>
+          <Text style={[mainStyle.buttonTitle, { marginHorizontal: 12, fontSize: 18 }]}>{item?.id ? "Cập nhật phiếu chấm sổ đầu bài" : "Gửi phiếu chấm sổ đầu bài"}</Text>
         </TouchableOpacity> : null}
       </ScrollView>
     </KeyboardAvoidingView>
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
     marginBottom: 10, color: 'black'
   },
   iamgeContainer: {
-    marginTop: 40
+    marginTop: 10
   },
   pointContainer: {
     marginTop: 25

@@ -8,6 +8,7 @@ import { postDcpReport } from '../api/mistake'
 import { color } from '../assets/color'
 import { fontSize, widthDevice } from '../assets/size'
 import Header from '../component/Header'
+import LoadingBase from '../component/LoadingBase'
 import { Class } from '../model/Class'
 import { addClassMistake } from '../redux/action/mistake'
 import { RootState } from '../redux/reducer'
@@ -15,6 +16,7 @@ import { DcpClassesReport, Faults } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { Regulation } from '../model/Mistake'
 interface Props {
 
 }
@@ -26,9 +28,9 @@ const ReportInfo = (props: Props) => {
   const dcpReport = useSelector((state: RootState) => state.mistake)
   const listClassReport = dcpReport.dcpClassReports
   const listRegulationApi = useSelector((state: RootState) => state.regulation)
-  const listClassReportApi = listClassReport.filter(item => item.faults.length > 0)
+  const listClassReportApi = listClassReport.filter((item:any) => item.faults.length > 0)
   const [listClass, setListClass] = useState<Class[]>([])
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   //check list empty
   const [isEmpty, setEmpty] = useState<boolean>(false);
   //Information list of votes
@@ -73,7 +75,7 @@ const ReportInfo = (props: Props) => {
     dcpReport.dcpClassReports = newListClassReport
     dispatch(addClassMistake(dcpReport))
     const listClassReport1 = dcpReport1.dcpClassReports
-    const listClassReportApi = listClassReport1.filter(item => item.faults.length > 0)
+    const listClassReportApi = listClassReport1.filter((item:any) => item.faults.length > 0)
     setListClassReportState(listClassReportApi);
     // navigation.dispatch(
     //   CommonActions.navigate({
@@ -83,10 +85,10 @@ const ReportInfo = (props: Props) => {
   }
 
   const _renderClass = (item: DcpClassesReport, index: number) => {
-    const classInfo = listClass.find(classItem => classItem.id === item.classId)
+    const classInfo = listClass.find((classItem:Class) => classItem.id === item.classId)
     const className: any = classInfo?.name
     const faultsInfo = item.faults.map((item: Faults) => {
-      const faultInfo = listRegulationApi.find(fault => fault.id === item.regulationId)
+      const faultInfo = listRegulationApi.find((fault:Regulation) => fault.id === item.regulationId)
       return {
         regulationName: faultInfo?.name,
         point: faultInfo?.point,
@@ -132,11 +134,12 @@ const ReportInfo = (props: Props) => {
 
   const createDcpReport = async () => {
     try {
-      // const res = await postDcpReport(dcpReport);
-      const listDcReport = dcpReport.dcpClassReports.filter(item=>item?.faults.length !=0)
+      setIsLoading(true);
+      const listDcReport = dcpReport.dcpClassReports.filter( (item:any) =>item?.faults.length !=0)
       const requestDcReport ={dcpClassReports:listDcReport}
             const res = await postDcpReport(requestDcReport);
       if (res) {
+        setIsLoading(false);
         Alert.alert("Thành công", "Gửi phiếu chấm thành công", [
           {
             text: "OK", onPress: () => {
@@ -164,10 +167,11 @@ const ReportInfo = (props: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Thông tin phiếu chấm" />
+      <Header title="Thông tin phiếu chấm nề nếp" />
+      <LoadingBase visible={isLoading} />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
         <View>
-          {listClassReportState.map((item, index) => _renderClass(item, index))}
+          {listClassReportState.map((item:DcpClassesReport, index:number) => _renderClass(item, index))}
         </View>
         <TouchableOpacity disabled={isEmpty}
           onPress={() => createDcpReport()}
@@ -197,16 +201,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 15,
     width: widthDevice * 92 / 100,
-    borderRadius: 6,
     borderWidth: 1,
-    borderColor: color.border
+    borderColor: color.border,
+    borderBottomRightRadius: 6,
+    borderTopRightRadius: 6,
   },
   itemClassContainer: {
     width: widthDevice * 25 / 100,
     height: 70,
     backgroundColor: color.blue,
-    borderRadius: 6,
-    borderWidth: 0,
     alignItems: 'center',
     justifyContent: 'center'
   },
