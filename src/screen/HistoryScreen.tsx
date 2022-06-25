@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../redux/reducer'
 import { DcpClassesReport, Faults } from '../redux/reducer/mistakeHistory'
 import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
+import { formatOnlyTime, formatDate } from '../ultil/TimeHelper'
 const HistoryScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
@@ -135,11 +136,11 @@ const HistoryScreen = () => {
       }}
         style={styles.itemContainer} key={index}>
         <View style={styles.infoContainer}>
-          <Text style={styles.dateTime}>{`Phiếu chấm ngày ${moment(item?.creationTime).format("DD/MM/YYYY")}`}</Text>
+          <Text style={styles.dateTime}>{`Phiếu chấm ngày ${formatDate(item?.creationTime.toLocaleString())}`}</Text>
           <View style={styles.line2Container}>
             <View style={styles.timeContainer}>
               <Image source={require('../assets/icon/clock.png')} />
-              <Text style={styles.line2Content}>{moment(item?.creationTime).format("hh:mm a")}</Text>
+              <Text style={styles.line2Content}>{formatOnlyTime(item?.creationTime.toLocaleString())}</Text>
             </View>
             <View style={styles.statusContainer}>
               <Image source={require('../assets/icon/status.png')} />

@@ -9,11 +9,11 @@ export const width = {
 }
 
 export const fontSize = {
-    title: 20,
-    content: 17,
-    tag: 13,
-    contentSmall: 16,
-    contentMini: 13
+    title: 19,
+    content: 16,
+    tag: 12,
+    contentSmall: 13,
+    contentMini: 12
 }
 
 export const widthDevice = Dimensions.get('window').width

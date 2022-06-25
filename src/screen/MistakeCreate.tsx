@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     paddingRight: 4,
   },
   criteriaName: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
     height: 21,
     color: 'black',
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 5,
     width: widthDevice * 92 / 100,
-    minHeight: 360
+    minHeight: 400
   },
   studentButton: {
     flexDirection: 'row',
