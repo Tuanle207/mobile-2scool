@@ -161,7 +161,7 @@ const LrReport = () => {
   const _renderImage = () => {
     return (
       <View style={styles.iamgeContainer}>
-        <Text style={styles.title}>Ảnh phiếu chấm sổ đầu bài (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
+        <Text style={styles.title}>Ảnh phiếu chấm SĐB (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity onPress={() => { chooseFile() }}
             style={[styles.image, { marginRight: 12 }]}>
@@ -202,12 +202,12 @@ const LrReport = () => {
   const _renderPoint = () => {
     return (
       <View style={styles.pointContainer}>
-        <Text style={styles.title}>Điểm phiếu chấm sổ đầu bài (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
+        <Text style={styles.title}>Điểm phiếu chấm SĐB (<Text style={[styles.title, { color: 'red' }]}>*</Text>)</Text>
         <TextInput
           value={point}
           onChangeText={(text: string) => setPoint(text)}
           keyboardType='numeric'
-          placeholder="Điểm phiếu chấm sổ đầu bài"
+          placeholder="Điểm phiếu chấm SĐB"
           placeholderTextColor="gray"
           style={styles.input}
         />
@@ -235,7 +235,7 @@ const LrReport = () => {
 
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={styles.container}>
 
-      <Header title={item?.id ? item?.status == "Created"? "Cập nhật phiếu chấm sổ đầu bài": "Thông tin phiếu chấm sổ đầu bài" : "Thêm phiếu chấm sổ đầu bài"} />
+      <Header title={item?.id ? item?.status == "Created"? "Cập nhật phiếu chấm SĐB": "Thông tin phiếu chấm SĐB" : "Thêm phiếu chấm SĐB"} />
       <LoadingBase visible={isLoading} />
       <ScrollView style={styles.mainContainer}>
         <View style={{ flex: 1, padding: 20, height: heightDevice*0.7}}>
@@ -252,7 +252,7 @@ const LrReport = () => {
             color={"white"}
             size={24}
           />
-          <Text style={[mainStyle.buttonTitle, { marginHorizontal: 12, fontSize: 18 }]}>{item?.id ? "Cập nhật phiếu chấm sổ đầu bài" : "Gửi phiếu chấm sổ đầu bài"}</Text>
+          <Text style={[mainStyle.buttonTitle, { marginHorizontal: 12, fontSize: 18 }]}>{item?.id ? "Cập nhật phiếu chấm SĐB" : "Gửi phiếu chấm SĐB"}</Text>
         </TouchableOpacity> : null}
       </ScrollView>
     </KeyboardAvoidingView>
