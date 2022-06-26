@@ -99,6 +99,15 @@ const getNextMonday = (index: number = 1) => {
   return moment().startOf('isoWeek').add(7 * index, 'days').toDate();
 };
 
+
+const toUtcTime = (date: Date | string): Date => {
+  return moment(date).utc().toDate();
+};
+
+const toUtcTimeString = (date: Date | string): string => {
+  return moment(date).utc().format('YYYY-MM-DDTHH:mm:ss');
+};
+
 export {
   formatDate, 
   formatTime, 
@@ -112,4 +121,6 @@ export {
   formatFullDateTimeWithoutTime,
   getLatestMonday,
   getNextMonday,
+  toUtcTime,
+  toUtcTimeString,
 };
