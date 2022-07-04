@@ -52,7 +52,7 @@ const MistakeCreate = () => {
     }
   }
   useEffect(() => {
-    if (criteria === '') setListRegulation1([])
+    if (criteria === '') setListRegulation1(listRegulation)
     else setListRegulation1(listRegulation.filter(item => item.criteriaId === criteria))
   }, [criteria])
 
@@ -127,7 +127,7 @@ const MistakeCreate = () => {
             selectedItems={[regulation]}
             selectText='Tên vi phạm'
             searchInputPlaceholderText='Tên vi phạm'
-            noItemsText='Vui lòng chọn tiêu chí'
+            noItemsText='Không có quy định nào'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
             onChangeInput={(text) => console.log(text)}

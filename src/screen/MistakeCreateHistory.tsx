@@ -35,7 +35,7 @@ const MistakeCreateHistory = () => {
   }, [])
 
   useEffect(() => {
-    if (criteria === '') setListRegulation([])
+    if (criteria === '') setListRegulation(listRegulationApi)
     else setListRegulation(listRegulationApi.filter(item => item.criteriaId === criteria))
   }, [criteria])
 
@@ -119,7 +119,7 @@ const MistakeCreateHistory = () => {
             selectedItems={[regulation]}
             selectText='Tên vi phạm'
             searchInputPlaceholderText='Tên vi phạm'
-            noItemsText='Vui lòng chọn tiêu chí'
+            noItemsText='Không có quy định nào'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
             onChangeInput={(text) => console.log(text)}
