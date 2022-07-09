@@ -100,7 +100,7 @@ const MistakeCreate = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectCriteria}
             selectedItems={[criteria]}
-            selectText='Tiêu chí'
+            selectText='Chọn tiêu chí'
             searchInputPlaceholderText='Tên tiêu chí'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
@@ -125,8 +125,8 @@ const MistakeCreate = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectRegulation}
             selectedItems={[regulation]}
-            selectText='Tên vi phạm'
-            searchInputPlaceholderText='Tên vi phạm'
+            selectText='Chọn quy định'
+            searchInputPlaceholderText='Tên quy định'
             noItemsText='Không có quy định nào'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
@@ -149,7 +149,7 @@ const MistakeCreate = () => {
             styleMainWrapper={styles.studentContainer}
             onSelectedItemsChange={onSelectStudentChange}
             selectedItems={studentMistake}
-            selectText='Học sinh vi phạm'
+            selectText='Chọn học sinh liên quan'
             searchInputPlaceholderText='Tên học sinh'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}

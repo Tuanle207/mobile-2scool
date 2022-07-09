@@ -81,7 +81,7 @@ const MistakeCreateHistory = () => {
 
   return (
     <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null}  style={styles.container}>
-      <Header title="Thêm vi phạm" />
+      <Header title="Chi tiết chấm nề nếp" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
         <View style={[styles.contentContainer,{paddingHorizontal:widthDevice * 3 / 100,}]}>
           <MultiSelect
@@ -92,7 +92,7 @@ const MistakeCreateHistory = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectCriteria}
             selectedItems={[criteria]}
-            selectText='Tiêu chí'
+            selectText='Chọn tiêu chí'
             searchInputPlaceholderText='Tên tiêu chí'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
@@ -117,8 +117,8 @@ const MistakeCreateHistory = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectRegulation}
             selectedItems={[regulation]}
-            selectText='Tên vi phạm'
-            searchInputPlaceholderText='Tên vi phạm'
+            selectText='Chọn quy định'
+            searchInputPlaceholderText='Tên quy định'
             noItemsText='Không có quy định nào'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
@@ -140,7 +140,7 @@ const MistakeCreateHistory = () => {
             styleMainWrapper={styles.studentContainer}
             onSelectedItemsChange={onSelectStudentChange}
             selectedItems={studentMistake}
-            selectText='Học sinh vi phạm'
+            selectText='Chọn học sinh liên quan'
             searchInputPlaceholderText='Tên học sinh'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
@@ -166,7 +166,7 @@ const MistakeCreateHistory = () => {
             color={"white"}
             size={30}
           />
-          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Thêm vi phạm</Text>
+          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Chấm nề nếp</Text>
         </TouchableOpacity>
       </View>
       </ScrollView>

@@ -11,6 +11,7 @@ import { RootState } from '../redux/reducer'
 import { DcpClassesReport, DcpReport, Faults } from '../redux/reducer/mistakeHistory'
 import { mainStyle } from './mainStyle'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { showPoint } from '../ultil/ShowPoint';
 
 interface FaultInfo {
   regulationName: string,
@@ -71,7 +72,7 @@ const ClassReportListHistory = () => {
         )}
         style={styles.item} key={index}>
         <View style={styles.itemPoint}>
-          <Text style={styles.point}>{item.relatedStudentIds.length !== 0 ? `- ${item.point * item.relatedStudentIds.length}` : `- ${item.point}`}</Text>
+        <Text style={styles.point}>{item.relatedStudentIds.length!==0?showPoint(-item.point * item.relatedStudentIds.length):showPoint(-item.point)}</Text>
         </View>
         <View style={styles.itemContent}>
           <Text style={styles.content}>{item.regulationName}</Text>
@@ -93,12 +94,12 @@ const ClassReportListHistory = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Vi phạm" />
+      <Header title="Chấm nề nếp" />
       <View style={styles.mainContainer}>
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>{`Danh sách vi phạm ${classInfo.name}`}</Text>
-          <Text style={styles.totalPoint}>Tổng điểm trừ:
-            <Text style={styles.point}>{` - ${totalPoint}`}</Text>
+          <Text style={styles.title}>{`Danh sách chấm nề nếp ${classInfo.name}`}</Text>
+          <Text style={styles.totalPoint}>Tổng điểm:
+          <Text style={styles.point}>{showPoint(-totalPoint)}</Text>
           </Text>
           {faultsInfo?.map((item: FaultInfo, index: number) => _renderMistake(item, index))}
         </View>
@@ -118,7 +119,7 @@ const ClassReportListHistory = () => {
                 })
               )}
               style={[mainStyle.buttonContainer, styles.buttonAdd]}>
-              <Text style={mainStyle.buttonTitle}>Thêm vi phạm</Text>
+              <Text style={mainStyle.buttonTitle}>Chấm nề nếp</Text>
             </TouchableOpacity>
           </View> : null}
       </View>

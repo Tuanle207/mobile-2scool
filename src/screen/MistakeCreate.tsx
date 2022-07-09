@@ -81,7 +81,7 @@ const MistakeCreate = () => {
 
   return (
     <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null}  style={styles.container}>
-      <Header title="Thêm vi phạm" />
+      <Header title="Chi tiết chấm nề nếp" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
         <View style={[styles.contentContainer,{paddingLeft: 16, paddingRight: 16}]}>
           <MultiSelect
@@ -92,9 +92,10 @@ const MistakeCreate = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectCriteria}
             selectedItems={[criteria]}
-            selectText='Tiêu chí'
+            selectText='Chọn tiêu chí'
             searchInputPlaceholderText='Tên tiêu chí'
-            styleTextDropdown={styles.criteriaName}
+            placeholderTextColor = 'red'
+            styleTextDropdown={styles.criteriaName1}
             styleTextDropdownSelected={styles.criteriaName}
             onChangeInput={(text) => console.log(text)}
             tagRemoveIconColor='gray'
@@ -117,8 +118,8 @@ const MistakeCreate = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectRegulation}
             selectedItems={[regulation]}
-            selectText='Tên vi phạm'
-            searchInputPlaceholderText='Tên vi phạm'
+            selectText='Chọn quy định'
+            searchInputPlaceholderText='Tên quy định'
             noItemsText='Không có quy định nào'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
@@ -140,7 +141,7 @@ const MistakeCreate = () => {
             styleMainWrapper={styles.studentContainer}
             onSelectedItemsChange={onSelectStudentChange}
             selectedItems={studentMistake}
-            selectText='Học sinh vi phạm'
+            selectText='Chọn học sinh liên quan'
             searchInputPlaceholderText='Tên học sinh'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
@@ -166,7 +167,7 @@ const MistakeCreate = () => {
             color={"white"}
             size={30}
           />
-          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Thêm vi phạm</Text>
+          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Chấm nề nếp</Text>
         </TouchableOpacity>
       </View>
       </ScrollView>
@@ -202,6 +203,14 @@ const styles = StyleSheet.create({
   },
   criteriaName: {
     fontSize: 15,
+    fontWeight: 'bold',
+    height: 21,
+    color: 'black',
+    marginTop: 0,
+    marginBottom: 0,
+  },
+  criteriaName1: {
+    fontSize: 30,
     fontWeight: 'bold',
     height: 21,
     color: 'black',

@@ -134,7 +134,7 @@ const HomeScreen = () => {
         title="Trang chủ"
       />
       <View style={styles.mainContainer}>
-        <Text style={styles.mainTitle}>Danh sách chấm vi phạm</Text>
+        <Text style={styles.mainTitle}>Danh sách lớp chấm nề nếp</Text>
         <View style={styles.searchInput}>
           <Image source={require('../assets/icon/search.png')} style={styles.iconSearch} />
           <TextInput
