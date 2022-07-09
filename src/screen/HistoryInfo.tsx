@@ -1,7 +1,7 @@
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { getClass } from '../api/class'
 import { getMyDcpReportId, postDcpReport, putEditDcpReport } from '../api/mistake'
@@ -183,9 +183,9 @@ const HistoryInfo = () => {
       <LoadingBase visible={isLoading} />
       <Header title="Thông tin phiếu chấm nề nếp" />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
-        <View>
+        <ScrollView>
           {listClassReportState.map((item: any, index: number) => _renderClass(item, index))}
-        </View>
+        </ScrollView>
         {data?.status == "Created" ?
           <TouchableOpacity disabled={isEmpty}
             onPress={() => { EditDcReport() }}

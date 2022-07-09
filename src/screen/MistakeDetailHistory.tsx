@@ -14,7 +14,8 @@ import { mainStyle } from './mainStyle'
 import { Regulation } from '../model/Mistake'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
-
+var PlaceholderTextRegulationColor = 'black'
+var PlaceholderTextRegulationFontWeight = 'bold'
 const MistakeDetailHistory = () => {
   const navigation = useNavigation()
   const dcpReport = useSelector((state: RootState) => state.mistakeHistory)
@@ -76,10 +77,14 @@ const MistakeDetailHistory = () => {
   }
 
   const onSelectCriteria = (e: any) => {
+    PlaceholderTextRegulationColor = 'gray'
+    PlaceholderTextRegulationFontWeight = 'normal'
     setCriteria(e[0])
   }
 
   const onSelectRegulation = (e: any) => {
+    PlaceholderTextRegulationColor = 'black'
+    PlaceholderTextRegulationFontWeight = 'bold'
     setRegulation(e[0])
   }
 
@@ -89,7 +94,7 @@ const MistakeDetailHistory = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Chi tiết vi phạm" />
+      <Header title="Chi tiết chấm nề nếp" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
       <View style={[styles.contentContainer,{paddingLeft: 16, paddingRight: 16}]}>
           <MultiSelect
@@ -128,9 +133,12 @@ const MistakeDetailHistory = () => {
             selectText='Chọn quy định'
             searchInputPlaceholderText='Tên quy định'
             noItemsText='Không có quy định nào'
-            styleTextDropdown={styles.criteriaName}
-            styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            styleTextDropdownSelected={{ fontSize: 15,
+              fontWeight: PlaceholderTextRegulationFontWeight,
+              height: 21,
+              color: PlaceholderTextRegulationColor,
+              marginTop: 0,
+              marginBottom: 0 }}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -149,7 +157,7 @@ const MistakeDetailHistory = () => {
             styleMainWrapper={styles.studentContainer}
             onSelectedItemsChange={onSelectStudentChange}
             selectedItems={studentMistake}
-            selectText='Chọn học sinh liên quan'
+            selectText='Học sinh liên quan'
             searchInputPlaceholderText='Tên học sinh'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}

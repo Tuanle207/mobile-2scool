@@ -1,7 +1,7 @@
 import { CommonActions, useNavigation } from '@react-navigation/native'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert  } from 'react-native'
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView  } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { getClass } from '../api/class'
 import { postDcpReport } from '../api/mistake'
@@ -171,9 +171,9 @@ const ReportInfo = (props: Props) => {
       <Header title="Thông tin phiếu chấm nề nếp" />
       <LoadingBase visible={isLoading} />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
-        <View>
+        <ScrollView>
           {listClassReportState.map((item:DcpClassesReport, index:number) => _renderClass(item, index))}
-        </View>
+        </ScrollView>
         <TouchableOpacity disabled={isEmpty}
           onPress={() => createDcpReport()}
           style={[mainStyle.buttonContainer, styles.buttonAdd, { backgroundColor: isEmpty ? 'gray' : color.blueStrong }]}>
