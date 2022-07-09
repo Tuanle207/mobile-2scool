@@ -15,6 +15,12 @@ import { mainStyle } from './mainStyle'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 
+var PlaceholderTextCriteriaColor = 'gray'
+var PlaceholderTextCriteriaFontWeight = 'normal'
+var PlaceholderTextRegulationColor = 'gray'
+var PlaceholderTextRegulationFontWeight = 'normal'
+var PlaceholderTextStudentColor = 'gray'
+var PlaceholderTextStudentFontWeight = 'normal'
 const MistakeCreateHistory = () => {
   const navigation = useNavigation()
   const dcpReport = useSelector((state: RootState) => state.mistakeHistory)
@@ -64,24 +70,38 @@ const MistakeCreateHistory = () => {
     newDcpReport.dcpClassReports = newDcpClassReports
 
     dispatch(addClassMistakeHistory(newDcpReport))
+    PlaceholderTextCriteriaColor = 'gray'
+    PlaceholderTextCriteriaFontWeight = 'normal'
+    PlaceholderTextRegulationColor = 'gray'
+    PlaceholderTextRegulationFontWeight = 'normal'
+    PlaceholderTextStudentColor = 'gray'
+    PlaceholderTextStudentFontWeight = 'normal'
     navigation.goBack()
   }
 
   const onSelectStudentChange = (e: any) => {
+    PlaceholderTextStudentColor = 'black'
+    PlaceholderTextStudentFontWeight = 'bold'
     setStudentMistake(e)
   }
 
   const onSelectCriteria = (e: any) => {
+    PlaceholderTextCriteriaColor = 'black'
+    PlaceholderTextCriteriaFontWeight = 'bold'
+    PlaceholderTextRegulationColor = 'gray'
+    PlaceholderTextRegulationFontWeight = 'normal'
     setCriteria(e[0])
   }
 
   const onSelectRegulation = (e: any) => {
+    PlaceholderTextRegulationColor = 'black'
+    PlaceholderTextRegulationFontWeight = 'bold'
     setRegulation(e[0])
   }
 
   return (
     <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null}  style={styles.container}>
-      <Header title="Thêm vi phạm" />
+      <Header title="Chi tiết chấm nề nếp" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
         <View style={[styles.contentContainer,{paddingHorizontal:widthDevice * 3 / 100,}]}>
           <MultiSelect
@@ -92,11 +112,14 @@ const MistakeCreateHistory = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectCriteria}
             selectedItems={[criteria]}
-            selectText='Tiêu chí'
+            selectText='Chọn tiêu chí'
             searchInputPlaceholderText='Tên tiêu chí'
-            styleTextDropdown={styles.criteriaName}
-            styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            styleTextDropdownSelected={{ fontSize: 15,
+              fontWeight: PlaceholderTextCriteriaFontWeight,
+              height: 21,
+              color: PlaceholderTextCriteriaColor,
+              marginTop: 0,
+              marginBottom: 0 }}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -117,12 +140,15 @@ const MistakeCreateHistory = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectRegulation}
             selectedItems={[regulation]}
-            selectText='Tên vi phạm'
-            searchInputPlaceholderText='Tên vi phạm'
+            selectText='Chọn quy định'
+            searchInputPlaceholderText='Tên quy định'
             noItemsText='Không có quy định nào'
-            styleTextDropdown={styles.criteriaName}
-            styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            styleTextDropdownSelected={{ fontSize: 15,
+              fontWeight: PlaceholderTextRegulationFontWeight,
+              height: 21,
+              color: PlaceholderTextRegulationColor,
+              marginTop: 0,
+              marginBottom: 0 }}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -140,11 +166,14 @@ const MistakeCreateHistory = () => {
             styleMainWrapper={styles.studentContainer}
             onSelectedItemsChange={onSelectStudentChange}
             selectedItems={studentMistake}
-            selectText='Học sinh vi phạm'
+            selectText='Học sinh liên quan'
             searchInputPlaceholderText='Tên học sinh'
-            styleTextDropdown={styles.criteriaName}
-            styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            styleTextDropdownSelected={{ fontSize: 15,
+              fontWeight: PlaceholderTextStudentFontWeight,
+              height: 21,
+              color: PlaceholderTextStudentColor,
+              marginTop: 0,
+              marginBottom: 0 }}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -166,7 +195,7 @@ const MistakeCreateHistory = () => {
             color={"white"}
             size={30}
           />
-          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Thêm vi phạm</Text>
+          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Chấm nề nếp</Text>
         </TouchableOpacity>
       </View>
       </ScrollView>

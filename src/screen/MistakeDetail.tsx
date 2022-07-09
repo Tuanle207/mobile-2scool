@@ -14,7 +14,8 @@ import { DcpReport } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
 import { Regulation} from '../model/Mistake'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
+var PlaceholderTextRegulationColor = 'black'
+var PlaceholderTextRegulationFontWeight = 'bold'
 const MistakeCreate = () => {
   const navigation = useNavigation()
   const dcpReport = useSelector((state: RootState) => state.mistake)
@@ -76,10 +77,14 @@ const MistakeCreate = () => {
   }
 
   const onSelectCriteria = (e: any) => {
+    PlaceholderTextRegulationColor = 'gray'
+    PlaceholderTextRegulationFontWeight = 'normal'
     setCriteria(e[0])
   }
 
   const onSelectRegulation = (e: any) => {
+    PlaceholderTextRegulationColor = 'black'
+    PlaceholderTextRegulationFontWeight = 'bold'
     setRegulation(e[0])
   }
 
@@ -89,7 +94,7 @@ const MistakeCreate = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Chi tiết vi phạm" />
+      <Header title="Chi tiết chấm nề nếp" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
       <View style={[styles.contentContainer,{paddingLeft: 16, paddingRight: 16}]}>
           <MultiSelect
@@ -100,7 +105,7 @@ const MistakeCreate = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectCriteria}
             selectedItems={[criteria]}
-            selectText='Tiêu chí'
+            selectText='Chọn tiêu chí'
             searchInputPlaceholderText='Tên tiêu chí'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}
@@ -125,12 +130,15 @@ const MistakeCreate = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectRegulation}
             selectedItems={[regulation]}
-            selectText='Tên vi phạm'
-            searchInputPlaceholderText='Tên vi phạm'
+            selectText='Chọn quy định'
+            searchInputPlaceholderText='Tên quy định'
             noItemsText='Không có quy định nào'
-            styleTextDropdown={styles.criteriaName}
-            styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            styleTextDropdownSelected={{ fontSize: 15,
+              fontWeight: PlaceholderTextRegulationFontWeight,
+              height: 21,
+              color: PlaceholderTextRegulationColor,
+              marginTop: 0,
+              marginBottom: 0 }}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -149,7 +157,7 @@ const MistakeCreate = () => {
             styleMainWrapper={styles.studentContainer}
             onSelectedItemsChange={onSelectStudentChange}
             selectedItems={studentMistake}
-            selectText='Học sinh vi phạm'
+            selectText='Học sinh liên quan'
             searchInputPlaceholderText='Tên học sinh'
             styleTextDropdown={styles.criteriaName}
             styleTextDropdownSelected={styles.criteriaName}

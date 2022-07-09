@@ -1,7 +1,7 @@
 import { CommonActions, useNavigation, useRoute } from '@react-navigation/native'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native'
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { getClass } from '../api/class'
 import { getMyDcpReportId, postDcpReport, putEditDcpReport } from '../api/mistake'
@@ -16,6 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { addClassMistakeHistory } from '../redux/action/mistakeHistory'
 import LoadingBase from '../component/LoadingBase'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { showPoint } from '../ultil/ShowPoint';
 
 const HistoryInfo = () => {
   const navigation = useNavigation()
@@ -129,11 +130,11 @@ const HistoryInfo = () => {
         </View>
         <View style={styles.contentContainer}>
           <Text style={styles.contentTitle}>
-            Tổng điểm trừ:
-            <Text style={styles.content}>{`  ${totalPoint}`}</Text>
+            Tổng điểm:
+            <Text style={styles.content}>{showPoint(-totalPoint)}</Text>
           </Text>
           <Text style={styles.contentTitle}>
-            Số lỗi vi phạm:
+            Số quy định đã chấm:
             <Text style={styles.content}>{`  ${totalFault}`}</Text>
           </Text>
         </View>
@@ -182,9 +183,9 @@ const HistoryInfo = () => {
       <LoadingBase visible={isLoading} />
       <Header title="Thông tin phiếu chấm nề nếp" />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
-        <View>
+        <ScrollView>
           {listClassReportState.map((item: any, index: number) => _renderClass(item, index))}
-        </View>
+        </ScrollView>
         {data?.status == "Created" ?
           <TouchableOpacity disabled={isEmpty}
             onPress={() => { EditDcReport() }}

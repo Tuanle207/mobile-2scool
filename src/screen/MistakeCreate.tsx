@@ -15,6 +15,12 @@ import { DcpReport } from '../redux/reducer/mistake'
 import { mainStyle } from './mainStyle'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
+var PlaceholderTextCriteriaColor = 'gray'
+var PlaceholderTextCriteriaFontWeight = 'normal'
+var PlaceholderTextRegulationColor = 'gray'
+var PlaceholderTextRegulationFontWeight = 'normal'
+var PlaceholderTextStudentColor = 'gray'
+var PlaceholderTextStudentFontWeight = 'normal'
 const MistakeCreate = () => {
   const navigation = useNavigation()
   const dcpReport = useSelector((state: RootState) => state.mistake)
@@ -26,7 +32,7 @@ const MistakeCreate = () => {
 
   const [listRegulation, setListRegulation] = useState<Regulation[]>([])
   const [listStudent, setListStudent] = useState<Student[]>([])
-  const [criteria, setCriteria] = useState('')
+  const [criteria,  setCriteria] = useState('')
   const [regulation, setRegulation] = useState('')
   const [studentMistake, setStudentMistake] = useState<Student[]>([])
 
@@ -62,26 +68,39 @@ const MistakeCreate = () => {
     const newDcpClassReports = newDcpReport.dcpClassReports
     newDcpClassReports[indexClassMistake] = classMistake
     newDcpReport.dcpClassReports = newDcpClassReports
-
+    PlaceholderTextCriteriaColor = 'gray'
+    PlaceholderTextCriteriaFontWeight = 'normal'
+    PlaceholderTextRegulationColor = 'gray'
+    PlaceholderTextRegulationFontWeight = 'normal'
+    PlaceholderTextStudentColor = 'gray'
+    PlaceholderTextStudentFontWeight = 'normal'
     dispatch(addClassMistake(newDcpReport))
     navigation.goBack()
   }
 
   const onSelectStudentChange = (e: any) => {
+    PlaceholderTextStudentColor = 'black'
+    PlaceholderTextStudentFontWeight = 'bold'
     setStudentMistake(e)
   }
 
   const onSelectCriteria = (e: any) => {
+    PlaceholderTextCriteriaColor = 'black'
+    PlaceholderTextCriteriaFontWeight = 'bold'
+    PlaceholderTextRegulationColor = 'gray'
+    PlaceholderTextRegulationFontWeight = 'normal'
     setCriteria(e[0])
   }
 
   const onSelectRegulation = (e: any) => {
+    PlaceholderTextRegulationColor = 'black'
+    PlaceholderTextRegulationFontWeight = 'bold'
     setRegulation(e[0])
   }
 
   return (
     <KeyboardAvoidingView  behavior={Platform.OS === "ios" ? "padding" : null}  style={styles.container}>
-      <Header title="Thêm vi phạm" />
+      <Header title="Chi tiết chấm nề nếp" />
       <ScrollView style={styles.mainContainer} showsVerticalScrollIndicator={false}>
         <View style={[styles.contentContainer,{paddingLeft: 16, paddingRight: 16}]}>
           <MultiSelect
@@ -92,10 +111,14 @@ const MistakeCreate = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectCriteria}
             selectedItems={[criteria]}
-            selectText='Tiêu chí'
+            selectText='Chọn tiêu chí'
             searchInputPlaceholderText='Tên tiêu chí'
-            styleTextDropdown={styles.criteriaName}
-            styleTextDropdownSelected={styles.criteriaName}
+            styleTextDropdownSelected={{ fontSize: 15,
+              fontWeight: PlaceholderTextCriteriaFontWeight,
+              height: 21,
+              color: PlaceholderTextCriteriaColor,
+              marginTop: 0,
+              marginBottom: 0 }}
             onChangeInput={(text) => console.log(text)}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
@@ -117,12 +140,15 @@ const MistakeCreate = () => {
             uniqueKey='id'
             onSelectedItemsChange={onSelectRegulation}
             selectedItems={[regulation]}
-            selectText='Tên vi phạm'
-            searchInputPlaceholderText='Tên vi phạm'
+            selectText='Chọn quy định'
+            searchInputPlaceholderText='Tên quy định'
             noItemsText='Không có quy định nào'
-            styleTextDropdown={styles.criteriaName}
-            styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            styleTextDropdownSelected={{ fontSize: 15,
+              fontWeight: PlaceholderTextRegulationFontWeight,
+              height: 21,
+              color: PlaceholderTextRegulationColor,
+              marginTop: 0,
+              marginBottom: 0 }}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -140,11 +166,14 @@ const MistakeCreate = () => {
             styleMainWrapper={styles.studentContainer}
             onSelectedItemsChange={onSelectStudentChange}
             selectedItems={studentMistake}
-            selectText='Học sinh vi phạm'
+            selectText = 'Học sinh liên quan'
             searchInputPlaceholderText='Tên học sinh'
-            styleTextDropdown={styles.criteriaName}
-            styleTextDropdownSelected={styles.criteriaName}
-            onChangeInput={(text) => console.log(text)}
+            styleTextDropdownSelected={{ fontSize: 15,
+              fontWeight: PlaceholderTextStudentFontWeight,
+              height: 21,
+              color: PlaceholderTextStudentColor,
+              marginTop: 0,
+              marginBottom: 0 }}
             tagRemoveIconColor='gray'
             tagBorderColor='gray'
             tagTextColor='black'
@@ -166,7 +195,7 @@ const MistakeCreate = () => {
             color={"white"}
             size={30}
           />
-          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Thêm vi phạm</Text>
+          <Text style={[mainStyle.buttonTitle, { fontSize: 18, marginHorizontal: 12 }]}>Chấm nề nếp</Text>
         </TouchableOpacity>
       </View>
       </ScrollView>
@@ -200,8 +229,8 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 4,
   },
-  criteriaName: {
-    fontSize: 15,
+  criteriaName1: {
+    fontSize: 30,
     fontWeight: 'bold',
     height: 21,
     color: 'black',

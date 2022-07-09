@@ -1,7 +1,7 @@
 import { CommonActions, useNavigation } from '@react-navigation/native'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert  } from 'react-native'
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView  } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { getClass } from '../api/class'
 import { postDcpReport } from '../api/mistake'
@@ -17,6 +17,7 @@ import { mainStyle } from './mainStyle'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { Regulation } from '../model/Mistake'
+import { showPoint } from '../ultil/ShowPoint';
 interface Props {
 
 }
@@ -110,12 +111,12 @@ const ReportInfo = (props: Props) => {
           <Text style={styles.itemClassName}>{className ? className : "Lớp"}</Text>
         </View>
         <View style={styles.contentContainer}>
-          <Text style={styles.contentTitle}>
-            Tổng điểm trừ:
-            <Text style={styles.content}>{`  ${totalPoint}`}</Text>
+        <Text style={styles.contentTitle}>
+            Tổng điểm:
+            <Text style={styles.content}>{showPoint(-totalPoint)}</Text>
           </Text>
           <Text style={styles.contentTitle}>
-            Số lỗi vi phạm:
+            Số quy định đã chấm:
             <Text style={styles.content}>{`  ${totalFault}`}</Text>
           </Text>
         </View>
@@ -170,9 +171,9 @@ const ReportInfo = (props: Props) => {
       <Header title="Thông tin phiếu chấm nề nếp" />
       <LoadingBase visible={isLoading} />
       <View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
-        <View>
+        <ScrollView>
           {listClassReportState.map((item:DcpClassesReport, index:number) => _renderClass(item, index))}
-        </View>
+        </ScrollView>
         <TouchableOpacity disabled={isEmpty}
           onPress={() => createDcpReport()}
           style={[mainStyle.buttonContainer, styles.buttonAdd, { backgroundColor: isEmpty ? 'gray' : color.blueStrong }]}>
