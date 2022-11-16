@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="HotelManagementModelStoreContainer" CdmEntityContainer="HotelManagementEntities">
+    <EntitySetMapping Name="BILLs">
+      <EntityTypeMapping TypeName="HotelManagementModel.BILL">
+        <MappingFragment StoreEntitySet="BILL">
+          <ScalarProperty Name="BILLID" ColumnName="BILLID" />
+          <ScalarProperty Name="BOOKINGID" ColumnName="BOOKINGID" />
+          <ScalarProperty Name="BEGINDATE" ColumnName="BEGINDATE" />
+          <ScalarProperty Name="ENDDATE" ColumnName="ENDDATE" />
+          <ScalarProperty Name="TOTALMONEY" ColumnName="TOTALMONEY" />
+          <ScalarProperty Name="CREATEDUSER" ColumnName="CREATEDUSER" />
+          <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+          <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+          <ScalarProperty Name="DELETEDUSER" ColumnName="DELETEDUSER" />
+          <ScalarProperty Name="DELETEDATE" ColumnName="DELETEDATE" />
+          <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BILLDETAILs">
+      <EntityTypeMapping TypeName="HotelManagementModel.BILLDETAIL">
+        <MappingFragment StoreEntitySet="BILLDETAIL">
+          <ScalarProperty Name="BILLDETAILID" ColumnName="BILLDETAILID" />
+          <ScalarProperty Name="BILLID" ColumnName="BILLID" />
+          <ScalarProperty Name="PRODUCTSERVICEID" ColumnName="PRODUCTSERVICEID" />
+          <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BOOKINGROOMs">
+      <EntityTypeMapping TypeName="HotelManagementModel.BOOKINGROOM">
+        <MappingFragment StoreEntitySet="BOOKINGROOM">
+          <ScalarProperty Name="BOOKINGID" ColumnName="BOOKINGID" />
+          <ScalarProperty Name="ROOMID" ColumnName="ROOMID" />
+          <ScalarProperty Name="CUSTOMERNAME" ColumnName="CUSTOMERNAME" />
+          <ScalarProperty Name="CUSTOMERIDENTIFY" ColumnName="CUSTOMERIDENTIFY" />
+          <ScalarProperty Name="ISRESERVE" ColumnName="ISRESERVE" />
+          <ScalarProperty Name="RESERVATEDATE" ColumnName="RESERVATEDATE" />
+          <ScalarProperty Name="DEPOSITMONEY" ColumnName="DEPOSITMONEY" />
+          <ScalarProperty Name="CREATEDUSER" ColumnName="CREATEDUSER" />
+          <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+          <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+          <ScalarProperty Name="DELETEDUSER" ColumnName="DELETEDUSER" />
+          <ScalarProperty Name="DELETEDDATE" ColumnName="DELETEDDATE" />
+          <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PRODUCTs">
+      <EntityTypeMapping TypeName="HotelManagementModel.PRODUCT">
+        <MappingFragment StoreEntitySet="PRODUCT">
+          <ScalarProperty Name="PRODUCTID" ColumnName="PRODUCTID" />
+          <ScalarProperty Name="PRODUCTNAME" ColumnName="PRODUCTNAME" />
+          <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+          <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PRODUCTSERVICEs">
+      <EntityTypeMapping TypeName="HotelManagementModel.PRODUCTSERVICE">
+        <MappingFragment StoreEntitySet="PRODUCTSERVICE">
+          <ScalarProperty Name="PRODUCTSERVICEID" ColumnName="PRODUCTSERVICEID" />
+          <ScalarProperty Name="PRODUCTID" ColumnName="PRODUCTID" />
+          <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ROOMs">
+      <EntityTypeMapping TypeName="HotelManagementModel.ROOM">
+        <MappingFragment StoreEntitySet="ROOM">
+          <ScalarProperty Name="ROOMID" ColumnName="ROOMID" />
+          <ScalarProperty Name="ROOMTYPEID" ColumnName="ROOMTYPEID" />
+          <ScalarProperty Name="ROOMNAME" ColumnName="ROOMNAME" />
+          <ScalarProperty Name="ROOMDESCRIPTION" ColumnName="ROOMDESCRIPTION" />
+          <ScalarProperty Name="BEDQUANTITY" ColumnName="BEDQUANTITY" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+          <ScalarProperty Name="CREATEDUSER" ColumnName="CREATEDUSER" />
+          <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+          <ScalarProperty Name="DELETEDUSER" ColumnName="DELETEDUSER" />
+          <ScalarProperty Name="DELETEDDATE" ColumnName="DELETEDDATE" />
+          <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ROOMTYPEs">
+      <EntityTypeMapping TypeName="HotelManagementModel.ROOMTYPE">
+        <MappingFragment StoreEntitySet="ROOMTYPE">
+          <ScalarProperty Name="ROOMTYPEID" ColumnName="ROOMTYPEID" />
+          <ScalarProperty Name="ROOMTYPENAME" ColumnName="ROOMTYPENAME" />
+          <ScalarProperty Name="ROOMTYPEDESCRPTION" ColumnName="ROOMTYPEDESCRPTION" />
+          <ScalarProperty Name="PRICEPERHOUR" ColumnName="PRICEPERHOUR" />
+          <ScalarProperty Name="PRICEPERDAY" ColumnName="PRICEPERDAY" />
+          <ScalarProperty Name="CREATEDUSER" ColumnName="CREATEDUSER" />
+          <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+          <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+          <ScalarProperty Name="DELETEDUSER" ColumnName="DELETEDUSER" />
+          <ScalarProperty Name="DELETEDDATE" ColumnName="DELETEDDATE" />
+          <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USERs">
+      <EntityTypeMapping TypeName="HotelManagementModel.USER">
+        <MappingFragment StoreEntitySet="USER">
+          <ScalarProperty Name="USERID" ColumnName="USERID" />
+          <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
+          <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+          <ScalarProperty Name="EMPLOYEENAME" ColumnName="EMPLOYEENAME" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="SEX" ColumnName="SEX" />
+          <ScalarProperty Name="PHONENUMBER" ColumnName="PHONENUMBER" />
+          <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="ISADMIN" ColumnName="ISADMIN" />
+          <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

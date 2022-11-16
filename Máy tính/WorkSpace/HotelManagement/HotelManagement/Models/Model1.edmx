@@ -1,0 +1,601 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="HotelManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BILL">
+          <Key>
+            <PropertyRef Name="BILLID" />
+          </Key>
+          <Property Name="BILLID" Type="int" Nullable="false" />
+          <Property Name="BOOKINGID" Type="int" Nullable="false" />
+          <Property Name="BEGINDATE" Type="datetime" Nullable="false" />
+          <Property Name="ENDDATE" Type="datetime" Nullable="false" />
+          <Property Name="TOTALMONEY" Type="bigint" Nullable="false" />
+          <Property Name="CREATEDUSER" Type="nvarchar" MaxLength="255" />
+          <Property Name="CREATEDDATE" Type="datetime" />
+          <Property Name="ISDELETED" Type="int" Nullable="false" />
+          <Property Name="DELETEDUSER" Type="nvarchar" MaxLength="1" />
+          <Property Name="DELETEDATE" Type="datetime" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="BILLDETAIL">
+          <Key>
+            <PropertyRef Name="BILLDETAILID" />
+          </Key>
+          <Property Name="BILLDETAILID" Type="int" Nullable="false" />
+          <Property Name="BILLID" Type="int" Nullable="false" />
+          <Property Name="PRODUCTSERVICEID" Type="int" />
+          <Property Name="PRICE" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BOOKINGROOM">
+          <Key>
+            <PropertyRef Name="BOOKINGID" />
+          </Key>
+          <Property Name="BOOKINGID" Type="int" Nullable="false" />
+          <Property Name="ROOMID" Type="int" Nullable="false" />
+          <Property Name="CUSTOMERNAME" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CUSTOMERIDENTIFY" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ISRESERVE" Type="bit" Nullable="false" />
+          <Property Name="RESERVATEDATE" Type="datetime" Nullable="false" />
+          <Property Name="DEPOSITMONEY" Type="bigint" Nullable="false" />
+          <Property Name="CREATEDUSER" Type="nvarchar" MaxLength="1" />
+          <Property Name="CREATEDDATE" Type="datetime" />
+          <Property Name="ISDELETED" Type="int" Nullable="false" />
+          <Property Name="DELETEDUSER" Type="nvarchar" MaxLength="1" />
+          <Property Name="DELETEDDATE" Type="datetime" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="PRODUCT">
+          <Key>
+            <PropertyRef Name="PRODUCTID" />
+          </Key>
+          <Property Name="PRODUCTID" Type="int" Nullable="false" />
+          <Property Name="PRODUCTNAME" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="PRICE" Type="bigint" Nullable="false" />
+          <Property Name="ISDELETED" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRODUCTSERVICE">
+          <Key>
+            <PropertyRef Name="PRODUCTSERVICEID" />
+          </Key>
+          <Property Name="PRODUCTSERVICEID" Type="int" Nullable="false" />
+          <Property Name="PRODUCTID" Type="int" Nullable="false" />
+          <Property Name="QUANTITY" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ROOM">
+          <Key>
+            <PropertyRef Name="ROOMID" />
+          </Key>
+          <Property Name="ROOMID" Type="int" Nullable="false" />
+          <Property Name="ROOMTYPEID" Type="int" Nullable="false" />
+          <Property Name="ROOMNAME" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ROOMDESCRIPTION" Type="nchar" MaxLength="255" />
+          <Property Name="BEDQUANTITY" Type="int" Nullable="false" />
+          <Property Name="STATUS" Type="int" Nullable="false" />
+          <Property Name="CREATEDDATE" Type="datetime" />
+          <Property Name="CREATEDUSER" Type="nvarchar" MaxLength="255" />
+          <Property Name="ISDELETED" Type="int" Nullable="false" />
+          <Property Name="DELETEDUSER" Type="nvarchar" MaxLength="255" />
+          <Property Name="DELETEDDATE" Type="datetime" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ROOMTYPE">
+          <Key>
+            <PropertyRef Name="ROOMTYPEID" />
+          </Key>
+          <Property Name="ROOMTYPEID" Type="int" Nullable="false" />
+          <Property Name="ROOMTYPENAME" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ROOMTYPEDESCRPTION" Type="nvarchar" MaxLength="255" />
+          <Property Name="PRICEPERHOUR" Type="bigint" Nullable="false" />
+          <Property Name="PRICEPERDAY" Type="bigint" Nullable="false" />
+          <Property Name="CREATEDUSER" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CREATEDDATE" Type="datetime" />
+          <Property Name="ISDELETED" Type="int" Nullable="false" />
+          <Property Name="DELETEDUSER" Type="nvarchar" MaxLength="255" />
+          <Property Name="DELETEDDATE" Type="datetime" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="USERID" />
+          </Key>
+          <Property Name="USERID" Type="int" Nullable="false" />
+          <Property Name="USERNAME" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="PASSWORD" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="EMPLOYEENAME" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="DOB" Type="datetime" Nullable="false" />
+          <Property Name="SEX" Type="nvarchar" MaxLength="1" Nullable="false" />
+          <Property Name="PHONENUMBER" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ADDRESS" Type="nvarchar" MaxLength="1" Nullable="false" />
+          <Property Name="EMAIL" Type="nvarchar" MaxLength="1" Nullable="false" />
+          <Property Name="ISADMIN" Type="int" Nullable="false" />
+          <Property Name="ISDELETED" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="BILL_fk0">
+          <End Role="BOOKINGROOM" Type="Self.BOOKINGROOM" Multiplicity="1" />
+          <End Role="BILL" Type="Self.BILL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOOKINGROOM">
+              <PropertyRef Name="BOOKINGID" />
+            </Principal>
+            <Dependent Role="BILL">
+              <PropertyRef Name="BOOKINGID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BILLDETAIL_fk0">
+          <End Role="BILL" Type="Self.BILL" Multiplicity="1" />
+          <End Role="BILLDETAIL" Type="Self.BILLDETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BILL">
+              <PropertyRef Name="BILLID" />
+            </Principal>
+            <Dependent Role="BILLDETAIL">
+              <PropertyRef Name="BILLID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BILLDETAIL_fk1">
+          <End Role="PRODUCTSERVICE" Type="Self.PRODUCTSERVICE" Multiplicity="0..1" />
+          <End Role="BILLDETAIL" Type="Self.BILLDETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTSERVICE">
+              <PropertyRef Name="PRODUCTSERVICEID" />
+            </Principal>
+            <Dependent Role="BILLDETAIL">
+              <PropertyRef Name="PRODUCTSERVICEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BOOKINGROOM_fk0">
+          <End Role="ROOM" Type="Self.ROOM" Multiplicity="1" />
+          <End Role="BOOKINGROOM" Type="Self.BOOKINGROOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ROOM">
+              <PropertyRef Name="ROOMID" />
+            </Principal>
+            <Dependent Role="BOOKINGROOM">
+              <PropertyRef Name="ROOMID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PRODUCTSERVICE_fk0">
+          <End Role="PRODUCT" Type="Self.PRODUCT" Multiplicity="1" />
+          <End Role="PRODUCTSERVICE" Type="Self.PRODUCTSERVICE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCT">
+              <PropertyRef Name="PRODUCTID" />
+            </Principal>
+            <Dependent Role="PRODUCTSERVICE">
+              <PropertyRef Name="PRODUCTID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ROOM_fk0">
+          <End Role="ROOMTYPE" Type="Self.ROOMTYPE" Multiplicity="1" />
+          <End Role="ROOM" Type="Self.ROOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ROOMTYPE">
+              <PropertyRef Name="ROOMTYPEID" />
+            </Principal>
+            <Dependent Role="ROOM">
+              <PropertyRef Name="ROOMTYPEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HotelManagementModelStoreContainer">
+          <EntitySet Name="BILL" EntityType="Self.BILL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BILLDETAIL" EntityType="Self.BILLDETAIL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BOOKINGROOM" EntityType="Self.BOOKINGROOM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PRODUCT" EntityType="Self.PRODUCT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PRODUCTSERVICE" EntityType="Self.PRODUCTSERVICE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ROOM" EntityType="Self.ROOM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ROOMTYPE" EntityType="Self.ROOMTYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USER" EntityType="Self.USER" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="BILL_fk0" Association="Self.BILL_fk0">
+            <End Role="BOOKINGROOM" EntitySet="BOOKINGROOM" />
+            <End Role="BILL" EntitySet="BILL" />
+          </AssociationSet>
+          <AssociationSet Name="BILLDETAIL_fk0" Association="Self.BILLDETAIL_fk0">
+            <End Role="BILL" EntitySet="BILL" />
+            <End Role="BILLDETAIL" EntitySet="BILLDETAIL" />
+          </AssociationSet>
+          <AssociationSet Name="BILLDETAIL_fk1" Association="Self.BILLDETAIL_fk1">
+            <End Role="PRODUCTSERVICE" EntitySet="PRODUCTSERVICE" />
+            <End Role="BILLDETAIL" EntitySet="BILLDETAIL" />
+          </AssociationSet>
+          <AssociationSet Name="BOOKINGROOM_fk0" Association="Self.BOOKINGROOM_fk0">
+            <End Role="ROOM" EntitySet="ROOM" />
+            <End Role="BOOKINGROOM" EntitySet="BOOKINGROOM" />
+          </AssociationSet>
+          <AssociationSet Name="PRODUCTSERVICE_fk0" Association="Self.PRODUCTSERVICE_fk0">
+            <End Role="PRODUCT" EntitySet="PRODUCT" />
+            <End Role="PRODUCTSERVICE" EntitySet="PRODUCTSERVICE" />
+          </AssociationSet>
+          <AssociationSet Name="ROOM_fk0" Association="Self.ROOM_fk0">
+            <End Role="ROOMTYPE" EntitySet="ROOMTYPE" />
+            <End Role="ROOM" EntitySet="ROOM" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HotelManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BILL">
+          <Key>
+            <PropertyRef Name="BILLID" />
+          </Key>
+          <Property Name="BILLID" Type="Int32" Nullable="false" />
+          <Property Name="BOOKINGID" Type="Int32" Nullable="false" />
+          <Property Name="BEGINDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ENDDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TOTALMONEY" Type="Int64" Nullable="false" />
+          <Property Name="CREATEDUSER" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CREATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="ISDELETED" Type="Int32" Nullable="false" />
+          <Property Name="DELETEDUSER" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="DELETEDATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="BOOKINGROOM" Relationship="Self.BILL_fk0" FromRole="BILL" ToRole="BOOKINGROOM" />
+          <NavigationProperty Name="BILLDETAILs" Relationship="Self.BILLDETAIL_fk0" FromRole="BILL" ToRole="BILLDETAIL" />
+        </EntityType>
+        <EntityType Name="BILLDETAIL">
+          <Key>
+            <PropertyRef Name="BILLDETAILID" />
+          </Key>
+          <Property Name="BILLDETAILID" Type="Int32" Nullable="false" />
+          <Property Name="BILLID" Type="Int32" Nullable="false" />
+          <Property Name="PRODUCTSERVICEID" Type="Int32" />
+          <Property Name="PRICE" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="BILL" Relationship="Self.BILLDETAIL_fk0" FromRole="BILLDETAIL" ToRole="BILL" />
+          <NavigationProperty Name="PRODUCTSERVICE" Relationship="Self.BILLDETAIL_fk1" FromRole="BILLDETAIL" ToRole="PRODUCTSERVICE" />
+        </EntityType>
+        <EntityType Name="BOOKINGROOM">
+          <Key>
+            <PropertyRef Name="BOOKINGID" />
+          </Key>
+          <Property Name="BOOKINGID" Type="Int32" Nullable="false" />
+          <Property Name="ROOMID" Type="Int32" Nullable="false" />
+          <Property Name="CUSTOMERNAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CUSTOMERIDENTIFY" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ISRESERVE" Type="Boolean" Nullable="false" />
+          <Property Name="RESERVATEDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DEPOSITMONEY" Type="Int64" Nullable="false" />
+          <Property Name="CREATEDUSER" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="CREATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="ISDELETED" Type="Int32" Nullable="false" />
+          <Property Name="DELETEDUSER" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="DELETEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="BILLs" Relationship="Self.BILL_fk0" FromRole="BOOKINGROOM" ToRole="BILL" />
+          <NavigationProperty Name="ROOM" Relationship="Self.BOOKINGROOM_fk0" FromRole="BOOKINGROOM" ToRole="ROOM" />
+        </EntityType>
+        <EntityType Name="PRODUCT">
+          <Key>
+            <PropertyRef Name="PRODUCTID" />
+          </Key>
+          <Property Name="PRODUCTID" Type="Int32" Nullable="false" />
+          <Property Name="PRODUCTNAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PRICE" Type="Int64" Nullable="false" />
+          <Property Name="ISDELETED" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PRODUCTSERVICEs" Relationship="Self.PRODUCTSERVICE_fk0" FromRole="PRODUCT" ToRole="PRODUCTSERVICE" />
+        </EntityType>
+        <EntityType Name="PRODUCTSERVICE">
+          <Key>
+            <PropertyRef Name="PRODUCTSERVICEID" />
+          </Key>
+          <Property Name="PRODUCTSERVICEID" Type="Int32" Nullable="false" />
+          <Property Name="PRODUCTID" Type="Int32" Nullable="false" />
+          <Property Name="QUANTITY" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BILLDETAILs" Relationship="Self.BILLDETAIL_fk1" FromRole="PRODUCTSERVICE" ToRole="BILLDETAIL" />
+          <NavigationProperty Name="PRODUCT" Relationship="Self.PRODUCTSERVICE_fk0" FromRole="PRODUCTSERVICE" ToRole="PRODUCT" />
+        </EntityType>
+        <EntityType Name="ROOM">
+          <Key>
+            <PropertyRef Name="ROOMID" />
+          </Key>
+          <Property Name="ROOMID" Type="Int32" Nullable="false" />
+          <Property Name="ROOMTYPEID" Type="Int32" Nullable="false" />
+          <Property Name="ROOMNAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ROOMDESCRIPTION" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="BEDQUANTITY" Type="Int32" Nullable="false" />
+          <Property Name="STATUS" Type="Int32" Nullable="false" />
+          <Property Name="CREATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="CREATEDUSER" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ISDELETED" Type="Int32" Nullable="false" />
+          <Property Name="DELETEDUSER" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DELETEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="BOOKINGROOMs" Relationship="Self.BOOKINGROOM_fk0" FromRole="ROOM" ToRole="BOOKINGROOM" />
+          <NavigationProperty Name="ROOMTYPE" Relationship="Self.ROOM_fk0" FromRole="ROOM" ToRole="ROOMTYPE" />
+        </EntityType>
+        <EntityType Name="ROOMTYPE">
+          <Key>
+            <PropertyRef Name="ROOMTYPEID" />
+          </Key>
+          <Property Name="ROOMTYPEID" Type="Int32" Nullable="false" />
+          <Property Name="ROOMTYPENAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ROOMTYPEDESCRPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PRICEPERHOUR" Type="Int64" Nullable="false" />
+          <Property Name="PRICEPERDAY" Type="Int64" Nullable="false" />
+          <Property Name="CREATEDUSER" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CREATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="ISDELETED" Type="Int32" Nullable="false" />
+          <Property Name="DELETEDUSER" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DELETEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ROOMs" Relationship="Self.ROOM_fk0" FromRole="ROOMTYPE" ToRole="ROOM" />
+        </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="USERID" />
+          </Key>
+          <Property Name="USERID" Type="Int32" Nullable="false" />
+          <Property Name="USERNAME" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PASSWORD" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EMPLOYEENAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SEX" Type="String" MaxLength="1" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PHONENUMBER" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ADDRESS" Type="String" MaxLength="1" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EMAIL" Type="String" MaxLength="1" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ISADMIN" Type="Int32" Nullable="false" />
+          <Property Name="ISDELETED" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="BILL_fk0">
+          <End Role="BOOKINGROOM" Type="Self.BOOKINGROOM" Multiplicity="1" />
+          <End Role="BILL" Type="Self.BILL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BOOKINGROOM">
+              <PropertyRef Name="BOOKINGID" />
+            </Principal>
+            <Dependent Role="BILL">
+              <PropertyRef Name="BOOKINGID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BILLDETAIL_fk0">
+          <End Role="BILL" Type="Self.BILL" Multiplicity="1" />
+          <End Role="BILLDETAIL" Type="Self.BILLDETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BILL">
+              <PropertyRef Name="BILLID" />
+            </Principal>
+            <Dependent Role="BILLDETAIL">
+              <PropertyRef Name="BILLID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BILLDETAIL_fk1">
+          <End Role="PRODUCTSERVICE" Type="Self.PRODUCTSERVICE" Multiplicity="0..1" />
+          <End Role="BILLDETAIL" Type="Self.BILLDETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTSERVICE">
+              <PropertyRef Name="PRODUCTSERVICEID" />
+            </Principal>
+            <Dependent Role="BILLDETAIL">
+              <PropertyRef Name="PRODUCTSERVICEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BOOKINGROOM_fk0">
+          <End Role="ROOM" Type="Self.ROOM" Multiplicity="1" />
+          <End Role="BOOKINGROOM" Type="Self.BOOKINGROOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ROOM">
+              <PropertyRef Name="ROOMID" />
+            </Principal>
+            <Dependent Role="BOOKINGROOM">
+              <PropertyRef Name="ROOMID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PRODUCTSERVICE_fk0">
+          <End Role="PRODUCT" Type="Self.PRODUCT" Multiplicity="1" />
+          <End Role="PRODUCTSERVICE" Type="Self.PRODUCTSERVICE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCT">
+              <PropertyRef Name="PRODUCTID" />
+            </Principal>
+            <Dependent Role="PRODUCTSERVICE">
+              <PropertyRef Name="PRODUCTID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ROOM_fk0">
+          <End Role="ROOMTYPE" Type="Self.ROOMTYPE" Multiplicity="1" />
+          <End Role="ROOM" Type="Self.ROOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ROOMTYPE">
+              <PropertyRef Name="ROOMTYPEID" />
+            </Principal>
+            <Dependent Role="ROOM">
+              <PropertyRef Name="ROOMTYPEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HotelManagementEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BILLs" EntityType="Self.BILL" />
+          <EntitySet Name="BILLDETAILs" EntityType="Self.BILLDETAIL" />
+          <EntitySet Name="BOOKINGROOMs" EntityType="Self.BOOKINGROOM" />
+          <EntitySet Name="PRODUCTs" EntityType="Self.PRODUCT" />
+          <EntitySet Name="PRODUCTSERVICEs" EntityType="Self.PRODUCTSERVICE" />
+          <EntitySet Name="ROOMs" EntityType="Self.ROOM" />
+          <EntitySet Name="ROOMTYPEs" EntityType="Self.ROOMTYPE" />
+          <EntitySet Name="USERs" EntityType="Self.USER" />
+          <AssociationSet Name="BILL_fk0" Association="Self.BILL_fk0">
+            <End Role="BOOKINGROOM" EntitySet="BOOKINGROOMs" />
+            <End Role="BILL" EntitySet="BILLs" />
+          </AssociationSet>
+          <AssociationSet Name="BILLDETAIL_fk0" Association="Self.BILLDETAIL_fk0">
+            <End Role="BILL" EntitySet="BILLs" />
+            <End Role="BILLDETAIL" EntitySet="BILLDETAILs" />
+          </AssociationSet>
+          <AssociationSet Name="BILLDETAIL_fk1" Association="Self.BILLDETAIL_fk1">
+            <End Role="PRODUCTSERVICE" EntitySet="PRODUCTSERVICEs" />
+            <End Role="BILLDETAIL" EntitySet="BILLDETAILs" />
+          </AssociationSet>
+          <AssociationSet Name="BOOKINGROOM_fk0" Association="Self.BOOKINGROOM_fk0">
+            <End Role="ROOM" EntitySet="ROOMs" />
+            <End Role="BOOKINGROOM" EntitySet="BOOKINGROOMs" />
+          </AssociationSet>
+          <AssociationSet Name="PRODUCTSERVICE_fk0" Association="Self.PRODUCTSERVICE_fk0">
+            <End Role="PRODUCT" EntitySet="PRODUCTs" />
+            <End Role="PRODUCTSERVICE" EntitySet="PRODUCTSERVICEs" />
+          </AssociationSet>
+          <AssociationSet Name="ROOM_fk0" Association="Self.ROOM_fk0">
+            <End Role="ROOMTYPE" EntitySet="ROOMTYPEs" />
+            <End Role="ROOM" EntitySet="ROOMs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HotelManagementModelStoreContainer" CdmEntityContainer="HotelManagementEntities">
+          <EntitySetMapping Name="BILLs">
+            <EntityTypeMapping TypeName="HotelManagementModel.BILL">
+              <MappingFragment StoreEntitySet="BILL">
+                <ScalarProperty Name="BILLID" ColumnName="BILLID" />
+                <ScalarProperty Name="BOOKINGID" ColumnName="BOOKINGID" />
+                <ScalarProperty Name="BEGINDATE" ColumnName="BEGINDATE" />
+                <ScalarProperty Name="ENDDATE" ColumnName="ENDDATE" />
+                <ScalarProperty Name="TOTALMONEY" ColumnName="TOTALMONEY" />
+                <ScalarProperty Name="CREATEDUSER" ColumnName="CREATEDUSER" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+                <ScalarProperty Name="DELETEDUSER" ColumnName="DELETEDUSER" />
+                <ScalarProperty Name="DELETEDATE" ColumnName="DELETEDATE" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BILLDETAILs">
+            <EntityTypeMapping TypeName="HotelManagementModel.BILLDETAIL">
+              <MappingFragment StoreEntitySet="BILLDETAIL">
+                <ScalarProperty Name="BILLDETAILID" ColumnName="BILLDETAILID" />
+                <ScalarProperty Name="BILLID" ColumnName="BILLID" />
+                <ScalarProperty Name="PRODUCTSERVICEID" ColumnName="PRODUCTSERVICEID" />
+                <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BOOKINGROOMs">
+            <EntityTypeMapping TypeName="HotelManagementModel.BOOKINGROOM">
+              <MappingFragment StoreEntitySet="BOOKINGROOM">
+                <ScalarProperty Name="BOOKINGID" ColumnName="BOOKINGID" />
+                <ScalarProperty Name="ROOMID" ColumnName="ROOMID" />
+                <ScalarProperty Name="CUSTOMERNAME" ColumnName="CUSTOMERNAME" />
+                <ScalarProperty Name="CUSTOMERIDENTIFY" ColumnName="CUSTOMERIDENTIFY" />
+                <ScalarProperty Name="ISRESERVE" ColumnName="ISRESERVE" />
+                <ScalarProperty Name="RESERVATEDATE" ColumnName="RESERVATEDATE" />
+                <ScalarProperty Name="DEPOSITMONEY" ColumnName="DEPOSITMONEY" />
+                <ScalarProperty Name="CREATEDUSER" ColumnName="CREATEDUSER" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+                <ScalarProperty Name="DELETEDUSER" ColumnName="DELETEDUSER" />
+                <ScalarProperty Name="DELETEDDATE" ColumnName="DELETEDDATE" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRODUCTs">
+            <EntityTypeMapping TypeName="HotelManagementModel.PRODUCT">
+              <MappingFragment StoreEntitySet="PRODUCT">
+                <ScalarProperty Name="PRODUCTID" ColumnName="PRODUCTID" />
+                <ScalarProperty Name="PRODUCTNAME" ColumnName="PRODUCTNAME" />
+                <ScalarProperty Name="PRICE" ColumnName="PRICE" />
+                <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRODUCTSERVICEs">
+            <EntityTypeMapping TypeName="HotelManagementModel.PRODUCTSERVICE">
+              <MappingFragment StoreEntitySet="PRODUCTSERVICE">
+                <ScalarProperty Name="PRODUCTSERVICEID" ColumnName="PRODUCTSERVICEID" />
+                <ScalarProperty Name="PRODUCTID" ColumnName="PRODUCTID" />
+                <ScalarProperty Name="QUANTITY" ColumnName="QUANTITY" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ROOMs">
+            <EntityTypeMapping TypeName="HotelManagementModel.ROOM">
+              <MappingFragment StoreEntitySet="ROOM">
+                <ScalarProperty Name="ROOMID" ColumnName="ROOMID" />
+                <ScalarProperty Name="ROOMTYPEID" ColumnName="ROOMTYPEID" />
+                <ScalarProperty Name="ROOMNAME" ColumnName="ROOMNAME" />
+                <ScalarProperty Name="ROOMDESCRIPTION" ColumnName="ROOMDESCRIPTION" />
+                <ScalarProperty Name="BEDQUANTITY" ColumnName="BEDQUANTITY" />
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="CREATEDUSER" ColumnName="CREATEDUSER" />
+                <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+                <ScalarProperty Name="DELETEDUSER" ColumnName="DELETEDUSER" />
+                <ScalarProperty Name="DELETEDDATE" ColumnName="DELETEDDATE" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ROOMTYPEs">
+            <EntityTypeMapping TypeName="HotelManagementModel.ROOMTYPE">
+              <MappingFragment StoreEntitySet="ROOMTYPE">
+                <ScalarProperty Name="ROOMTYPEID" ColumnName="ROOMTYPEID" />
+                <ScalarProperty Name="ROOMTYPENAME" ColumnName="ROOMTYPENAME" />
+                <ScalarProperty Name="ROOMTYPEDESCRPTION" ColumnName="ROOMTYPEDESCRPTION" />
+                <ScalarProperty Name="PRICEPERHOUR" ColumnName="PRICEPERHOUR" />
+                <ScalarProperty Name="PRICEPERDAY" ColumnName="PRICEPERDAY" />
+                <ScalarProperty Name="CREATEDUSER" ColumnName="CREATEDUSER" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+                <ScalarProperty Name="DELETEDUSER" ColumnName="DELETEDUSER" />
+                <ScalarProperty Name="DELETEDDATE" ColumnName="DELETEDDATE" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERs">
+            <EntityTypeMapping TypeName="HotelManagementModel.USER">
+              <MappingFragment StoreEntitySet="USER">
+                <ScalarProperty Name="USERID" ColumnName="USERID" />
+                <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+                <ScalarProperty Name="EMPLOYEENAME" ColumnName="EMPLOYEENAME" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="SEX" ColumnName="SEX" />
+                <ScalarProperty Name="PHONENUMBER" ColumnName="PHONENUMBER" />
+                <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="ISADMIN" ColumnName="ISADMIN" />
+                <ScalarProperty Name="ISDELETED" ColumnName="ISDELETED" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
