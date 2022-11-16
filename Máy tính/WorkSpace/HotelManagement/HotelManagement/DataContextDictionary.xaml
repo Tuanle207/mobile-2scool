@@ -1,8 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:HotelManagement"
-                    xmlns:viewmodel="clr-namespace:HotelManagement.ViewModels">
-    <!-- ViewModel -->
-    <viewmodel:SampleViewModel x:Key="SampleViewModel"/>
-    <viewmodel:RoomViewModel x:Key="RoomeViewModel"/>
-</ResourceDictionary>
